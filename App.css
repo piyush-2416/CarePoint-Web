@@ -1,14 +1,44 @@
  @plugin "daisyui";
-.main-sec img{
-  height:25rem;
+ /* .main-sec img{
+   height:25rem;
   width:100%;
+}  */
+.content{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  color:white;
 }
-body{
-  background-color:white;
+.Doctors-image img{
+height: 22rem;
+width:100%;
+      filter: brightness(60%) contrast(110%);
+
 }
-.dropdown a{
+ 
+.main-sec img{
+      background-image: url("carepoint.jpg");
+      width: 70rem;
+      /* filter: brightness(90%) contrast(110%); */
+      object-fit: cover;
+      height: 30rem;
+      color: darkred;
+      background-size: cover;
+      background-position: center;
+    display: flex;
+
+}
+    .dropdown a{
 color: white;
 
+}body{
+  background: linear-gradient(
+    to right,
+    #f8ffff,
+    #e8f9f9
+  );
 }
 .problem-sec ul li img{
   width:12rem;
@@ -42,6 +72,17 @@ font-size:25px;
   border-radius: 2rem;
   height:20rem;border:2px solid darkgray;
 }
+.About-section img{
+    width:25rem;
+    border-radius: 8rem 2rem 3rem 4rem;
+    height:28rem;
+    /*padding:1rem;*/
+
+ }.About-section {
+    display: flex;
+    padding:0.2rem;
+
+   }
 .emergency-sec p{
   position: relative;
   top:0rem;
