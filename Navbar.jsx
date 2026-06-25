@@ -1,157 +1,58 @@
-import React from "react";
-import Navbar from "../Components/Navbar";
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import axios from "axios";
-
-function Doctors() {
-  const [products, setProducts] = useState([]);
-  const [add, setAdd] = useState(0);
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/products") // 👈 backend URL
-      .then((res) => {
-        setProducts(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
-  }, []);
-
-  // setDatasend(document.getElementsByClassName("producta").document.getElementsByClassName("Shop-list"))
-  // if (loading) return <h2 style={{ textAlign: "center" }}>Loading...</h2>;
-
-  return (
-    <div>
-      <div className="Doctors-image">
-        <img src="https://img.freepik.com/premium-photo/successful-indian-doctors-team-standing-together_601128-2655.jpg?w=2000" />
-      </div>
-      <div className="fab">
-        {/* a focusable div with tabIndex is necessary to work on all browsers. role="button" is necessary for accessibility */}
-        <div
-          tabIndex={0}
-          role="button"
-          className="btn btn-lg btn-circle btn-secondary"
-        >
-          <svg
-            aria-label="New"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="2"
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
-            />
-          </svg>
-        </div>
-
-        {/* buttons that show up when FAB is open */}
-     <Link to="/"><button>🏡</button></Link>
-        <button className="btn btn-lg btn-circle">
-          <svg
-            aria-label="Gallery"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-            />
-          </svg>
-        </button>
-        <button className="btn btn-lg btn-circle">
-          <svg
-            aria-label="Voice"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 18.75a6 6 0 0 0 6-6v-1.5m-6 7.5a6 6 0 0 1-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 0 1-3-3V4.5a3 3 0 1 1 6 0v8.25a3 3 0 0 1-3 3Z"
-            />
-          </svg>
-        </button>
-      </div>
-      <div style={{ padding: "20px" }}>
-        <h1>🩺Our Doctors </h1>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-            gap: "20px",
-            marginTop: "20px",
-          }}
-        >
-          {products.map((product) => (
-            // 👇 Click karo toh /product/:id pe jayega
-            <Link
-              to={`/product/${product._id}`}
-              key={product._id}
-              style={{ textDecoration: "none", color: "black" }}
-            >
-              <div
-                style={{
-                  border: "2px solid #d24545",
-                  borderRadius: "10px",
-                  padding: "15px",
-                  cursor: "pointer",
-                  transition: "box-shadow 0.2s",
-                  backgroundColor: "#fff",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.boxShadow =
-                    "0 4px 15px rgba(0,0,0,0.15)")
-                }
-                onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
-              >
-                {product.image && (
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    style={{
-                      width: "100%",
-                      height: "150px",
-                      objectFit: "cover",
-                      borderRadius: "8px",
-                    }}
-                  />
-                )}
-                <h3 style={{ margin: "10px 0 5px" }}>{product.name}</h3>
-                <p style={{ color: "#666", fontSize: "14px" }}>
-                  {product.description}
-                </p>
-                {product.price && (
-                  <p style={{ fontWeight: "bold", color: "#e44" }}>
-                    ${product.price}
-                  </p>
-                )}
-                <button className="text-2px">Details</button>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-      <hr />
-      {/* </div> */}
+ import React from 'react'
+import { Link } from 'react-router-dom'
+ import { useState } from 'react'
+ import About from './About'
+//  import { BrowserRouter, Routes, Route } from "react-router-dom";
+ import Doctors from '../Pages/Doctors'
+ function Navbar() {
+   return (
+     <div>
+         
+  <div className="bg-base-100 shadow-sm navbar">
+  <div className="navbar-start">
+    <div className="dropdown">
+        <Link to="/"><a className="text-xl btn btn-ghost">CarePoint</a>
+</Link> 
+       
     </div>
-  );
-}
-
-export default Doctors;
+  </div>
+  <div className="navbar-center">
+   <Link to="/Doctors"> <button className="btn-outline btn btn-ghost">
+      <div className="indicator">
+Doctor       <span className="badge badge-xs badge-primary indicator-item"></span>
+      </div>
+    </button> </Link>|  
+      <Link to="/About">
+       <button className="btn-outline btn btn-ghost">
+      <div className="indicator">
+About      <span className="badge badge-xs badge-primary indicator-item"></span>
+      </div>
+    </button> |
+    </Link> 
+<Link to="/Medicines">  <button className="btn-outline btn btn-ghost">
+      <div className="indicator">
+Medicine      <span className="badge badge-xs badge-primary indicator-item"></span>
+      </div>
+    </button></Link>  </div>
+  <div className="navbar-end">
+    <button className="btn btn-ghost btn-circle">
+📅    </button>
+ <button className="btn btn-ghost btn-circle">
+      <div className="indicator">
+💊        <span className="badge badge-xs badge-primary indicator-item"></span>
+      </div>
+    </button>
+    <button className="btn btn-ghost btn-circle">
+      <div className="indicator">
+👤        <span className="badge badge-xs badge-primary indicator-item"></span>
+      </div>
+    </button>
+  </div>
+</div>  
+      {/* </div> */}
+     </div>
+   )
+ }
+ 
+ export default Navbar
+ 
