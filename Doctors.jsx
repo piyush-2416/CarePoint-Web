@@ -1,10 +1,35 @@
-import React from 'react'
+ import React from 'react'
+import Navbar from '../Components/Navbar'
 import { Link } from 'react-router-dom'
+import { useEffect, useState } from "react";
+import axios from "axios";
 function Doctors() {
+    const [products, setProducts] = useState([]);
+  const [add,setAdd]=useState(0);
+    useEffect(() => {
+    axios
+      .get("http://localhost:3000/api/products") // 👈 backend URL
+      .then((res) => {
+        setProducts(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  }, []);
+
+  // setDatasend(document.getElementsByClassName("producta").document.getElementsByClassName("Shop-list"))
+  // if (loading) return <h2 style={{ textAlign: "center" }}>Loading...</h2>;
+
+
+
   return (
     <div>
-<h1>hello piyush</h1>
-            <div
+      <Navbar/> 
+              <div style={{ padding: "20px" }}>
+            <h1>🩺Our Doctors </h1>
+   <div
               style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
@@ -62,6 +87,10 @@ function Doctors() {
                 </Link>
               ))}
             </div>
+          </div>
+<hr/>
+          {/* </div> */}
+
           </div>
    )
 }
