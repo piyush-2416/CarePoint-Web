@@ -58,9 +58,9 @@ import cors from "cors";
     import { ObjectId } from "mongodb"; // top pe
 
 const MONGODB_URI = "mongodb+srv://wwwpiyushverma2401_db_user:N3hTB85tx.xnStG@piyush2416.sp9zipj.mongodb.net/?appName=Piyush2416"; // apna URI daalo
-const Database = "Food-data";
-const collection = "Food-items";
-
+const Database = "hospital-data";
+const collection = "Doctors-data";
+const collection2="Medicine-data";
 dotenv.config();
 
 const app = express();
@@ -98,6 +98,21 @@ db=client.db(Database);
     res.status(500).json({ error: error.message });
   }
 });
+
+app.get("/api/Medicines", async (req, res) => {
+  try {
+    const data = await db
+      .collection(collection2)
+      .find()
+      .toArray();
+db=client.db(Database);
+    res.json(data); // React ko data bhej raha hai
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 
 // // ✅ Route 2: Single product by ID (Product detail page ke liye)
 app.get("/api/products/:id", async (req, res) => {
