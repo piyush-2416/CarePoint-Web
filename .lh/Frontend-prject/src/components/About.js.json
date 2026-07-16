@@ -1,0 +1,18 @@
+{
+    "sourceFile": "Frontend-prject/src/components/About.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1774685864686,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1774685864686,
+            "name": "Commit-0",
+            "content": "function About() {\r\n    return(\r\n    <>\r\n    <h1>About-sec</h1>\r\n\r\n    <div className={\"About-section\"}>\r\n        <img src={\"https://img.freepik.com/premium-photo/fast-food-concept-with-greasy-fried-restaurant-take-out-as-onion-rings-burger-generative-ai_21085-36439.jpg?w=2000\"}/>\r\n        <a>Fast food is very popular among people of all ages because it is quick, tasty, and easily available.\r\n            Items like burgers, pizza, fries, and sandwiches are commonly enjoyed by students and working\r\n            professionals. One of the main reasons for its popularity is that it saves time and is affordable.\r\n            However, eating fast food regularly can be harmful to health because it often contains high amounts\r\n            of oil, sugar, and salt. This may lead to problems like obesity and heart disease. Therefore, while\r\n            fast food can be enjoyed occasionally, it is important to maintain a balanced diet and include\r\n            healthy foods like fruits and vegetables in daily meals.\r\n            Fast food is very popular among people of all ages because it is quick, tasty, and easily\r\n            available. Items like burgers, pizza, fries, and sandwiches are commonly enjoyed by students and\r\n            working professionals. One of the main reasons for its popularity is that it saves time and is\r\n            affordable. However, eating fast food regularly can be harmful to health because it often contains\r\n            high amounts of oil, sugar, and salt. This may lead to problems like obesity and heart disease.\r\n            Therefore, while fast food can be enjoyed occasionally, it is important to maintain a balanced diet\r\n            and include healthy foods like fruits and vegetables in daily meals.</a>\r\n    </div>\r\n    </>\r\n    )\r\n}\r\n\r\nexport default About;"
+        }
+    ]
+}

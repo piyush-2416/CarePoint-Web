@@ -1,0 +1,114 @@
+import {Link} from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios"; 
+
+function Home() {
+  const [students, setStudents] = useState([]);
+useEffect(() => {
+    axios
+      .get("http://localhost:3000/api/students") // 👈 backend URL
+      .then((res) => {
+        setStudents(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+     return (
+         <>
+             <div className="app">
+  <div className="container">
+                     <img src="https://images.pexels.com/photos/2318966/pexels-photo-2318966.jpeg"/>
+                     {/*<button>Login</button>*/}
+                 </div>
+                 <br/>
+                 <h1>Products</h1>
+
+                 <ul>
+                     <li>
+                         <Link className={"Element"} to="/element">  <img src="https://images.pexels.com/photos/2119758/pexels-photo-2119758.jpeg"/></Link> {" "}
+
+                     </li>
+                     <li>
+                         <Link className={"Element2"} to="/element2"> <img src="https://recipes.timesofindia.com/photo/52532656.cms"/></Link> {" "}
+                     </li>
+                     <li>
+                         <img
+                             src={"https://static.vecteezy.com/system/resources/previews/047/831/550/non_2x/delicious-plate-of-chicken-chow-mein-featuring-noodles-and-fresh-vegetables-in-a-dark-bowl-vibrant-and-appetizing-chinese-cuisine-png.png"}/>
+                     </li>
+                     <li>
+                         <img
+                             src={"https://static.vecteezy.com/system/resources/previews/038/972/466/large_2x/ai-generated-veg-steam-momo-nepalese-traditional-dish-momo-stuffed-with-vegetables-and-then-cooked-and-served-with-sauce-over-a-rustic-wooden-background-selective-focus-photo.jpg"}/>
+                     </li>
+                     <li>
+                         <img
+                             src={"https://www.cubesnjuliennes.com/wp-content/uploads/2021/01/Spring-Roll-Recipe.jpg"}/>
+                     </li>
+                     <li>
+                         <img src={"https://images.alphacoders.com/105/1050377.jpg"}/>
+                     </li>
+                 </ul>
+             </div>
+
+             <br/><h1>Products-sec</h1>
+               <Link className={"Product"} to="/Product"> 
+
+             <div className="card-body">
+                 <ul>
+                     <li>
+                         <img
+                             src={"https://brookrest.com/wp-content/uploads/2020/05/AdobeStock_282247995-scaled.jpeg"}/>
+                         <h3>Burger</h3>
+                         <h5> This is the Burgur
+                         </h5>
+                     </li>
+                     <li><img src={"https://www.cookinwithmima.com/wp-content/uploads/2023/04/honey-chilli-fries.jpg"}/>
+                         <h3>Chilli
+                             Patato</h3>
+                         <h5>This is the Chilli patato
+                         </h5></li>
+
+                     <li><img
+                         src={"https://static.vecteezy.com/system/resources/thumbnails/038/561/425/small_2x/ai-generated-a-slice-of-gourmet-cheese-pizza-being-lifted-with-hot-melted-cheese-stretching-from-the-pie-generative-ai-photo.jpeg"}/>
+                         <h3>Pizza</h3>
+                         <h5>This is the Pizza
+                         </h5></li>
+                 </ul>
+                 <ul>
+                     <li><img src={"https://cdn.pixabay.com/photo/2023/09/22/18/53/ai-generated-8269635_1280.jpg"}/>
+                         <h3>Pasta</h3>
+                         <h5>This is the Pasta
+                         </h5></li>
+                     <br/>
+                     <br/>
+                     <li><img src={"https://cdn.pixabay.com/photo/2023/07/18/19/19/spring-rolls-8135469_1280.jpg"}/>
+                         <h3>Spring Roll</h3>
+                         <h5>This is the Roll
+                         </h5></li>
+                     <li><img src={"https://www.crazymasalafood.com/wp-content/images/pudina-4.jpg"}/>
+                         <h3>Chaap</h3>
+                         <h5>This is the chaap
+                         </h5></li>
+                 </ul>
+             </div></Link> {" "}
+             <hr/>
+   {/* <div>
+            <h1 >Student Data</h1>
+          {students.map((item) => (
+         <div key={item._id}> 
+        <h2>{item.age}</h2>   
+        <h2>{item.Rank}</h2>
+         <img src={item.image}/>
+         <h3>{item.name}</h3>
+         <h4>{item.surname}</h4>l
+        <h2>{item.description}</h2>
+        </div>
+      ))}
+    </div> */}
+      <div>
+          <h1>All Products</h1>
+          <ProductList />
+        </div>
+         </>
+     );
+ }
+
+export default Home;

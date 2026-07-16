@@ -1,0 +1,18 @@
+{
+    "sourceFile": "Mern Stack/Frontend-prject/src/App.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1774177587986,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1774177587986,
+            "name": "Commit-0",
+            "content": "import { useState } from 'react'\nimport reactLogo from './assets/react.svg'\nimport viteLogo from './assets/vite.svg'\nimport heroImg from './assets/hero.png'\nimport './App.css'\n\nfunction App() {\n  const [jokes, setJokes] = useState([])\n\n  return (\n    <>\n   <h1> Welcome to our Frontend and Backend wbesite</h1>\n   \n     </>\n  )\n}\n\nexport default App\n"
+        }
+    ]
+}

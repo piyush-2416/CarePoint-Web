@@ -1,0 +1,30 @@
+{
+    "sourceFile": "Frontend-prject/vite.config.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1774181509341,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1774418786919,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,9 @@\n // https://vite.dev/config/\n export default defineConfig({\n   server:{\n     proxy:{\n-      '/api':'http://localhost:3000',\n+      '/api':'http://localhost:3000'\n     },\n   },\n   plugins: [react()],\n })\n"
+                },
+                {
+                    "date": 1783662209373,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,11 @@\n // https://vite.dev/config/\n export default defineConfig({\n   server:{\n     proxy:{\n+            \"http://localhost:3000/api/products/${id}\"\n+\n       '/api':'http://localhost:3000'\n-    },\n+     },\n   },\n   plugins: [react()],\n })\n"
+                },
+                {
+                    "date": 1783663096945,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,11 +4,9 @@\n // https://vite.dev/config/\n export default defineConfig({\n   server:{\n     proxy:{\n-            \"http://localhost:3000/api/products/${id}\"\n-\n-      '/api':'http://localhost:3000'\n+       '/api':'http://localhost:3000'\n      },\n   },\n   plugins: [react()],\n })\n"
+                }
+            ],
+            "date": 1774181509340,
+            "name": "Commit-0",
+            "content": "import { defineConfig } from 'vite'\nimport react from '@vitejs/plugin-react'\n\n// https://vite.dev/config/\nexport default defineConfig({\n  server:{\n    proxy:{\n      '/api':'http://localhost:3000',\n    },\n  },\n  plugins: [react()],\n})\n"
+        }
+    ]
+}

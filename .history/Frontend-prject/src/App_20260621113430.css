@@ -1,0 +1,17 @@
+ @plugin "daisyui";
+.main-sec img{
+  height:25rem;
+  width:100%;
+}
+.problem-sec ul li img{
+  width:15rem;
+  height:15rem;
+ border:1px solid darkturquoise;
+/* background-color: */
+}
+.problem-sec ul{
+  display:flex;
+}
+.navbar{
+background-color: darkturquoise;
+}

@@ -1,0 +1,78 @@
+{
+    "sourceFile": "Frontend-prject/src/Pages/CreateUser.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 15,
+            "patches": [
+                {
+                    "date": 1775844246733,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1775844296830,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,19 @@\n+import React from 'react'\r\n+import Home from './Home.jsx'\r\n+function CreateUser() {\r\n+  return (\r\n+    <>\r\n+      <div>\r\n+        <h1>Add User</h1>\r\n+       <div> name\r\n+        <input  placeholder='Enter the name'/>\r\n+        \r\n+        <input  placeholder='Enter the Email'/>\r\n+        <input  placeholder='Enter the Age'/>\r\n+</div>\r\n+      </div>\r\n+    </>\r\n+  )\r\n+}\r\n+\r\n+export default CreateUser\r\n"
+                },
+                {
+                    "date": 1775844349081,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,33 +4,17 @@\n   return (\r\n     <>\r\n       <div>\r\n         <h1>Add User</h1>\r\n-       <div> name\r\n-        <input  placeholder='Enter the name'/>\r\n-        \r\n+       <div> name<br/>\r\n+       <input  placeholder='Enter the name'/>\r\n+       Email<br/>\r\n         <input  placeholder='Enter the Email'/>\r\n+        Age<br/>\r\n         <input  placeholder='Enter the Age'/>\r\n </div>\r\n       </div>\r\n     </>\r\n   )\r\n }\r\n \r\n export default CreateUser\r\n-import React from 'react'\r\n-import Home from './Home.jsx'\r\n-function CreateUser() {\r\n-  return (\r\n-    <>\r\n-      <div>\r\n-        <h1>Add User</h1>\r\n-        <input  text=\"name\"placeholder='Enter the name'/>\r\n-        <input  placeholder='Enter the Email'/>\r\n-        <input  placeholder='Enter the Age'/>\r\n-\r\n-      </div>\r\n-    </>\r\n-  )\r\n-}\r\n-\r\n-export default CreateUser\r\n"
+                },
+                {
+                    "date": 1775844424935,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,20 @@\n+import React from 'react'\r\n+import Home from './Home.jsx'\r\n+function CreateUser() {\r\n+  return (\r\n+    <>\r\n+      <div>\r\n+        <h1>Add User</h1>\r\n+       <div> name\r\n+       <input  placeholder='Enter the name'/><br/>\r\n+       Email\r\n+        <input  placeholder='Enter the Email'/><br/>\r\n+        Age\r\n+        <input  placeholder='Enter the Age'/><br/>\r\n+</div>\r\n+      </div>\r\n+    </>\r\n+  )\r\n+}\r\n+\r\n+export default CreateUser\r\n"
+                },
+                {
+                    "date": 1775844549912,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,20 @@\n+import React from 'react'\r\n+import Home from './Home.jsx'\r\n+function CreateUser() {\r\n+  return (\r\n+    <>\r\n+      <div>\r\n+        <h1>Add User</h1>\r\n+       <div><h1>name</h1> \r\n+       <input  placeholder='Enter the name'/><br/>\r\n+      <h2>Email</h2> \r\n+        <input  placeholder='Enter the Email'/><br/>\r\n+        <h2>Age</h2>\r\n+        <input  placeholder='Enter the Age'/><br/>\r\n+</div>\r\n+      </div>\r\n+    </>\r\n+  )\r\n+}\r\n+\r\n+export default CreateUser\r\n"
+                },
+                {
+                    "date": 1775844575901,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,57 +4,17 @@\n   return (\r\n     <>\r\n       <div>\r\n         <h1>Add User</h1>\r\n-       <div><h1>name</h1> \r\n+       <div><h4>name</h4> \r\n        <input  placeholder='Enter the name'/><br/>\r\n-      <h2>Email</h2> \r\n+      <h4>Email</h4> \r\n         <input  placeholder='Enter the Email'/><br/>\r\n-        <h2>Age</h2>\r\n+        <h3>Age</h3>\r\n         <input  placeholder='Enter the Age'/><br/>\r\n </div>\r\n       </div>\r\n     </>\r\n   )\r\n }\r\n \r\n export default CreateUser\r\n-import React from 'react'\r\n-import Home from './Home.jsx'\r\n-function CreateUser() {\r\n-  return (\r\n-    <>\r\n-      <div>\r\n-        <h1>Add User</h1>\r\n-       <div> name\r\n-       <input  placeholder='Enter the name'/><br/>\r\n-       Email\r\n-        <input  placeholder='Enter the Email'/><br/>\r\n-        Age\r\n-        <input  placeholder='Enter the Age'/><br/>\r\n-</div>\r\n-      </div>\r\n-    </>\r\n-  )\r\n-}\r\n-\r\n-export default CreateUser\r\n-import React from 'react'\r\n-import Home from './Home.jsx'\r\n-function CreateUser() {\r\n-  return (\r\n-    <>\r\n-      <div>\r\n-        <h1>Add User</h1>\r\n-       <div> name<br/>\r\n-       <input  placeholder='Enter the name'/>\r\n-       Email<br/>\r\n-        <input  placeholder='Enter the Email'/>\r\n-        Age<br/>\r\n-        <input  placeholder='Enter the Age'/>\r\n-</div>\r\n-      </div>\r\n-    </>\r\n-  )\r\n-}\r\n-\r\n-export default CreateUser\r\n"
+                },
+                {
+                    "date": 1775844627088,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,21 @@\n+import React from 'react'\r\n+import \"./App.css\";\r\n+import Home from './Home.jsx'\r\n+function CreateUser() {\r\n+  return (\r\n+    <>\r\n+      <div>\r\n+        <h1>Add User</h1>\r\n+       <div><h4>name</h4> \r\n+       <input  placeholder='Enter the name'/><br/>\r\n+      <h4>Email</h4> \r\n+        <input  placeholder='Enter the Email'/><br/>\r\n+        <h4>Age</h4>\r\n+        <input  placeholder='Enter the Age'/><br/>\r\n+</div>\r\n+      </div>\r\n+    </>\r\n+  )\r\n+}\r\n+\r\n+export default CreateUser\r\n"
+                },
+                {
+                    "date": 1775844647091,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,9 +3,9 @@\n import Home from './Home.jsx'\r\n function CreateUser() {\r\n   return (\r\n     <>\r\n-      <div>\r\n+      <div className='add-sec'>\r\n         <h1>Add User</h1>\r\n        <div><h4>name</h4> \r\n        <input  placeholder='Enter the name'/><br/>\r\n       <h4>Email</h4> \r\n@@ -18,24 +18,4 @@\n   )\r\n }\r\n \r\n export default CreateUser\r\n-import React from 'react'\r\n-import Home from './Home.jsx'\r\n-function CreateUser() {\r\n-  return (\r\n-    <>\r\n-      <div>\r\n-        <h1>Add User</h1>\r\n-       <div><h4>name</h4> \r\n-       <input  placeholder='Enter the name'/><br/>\r\n-      <h4>Email</h4> \r\n-        <input  placeholder='Enter the Email'/><br/>\r\n-        <h3>Age</h3>\r\n-        <input  placeholder='Enter the Age'/><br/>\r\n-</div>\r\n-      </div>\r\n-    </>\r\n-  )\r\n-}\r\n-\r\n-export default CreateUser\r\n"
+                },
+                {
+                    "date": 1775844675662,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,6 @@\n import React from 'react'\r\n-import \"./App.css\";\r\n+// import \"./App.css\";\r\n import Home from './Home.jsx'\r\n function CreateUser() {\r\n   return (\r\n     <>\r\n"
+                },
+                {
+                    "date": 1775844834577,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,13 +5,13 @@\n   return (\r\n     <>\r\n       <div className='add-sec'>\r\n         <h1>Add User</h1>\r\n-       <div><h4>name</h4> \r\n+       <div><h5>name</h5> \r\n        <input  placeholder='Enter the name'/><br/>\r\n-      <h4>Email</h4> \r\n+      <h5>Email</h5> \r\n         <input  placeholder='Enter the Email'/><br/>\r\n-        <h4>Age</h4>\r\n+        <h5>Age</h5>\r\n         <input  placeholder='Enter the Age'/><br/>\r\n </div>\r\n       </div>\r\n     </>\r\n"
+                },
+                {
+                    "date": 1775844859403,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,9 @@\n   return (\r\n     <>\r\n       <div className='add-sec'>\r\n         <h1>Add User</h1>\r\n-       <div><h5>name</h5> \r\n+       <div><h5>Name</h5> \r\n        <input  placeholder='Enter the name'/><br/>\r\n       <h5>Email</h5> \r\n         <input  placeholder='Enter the Email'/><br/>\r\n         <h5>Age</h5>\r\n"
+                },
+                {
+                    "date": 1775844885932,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,8 +11,9 @@\n       <h5>Email</h5> \r\n         <input  placeholder='Enter the Email'/><br/>\r\n         <h5>Age</h5>\r\n         <input  placeholder='Enter the Age'/><br/>\r\n+        <button>Submit</button>\r\n </div>\r\n       </div>\r\n     </>\r\n   )\r\n"
+                },
+                {
+                    "date": 1775844941002,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,24 @@\n+import React from 'react'\r\n+// import \"./App.css\";\r\n+import Home from './Home.jsx'\r\n+function CreateUser() {\r\n+  return (\r\n+    <>\r\n+      <div className='add-sec'>\r\n+        <h1>Add User</h1>\r\n+       <div><h5>Name</h5> \r\n+       <input  placeholder='Enter the name'/><br/>\r\n+      <h5>Email</h5> \r\n+        <input  placeholder='Enter the Email'/><br/>\r\n+        <h5>Age</h5>\r\n+        <input  placeholder='Enter the Age'/><br/>\r\n+\r\n+        <button>Submit</button>\r\n+        \r\n+</div>\r\n+      </div>\r\n+    </>\r\n+  )\r\n+}\r\n+\r\n+export default CreateUser\r\n"
+                },
+                {
+                    "date": 1775845316013,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,24 @@\n+import React from 'react'\r\n+// import \"./App.css\";\r\n+import Home from './Home.jsx'\r\n+function CreateUser() {\r\n+  return (\r\n+    <>\r\n+      <div className='add-sec'>\r\n+        <h1>Add User</h1>\r\n+       <div><h5>Name</h5> \r\n+       <input  placeholder='Enter the name'/><br/>\r\n+      <h5>Email</h5> \r\n+        <input  placeholder='Enter the Email'/><br/>\r\n+        <h5>Age</h5>\r\n+        <input  placeholder='Enter the Age'/><br/>\r\n+\r\n+        <Link to=\"/\"><button>Submit</button></Link>\r\n+\r\n+</div>\r\n+      </div>\r\n+    </>\r\n+  )\r\n+}\r\n+\r\n+export default CreateUser\r\n"
+                },
+                {
+                    "date": 1775845347871,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,7 @@\n import React from 'react'\r\n // import \"./App.css\";\r\n+import {Link} from \"react-router-dom\"\r\n import Home from './Home.jsx'\r\n function CreateUser() {\r\n   return (\r\n     <>\r\n@@ -21,50 +22,4 @@\n   )\r\n }\r\n \r\n export default CreateUser\r\n-import React from 'react'\r\n-// import \"./App.css\";\r\n-import Home from './Home.jsx'\r\n-function CreateUser() {\r\n-  return (\r\n-    <>\r\n-      <div className='add-sec'>\r\n-        <h1>Add User</h1>\r\n-       <div><h5>Name</h5> \r\n-       <input  placeholder='Enter the name'/><br/>\r\n-      <h5>Email</h5> \r\n-        <input  placeholder='Enter the Email'/><br/>\r\n-        <h5>Age</h5>\r\n-        <input  placeholder='Enter the Age'/><br/>\r\n-\r\n-        <button>Submit</button>\r\n-        \r\n-</div>\r\n-      </div>\r\n-    </>\r\n-  )\r\n-}\r\n-\r\n-export default CreateUser\r\n-import React from 'react'\r\n-// import \"./App.css\";\r\n-import Home from './Home.jsx'\r\n-function CreateUser() {\r\n-  return (\r\n-    <>\r\n-      <div className='add-sec'>\r\n-        <h1>Add User</h1>\r\n-       <div><h5>Name</h5> \r\n-       <input  placeholder='Enter the name'/><br/>\r\n-      <h5>Email</h5> \r\n-        <input  placeholder='Enter the Email'/><br/>\r\n-        <h5>Age</h5>\r\n-        <input  placeholder='Enter the Age'/><br/>\r\n-        <button>Submit</button>\r\n-</div>\r\n-      </div>\r\n-    </>\r\n-  )\r\n-}\r\n-\r\n-export default CreateUser\r\n"
+                },
+                {
+                    "date": 1775845454582,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,9 @@\n function CreateUser() {\r\n   return (\r\n     <>\r\n       <div className='add-sec'>\r\n-        <h1>Add User</h1>\r\n+        <h2>Add User</h2>\r\n        <div><h5>Name</h5> \r\n        <input  placeholder='Enter the name'/><br/>\r\n       <h5>Email</h5> \r\n         <input  placeholder='Enter the Email'/><br/>\r\n"
+                }
+            ],
+            "date": 1775844246733,
+            "name": "Commit-0",
+            "content": "import React from 'react'\r\nimport Home from './Home.jsx'\r\nfunction CreateUser() {\r\n  return (\r\n    <>\r\n      <div>\r\n        <h1>Add User</h1>\r\n        <input  text=\"name\"placeholder='Enter the name'/>\r\n        <input  placeholder='Enter the Email'/>\r\n        <input  placeholder='Enter the Age'/>\r\n\r\n      </div>\r\n    </>\r\n  )\r\n}\r\n\r\nexport default CreateUser\r\n"
+        }
+    ]
+}

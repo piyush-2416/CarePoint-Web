@@ -1,0 +1,34 @@
+{
+    "sourceFile": "Frontend-prject/src/App.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 4,
+            "patches": [
+                {
+                    "date": 1774176152602,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1774176161522,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,9 @@\n   const [count, setCount] = useState(0)\n \n   return (\n     <>\n-      \n+      hello piyush \n     </>\n   )\n }\n \n"
+                },
+                {
+                    "date": 1774176211720,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,9 @@\n   const [count, setCount] = useState(0)\n \n   return (\n     <>\n-      hello piyush \n+       <h1>hello world </h1>\n     </>\n   )\n }\n \n"
+                },
+                {
+                    "date": 1774176253171,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,17 @@\n import { useState } from 'react'\n import reactLogo from './assets/react.svg'\n import viteLogo from './assets/vite.svg'\n import heroImg from './assets/hero.png'\n-imp\n\\ No newline at end of file\n+import './App.css'\n+\n+function App() {\n+  const [count, setCount] = useState(0)\n+\n+  return (\n+    <>\n+      <h1>hello piyush verma </h1>\n+    </>\n+  )\n+}\n+\n+export default App\n"
+                },
+                {
+                    "date": 1774180568782,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,9 +9,16 @@\n \n   return (\n     <>\n    <h1> Welcome to Mern website</h1>\n-   \n+   <p>Jokes : {jokes.length}</p>\n+   {\n+    jokes.map((jokes,index)=>{\n+     <div key={jokes.id}><h3>{jokes.title}</h3>\n+     <h3>{jokes.content}</h3>\n+      </div> \n+    })\n+   }\n      </>\n   )\n }\n \n"
+                }
+            ],
+            "date": 1774176152602,
+            "name": "Commit-0",
+            "content": " import './App.css'\n\nfunction App() {\n  const [count, setCount] = useState(0)\n\n  return (\n    <>\n      \n    </>\n  )\n}\n\nexport default App\n"
+        }
+    ]
+}

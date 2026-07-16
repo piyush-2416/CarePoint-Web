@@ -1,0 +1,57 @@
+ @plugin "daisyui";
+.main-sec img{
+  height:25rem;
+  width:100%;
+}
+body{
+  background-color:whitesmoke;
+}
+.problem-sec ul li img{
+  width:12rem;
+  height:10rem;
+ border:2px solid white;
+border-radius:10rem;
+}
+.problem-sec ul{
+  display:flex;
+  gap:0.5rem;
+  /* border: 1px solid black; */
+}
+.navbar{
+background-color: darkturquoise;
+}
+.emergency-sec{
+  display:flex;
+  
+}
+.emergency-sec img{
+  width:29rem;position: relative;
+  left:2rem;
+  border-radius: 2rem;
+  height:20rem;border:2px solid darkgray;
+}
+.emergency-sec p{
+  position: relative;
+  top:0rem;
+  background-color: darkturquoise;
+  left:7rem;color:white;
+  padding:1rem;
+  font-size:20px;
+  /* gap:5rem; */
+  height:21rem;
+  width:20rem;border:1.8px solid black;
+  border-radius:2rem;
+}.emergency-sec p button{
+  color:black;
+  border:2px solid  white;
+  /* padding:1rem; */
+  background-color:white;
+  position:relative;left:4rem;
+  border-radius:2rem;font-size: 15px;
+}.doctor-sec button{
+  font-size:2rem;
+
+}
+.doctor-sec{
+  overflow:hidden;
+}

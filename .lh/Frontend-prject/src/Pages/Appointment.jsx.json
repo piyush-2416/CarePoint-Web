@@ -1,0 +1,50 @@
+{
+    "sourceFile": "Frontend-prject/src/Pages/Appointment.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 8,
+            "patches": [
+                {
+                    "date": 1782753371580,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1782753401044,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,7 @@\n import React from 'react'\r\n+import Navbar from '../Components/Navbar'\r\n+import { Link } from 'react-router-dom'\r\n \r\n function Appointment() {\r\n   return (\r\n     <div>\r\n"
+                },
+                {
+                    "date": 1782753420033,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,10 +4,11 @@\n \r\n function Appointment() {\r\n   return (\r\n     <div>\r\n+      <Navbar/>\r\n+      <h1>Appointment Page</h1>\r\n       \r\n-      <h1>Appointment Page</h1>\r\n     </div>\r\n   )\r\n }\r\n \r\n"
+                },
+                {
+                    "date": 1783185236603,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,10 +5,12 @@\n function Appointment() {\r\n   return (\r\n     <div>\r\n       <Navbar/>\r\n+\r\n       <h1>Appointment Page</h1>\r\n-      \r\n+     <div className='appointment-sec'> <img src='https://thumbs.dreamstime.com/b/patients-doctors-waiting-room-vector-illustration-patient-doctor-patient-hospital-office-interior-clinic-patient-70562172.jpg'/>\r\n+</div>\r\n     </div>\r\n   )\r\n }\r\n \r\n"
+                },
+                {
+                    "date": 1783185285085,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,9 @@\n     <div>\r\n       <Navbar/>\r\n \r\n       <h1>Appointment Page</h1>\r\n-     <div className='appointment-sec'> <img src='https://thumbs.dreamstime.com/b/patients-doctors-waiting-room-vector-illustration-patient-doctor-patient-hospital-office-interior-clinic-patient-70562172.jpg'/>\r\n+     <div className='appointment-sec'> <img src='https://themighty.com/wp-content/uploads/2018/01/GettyImages-533227522-1280x640.jpg'/>\r\n </div>\r\n     </div>\r\n   )\r\n }\r\n"
+                },
+                {
+                    "date": 1783185335499,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,10 +6,9 @@\n   return (\r\n     <div>\r\n       <Navbar/>\r\n \r\n-      <h1>Appointment Page</h1>\r\n-     <div className='appointment-sec'> <img src='https://themighty.com/wp-content/uploads/2018/01/GettyImages-533227522-1280x640.jpg'/>\r\n+      <div className='appointment-sec'> <img src='https://themighty.com/wp-content/uploads/2018/01/GettyImages-533227522-1280x640.jpg'/>\r\n </div>\r\n     </div>\r\n   )\r\n }\r\n"
+                },
+                {
+                    "date": 1783186895569,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,8 +7,9 @@\n     <div>\r\n       <Navbar/>\r\n \r\n       <div className='appointment-sec'> <img src='https://themighty.com/wp-content/uploads/2018/01/GettyImages-533227522-1280x640.jpg'/>\r\n+      \r\n </div>\r\n     </div>\r\n   )\r\n }\r\n"
+                },
+                {
+                    "date": 1784040461469,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,15 +1,16 @@\n import React from 'react'\r\n import Navbar from '../Components/Navbar'\r\n import { Link } from 'react-router-dom'\r\n import ProductPage from './ProductPage'\r\n+import Doctorid from './Doctorid'\r\n function Appointment() {\r\n   return (\r\n     <div>\r\n       <Navbar/>\r\n \r\n       <div className='appointment-sec'> <img src='https://themighty.com/wp-content/uploads/2018/01/GettyImages-533227522-1280x640.jpg'/>\r\n-    \r\n+    <Doctorid/>\r\n </div>\r\n     </div>\r\n   )\r\n }\r\n"
+                },
+                {
+                    "date": 1784041471683,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,132 @@\n+import React from 'react'\r\n+import Navbar from '../Components/Navbar'\r\n+import { Link } from 'react-router-dom'\r\n+import ProductPage from './ProductPage'\r\n+import Doctorid from './Doctorid'\r\n+function Appointment() {\r\n+    const { id } = useParams(); // URL se product ID lega\r\n+  const [product, setProduct] = useState(null);\r\n+  const [loading, setLoading] = useState(true);\r\n+  const [error, setError] = useState(null);\r\n+\r\n+  useEffect(() => {\r\n+  axios.get(`http://localhost:3000/api/Doctorid/${id}`) // 👈 Backend se single product fetch\r\n+      .then((res) => {\r\n+        setProduct(res.data);\r\n+        setLoading(false);\r\n+      })\r\n+      .catch((err) => {\r\n+        console.log(err);\r\n+        setError(\"Product nahi mila!\");\r\n+        setLoading(false);\r\n+      });\r\n+  }, [id]);\r\n+\r\n+  // Loading state\r\n+  if (loading)\r\n+    return <h2 style={{ textAlign: \"center\", marginTop: \"50px\" }}>Loading...</h2>;\r\n+\r\n+  // Error state\r\n+  if (error)\r\n+    return (\r\n+      <div style={{ textAlign: \"center\", marginTop: \"50px\" }}>\r\n+        <h2 style={{ color: \"red\" }}>{error}</h2>\r\n+        <Link to=\"/\" style={{ color: \"blue\" }}>\r\n+          ← Home par wapas jao\r\n+        </Link>\r\n+      </div>\r\n+    );\r\n+\r\n+  // Product nahi mila\r\n+  if (!product)\r\n+    return (\r\n+      <div style={{ textAlign: \"center\", marginTop: \"50px\" }}>\r\n+        <h2>Product nahi mila 😕</h2>\r\n+        <Link to=\"/\">← Home par wapas jao</Link>\r\n+      </div>\r\n+    );\r\n+  return (\r\n+    <div>\r\n+      <Navbar/>\r\n+\r\n+      <div className='appointment-sec'> <img src='https://themighty.com/wp-content/uploads/2018/01/GettyImages-533227522-1280x640.jpg'/>\r\n+        {/* Product Card */}\r\n+      <div\r\n+        style={{\r\n+          border: \"1px solid #ddd\",\r\n+          borderRadius: \"12px\",\r\n+          padding: \"30px\",\r\n+          backgroundColor: \"#fff\",\r\n+          boxShadow: \"0 4px 20px rgba(0,0,0,0.1)\",\r\n+        }}\r\n+      >\r\n+        {/* Product Image */}\r\n+        {product.image && (\r\n+          <img\r\n+            src={product.image}\r\n+            alt={product.name}\r\n+            style={{\r\n+              width: \"100%\",\r\n+              height: \"350px\",\r\n+              objectFit: \"cover\",\r\n+              borderRadius: \"10px\",\r\n+              marginBottom: \"20px\",\r\n+            }}\r\n+          />\r\n+        )}\r\n+\r\n+        {/* Product Name */}\r\n+        <h1 style={{ margin: \"10px 0\", fontSize: \"28px\", color: \"#222\" }}>\r\n+          {product.name}\r\n+        </h1>\r\n+  <h2 style={{ color: \"skyblue\", fontSize: \"14px\" }}>\r\n+                  {product.specialization}\r\n+                </h2>   <p style={{ color:\"chocolate\", fontSize: \"14px\" }}>\r\n+                      {product.qualification}\r\n+                    </p>     <p style={{ color: \"gray\", fontSize: \"14px\" }}>\r\n+                      |{product.experience}\r\n+                    </p>  {/* Product Price */}   <p style={{ color: \"firebrick\", fontSize: \"14px\" }}>\r\n+                  {product.availableTime}\r\n+                </p>\r\n+        {product.price && (\r\n+          <p\r\n+            style={{\r\n+              fontWeight: \"bold\",\r\n+              color: \"#e44\",\r\n+              fontSize: \"24px\",\r\n+              margin: \"10px 0\",\r\n+            }}\r\n+          >\r\n+            💰 ₹{product.consultationFee}\r\n+          </p>\r\n+        )}\r\n+\r\n+\r\n+        {/* Buy Button */}\r\n+      <Link to=\"/Appointment\">  <button\r\n+          style={{\r\n+            marginTop: \"25px\",\r\n+            padding: \"14px 35px\",\r\n+            backgroundColor: \"#e44\",\r\n+            color: \"#fff\",\r\n+            border: \"none\",\r\n+            borderRadius: \"8px\",\r\n+            fontSize: \"18px\",\r\n+            cursor: \"pointer\",\r\n+            fontWeight: \"bold\",\r\n+            width: \"100%\",\r\n+            transition: \"background 0.2s\",\r\n+          }}\r\n+          onMouseEnter={(e) => (e.target.style.backgroundColor = \"#c33\")}\r\n+          onMouseLeave={(e) => (e.target.style.backgroundColor = \"#e44\")}\r\n+        \r\n+        >\r\n+          🩺Appointment\r\n+        </button></Link>\r\n+      </div>\r\n+</div>\r\n+    </div>\r\n+  )\r\n+}\r\n+\r\n+export default Appointment\r\n"
+                }
+            ],
+            "date": 1782753371580,
+            "name": "Commit-0",
+            "content": "import React from 'react'\r\n\r\nfunction Appointment() {\r\n  return (\r\n    <div>\r\n      \r\n      <h1>Appointment Page</h1>\r\n    </div>\r\n  )\r\n}\r\n\r\nexport default Appointment\r\n"
+        }
+    ]
+}

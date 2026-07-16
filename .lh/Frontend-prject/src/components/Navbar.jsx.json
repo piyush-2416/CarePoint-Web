@@ -1,0 +1,38 @@
+{
+    "sourceFile": "Frontend-prject/src/Components/Navbar.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 5,
+            "patches": [
+                {
+                    "date": 1776316671783,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1781072085031,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,15 +1,15 @@\n  import React from 'react'\r\n import { Link } from 'react-router-dom'\r\n- \r\n+ import { useState } from 'react'\r\n  function Navbar() {\r\n    return (\r\n      <div>\r\n         <div className=\"Navbar\">\r\n         <Link className={\"home\"} to=\"/\">Home</Link>{\"\"}\r\n         <Link className={\"about\"} to=\"/about\">About</Link>{\" \"}\r\n         <Link className={\"contact\"} to=\"/contact\">Contact</Link>\r\n-      <div>  <Link className={\"Shop\"} to=\"/Shop\">🛍️</Link>\r\n+      <div>  <Link className={\"Shop\"} to=\"/Shop\">🛍️{add}</Link>\r\n        <Link className={\"Login\"} to=\"/Login\">Login</Link></div>\r\n \r\n       </div>\r\n      </div>\r\n"
+                },
+                {
+                    "date": 1781072115016,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,9 @@\n         <div className=\"Navbar\">\r\n         <Link className={\"home\"} to=\"/\">Home</Link>{\"\"}\r\n         <Link className={\"about\"} to=\"/about\">About</Link>{\" \"}\r\n         <Link className={\"contact\"} to=\"/contact\">Contact</Link>\r\n-      <div>  <Link className={\"Shop\"} to=\"/Shop\">🛍️{add}</Link>\r\n+      <div>  <Link className={\"Shop\"} to=\"/Shop\">🛍️0</Link>\r\n        <Link className={\"Login\"} to=\"/Login\">Login</Link></div>\r\n \r\n       </div>\r\n      </div>\r\n"
+                },
+                {
+                    "date": 1781072145651,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,9 @@\n         <div className=\"Navbar\">\r\n         <Link className={\"home\"} to=\"/\">Home</Link>{\"\"}\r\n         <Link className={\"about\"} to=\"/about\">About</Link>{\" \"}\r\n         <Link className={\"contact\"} to=\"/contact\">Contact</Link>\r\n-      <div>  <Link className={\"Shop\"} to=\"/Shop\">🛍️0</Link>\r\n+      <div>  <Link className={\"Shop\"} to=\"/Shop\">🛍️ooooo</Link>\r\n        <Link className={\"Login\"} to=\"/Login\">Login</Link></div>\r\n \r\n       </div>\r\n      </div>\r\n"
+                },
+                {
+                    "date": 1782408212214,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -28,13 +28,13 @@\n About      <span className=\"badge badge-xs badge-primary indicator-item\"></span>\r\n       </div>\r\n     </button> |\r\n     </Link> \r\n-  <button className=\"btn-outline btn btn-ghost\">\r\n+<Link>  <button className=\"btn-outline btn btn-ghost\">\r\n       <div className=\"indicator\">\r\n Medicine      <span className=\"badge badge-xs badge-primary indicator-item\"></span>\r\n       </div>\r\n-    </button>  </div>\r\n+    </button></Link>  </div>\r\n   <div className=\"navbar-end\">\r\n     <button className=\"btn btn-ghost btn-circle\">\r\n 📅    </button>\r\n  <button className=\"btn btn-ghost btn-circle\">\r\n"
+                },
+                {
+                    "date": 1782408275464,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,58 @@\n+ import React from 'react'\r\n+import { Link } from 'react-router-dom'\r\n+ import { useState } from 'react'\r\n+ import About from './About'\r\n+//  import { BrowserRouter, Routes, Route } from \"react-router-dom\";\r\n+ import Doctors from '../Pages/Doctors'\r\n+ function Navbar() {\r\n+   return (\r\n+     <div>\r\n+         \r\n+  <div className=\"bg-base-100 shadow-sm navbar\">\r\n+  <div className=\"navbar-start\">\r\n+    <div className=\"dropdown\">\r\n+        <Link to=\"/\"><a className=\"text-xl btn btn-ghost\">CarePoint</a>\r\n+</Link> \r\n+       \r\n+    </div>\r\n+  </div>\r\n+  <div className=\"navbar-center\">\r\n+   <Link to=\"/Doctors\"> <button className=\"btn-outline btn btn-ghost\">\r\n+      <div className=\"indicator\">\r\n+Doctor       <span className=\"badge badge-xs badge-primary indicator-item\"></span>\r\n+      </div>\r\n+    </button> </Link>|  \r\n+      <Link to=\"/About\">\r\n+       <button className=\"btn-outline btn btn-ghost\">\r\n+      <div className=\"indicator\">\r\n+About      <span className=\"badge badge-xs badge-primary indicator-item\"></span>\r\n+      </div>\r\n+    </button> |\r\n+    </Link> \r\n+<Link to=\"/Medicines\">  <button className=\"btn-outline btn btn-ghost\">\r\n+      <div className=\"indicator\">\r\n+Medicine      <span className=\"badge badge-xs badge-primary indicator-item\"></span>\r\n+      </div>\r\n+    </button></Link>  </div>\r\n+  <div className=\"navbar-end\">\r\n+    <button className=\"btn btn-ghost btn-circle\">\r\n+📅    </button>\r\n+ <button className=\"btn btn-ghost btn-circle\">\r\n+      <div className=\"indicator\">\r\n+💊        <span className=\"badge badge-xs badge-primary indicator-item\"></span>\r\n+      </div>\r\n+    </button>\r\n+    <button className=\"btn btn-ghost btn-circle\">\r\n+      <div className=\"indicator\">\r\n+👤        <span className=\"badge badge-xs badge-primary indicator-item\"></span>\r\n+      </div>\r\n+    </button>\r\n+  </div>\r\n+</div>  \r\n+      {/* </div> */}\r\n+     </div>\r\n+   )\r\n+ }\r\n+ \r\n+ export default Navbar\r\n+ \n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1776316671782,
+            "name": "Commit-0",
+            "content": " import React from 'react'\r\nimport { Link } from 'react-router-dom'\r\n \r\n function Navbar() {\r\n   return (\r\n     <div>\r\n        <div className=\"Navbar\">\r\n        <Link className={\"home\"} to=\"/\">Home</Link>{\"\"}\r\n        <Link className={\"about\"} to=\"/about\">About</Link>{\" \"}\r\n        <Link className={\"contact\"} to=\"/contact\">Contact</Link>\r\n      <div>  <Link className={\"Shop\"} to=\"/Shop\">🛍️</Link>\r\n       <Link className={\"Login\"} to=\"/Login\">Login</Link></div>\r\n\r\n      </div>\r\n     </div>\r\n   )\r\n }\r\n \r\n export default Navbar\r\n "
+        }
+    ]
+}

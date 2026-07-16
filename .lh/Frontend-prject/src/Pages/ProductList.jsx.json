@@ -1,0 +1,22 @@
+{
+    "sourceFile": "Frontend-prject/src/Pages/ProductList.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1774934742766,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1774934808119,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,22 @@\n+ import { useEffect, useState } from \"react\";\r\n+import axios from \"axios\";\r\n+import ProductCard from \"./ProductCard\";\r\n+\r\n+function ProductList() {\r\n+  const [products, setProducts] = useState([]);\r\n+\r\n+  useEffect(() => {\r\n+    axios.get(\"http://localhost:3000/api/students\")\r\n+      .then(res => setProducts(res.data));\r\n+  }, []);\r\n+\r\n+  return (\r\n+    <>\r\n+      {products.map(item => (\r\n+        <ProductCard key={item._id} item={item} />\r\n+      ))}\r\n+    </>\r\n+  );\r\n+}\r\n+\r\n+export default ProductList;\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1774934742766,
+            "name": "Commit-0",
+            "content": " import { useEffect, useState } from \"react\";\r\nimport axios from \"axios\";\r\nimport ProductCard from \"./ProductCard\";\r\n\r\nfunction ProductList() {\r\n  const [products, setProducts] = useState([]);\r\n\r\n  useEffect(() => {\r\n    axios.get(\"http://localhost:3000/api/students\")\r\n      .then(res => setProducts(res.data));\r\n  }, []);\r\n\r\n  return (\r\n    <>\r\n      {products.map(item => (\r\n        <ProductCard key={item._id} item={item} />\r\n      ))}\r\n    </>\r\n  );\r\n}\r\n\r\nexport default ProductList;"
+        }
+    ]
+}

@@ -1,0 +1,58 @@
+{
+    "sourceFile": "Backend/package.json",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 10,
+            "patches": [
+                {
+                    "date": 1774113570702,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1774113580539,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n   },\n   \"keywords\": [],\n   \"author\": \"\",\n   \"license\": \"ISC\",\n-  \"type\": \"module\",\n+  \"type\": \"commonjs\",\n   \"dependencies\": {\n     \"cors\": \"^2.8.6\",\n     \"dotenv\": \"^17.3.1\",\n     \"express\": \"^5.2.1\",\n"
+                },
+                {
+                    "date": 1774114794326,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n   },\n   \"keywords\": [],\n   \"author\": \"\",\n   \"license\": \"ISC\",\n-  \"type\": \"commonjs\",\n+  \"type\": \"module\",\n   \"dependencies\": {\n     \"cors\": \"^2.8.6\",\n     \"dotenv\": \"^17.3.1\",\n     \"express\": \"^5.2.1\",\n"
+                },
+                {
+                    "date": 1774275591202,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,20 @@\n+{\n+  \"name\": \"backend\",\n+  \"version\": \"1.0.0\",\n+  \"description\": \"\",\n+  \"main\": \"server.js\",\n+  \"scripts\": {\n+    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n+  },\n+  \"keywords\": [],\n+  \"author\": \"\",\n+  \"license\": \"ISC\",\n+  \"type\": \"module\",\n+  \"dependencies\": {\n+    \"cors\": \"^2.8.6\",\n+    \"dotenv\": \"^17.3.1\",\n+    \"express\": \"^5.2.1\",\n+    \"mongoose\": \"^9.3.1\",\n+    \"nodemon\": \"^3.1.14\"\n+  }\n+}\n"
+                },
+                {
+                    "date": 1774336455740,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n {\n   \"name\": \"backend\",\n   \"version\": \"1.0.0\",\n   \"description\": \"\",\n-  \"main\": \"server.js\",\n+  \"main\": \"index.js\",\n   \"scripts\": {\n     \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n   },\n   \"keywords\": [],\n@@ -17,24 +17,4 @@\n     \"mongoose\": \"^9.3.1\",\n     \"nodemon\": \"^3.1.14\"\n   }\n }\n-{\n-  \"name\": \"backend\",\n-  \"version\": \"1.0.0\",\n-  \"description\": \"\",\n-  \"main\": \"server.js\",\n-  \"scripts\": {\n-    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n-  },\n-  \"keywords\": [],\n-  \"author\": \"\",\n-  \"license\": \"ISC\",\n-  \"type\": \"module\",\n-  \"dependencies\": {\n-    \"cors\": \"^2.8.6\",\n-    \"dotenv\": \"^17.3.1\",\n-    \"express\": \"^5.2.1\",\n-    \"mongoose\": \"^9.3.1\",\n-    \"nodemon\": \"^3.1.14\"\n-  }\n-}\n"
+                },
+                {
+                    "date": 1774414653325,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n {\n   \"name\": \"backend\",\n   \"version\": \"1.0.0\",\n   \"description\": \"\",\n-  \"main\": \"index.js\",\n+  \"main\": \"server.js\",\n   \"scripts\": {\n     \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n   },\n   \"keywords\": [],\n"
+                },
+                {
+                    "date": 1774415719627,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n {\n   \"name\": \"backend\",\n   \"version\": \"1.0.0\",\n   \"description\": \"\",\n-  \"main\": \"server.js\",\n+  \"main\": \"jokes.js\",\n   \"scripts\": {\n     \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n   },\n   \"keywords\": [],\n"
+                },
+                {
+                    "date": 1774416263188,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,20 @@\n+{\n+  \"name\": \"backend\",\n+  \"version\": \"1.0.0\",\n+  \"description\": \"\",\n+  \"main\": \"server.js\",\n+  \"scripts\": {\n+    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n+  },\n+  \"keywords\": [],\n+  \"author\": \"\",\n+  \"license\": \"ISC\",\n+  \"type\": \"module\",\n+  \"dependencies\": {\n+    \"cors\": \"^2.8.6\",\n+    \"dotenv\": \"^17.3.1\",\n+    \"express\": \"^5.2.1\",\n+    \"mongoose\": \"^9.3.1\",\n+    \"nodemon\": \"^3.1.14\"\n+  }\n+}\n"
+                },
+                {
+                    "date": 1774417503674,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,24 +17,4 @@\n     \"mongoose\": \"^9.3.1\",\n     \"nodemon\": \"^3.1.14\"\n   }\n }\n-{\n-  \"name\": \"backend\",\n-  \"version\": \"1.0.0\",\n-  \"description\": \"\",\n-  \"main\": \"jokes.js\",\n-  \"scripts\": {\n-    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n-  },\n-  \"keywords\": [],\n-  \"author\": \"\",\n-  \"license\": \"ISC\",\n-  \"type\": \"module\",\n-  \"dependencies\": {\n-    \"cors\": \"^2.8.6\",\n-    \"dotenv\": \"^17.3.1\",\n-    \"express\": \"^5.2.1\",\n-    \"mongoose\": \"^9.3.1\",\n-    \"nodemon\": \"^3.1.14\"\n-  }\n-}\n"
+                },
+                {
+                    "date": 1774965959801,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,12 +8,13 @@\n   },\n   \"keywords\": [],\n   \"author\": \"\",\n   \"license\": \"ISC\",\n-  \"type\": \"module\",\n+  \"type\": \"commonjs\",\n   \"dependencies\": {\n     \"cors\": \"^2.8.6\",\n     \"dotenv\": \"^17.3.1\",\n+    \"ejs\": \"^5.0.1\",\n     \"express\": \"^5.2.1\",\n     \"mongoose\": \"^9.3.1\",\n     \"nodemon\": \"^3.1.14\"\n   }\n"
+                },
+                {
+                    "date": 1774969534675,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n   },\n   \"keywords\": [],\n   \"author\": \"\",\n   \"license\": \"ISC\",\n-  \"type\": \"commonjs\",\n+  \"type\": \"module\",\n   \"dependencies\": {\n     \"cors\": \"^2.8.6\",\n     \"dotenv\": \"^17.3.1\",\n     \"ejs\": \"^5.0.1\",\n"
+                }
+            ],
+            "date": 1774113570702,
+            "name": "Commit-0",
+            "content": "{\n  \"name\": \"backend\",\n  \"version\": \"1.0.0\",\n  \"description\": \"\",\n  \"main\": \"server.js\",\n  \"scripts\": {\n    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n  },\n  \"keywords\": [],\n  \"author\": \"\",\n  \"license\": \"ISC\",\n  \"type\": \"module\",\n  \"dependencies\": {\n    \"cors\": \"^2.8.6\",\n    \"dotenv\": \"^17.3.1\",\n    \"express\": \"^5.2.1\",\n    \"mongoose\": \"^9.3.1\",\n    \"nodemon\": \"^3.1.14\"\n  }\n}\n"
+        }
+    ]
+}

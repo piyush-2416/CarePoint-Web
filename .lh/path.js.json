@@ -1,0 +1,38 @@
+{
+    "sourceFile": "path.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 5,
+            "patches": [
+                {
+                    "date": 1772171838923,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1772172210939,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,2 +1,3 @@\n const path=require('path');\r\n-path.basename('c:\\\\temp\\\\myfile.html');\n\\ No newline at end of file\n+path.basename('C:\\\\temp\\\\myfile.html');\r\n+ \n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1772172251492,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,3 @@\n const path=require('path');\r\n path.basename('C:\\\\temp\\\\myfile.html');\r\n- \n\\ No newline at end of file\n+ console.log(path);\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1772172359526,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,3 @@\n const path=require('path');\r\n-path.basename('C:\\\\temp\\\\myfile.html');\r\n- console.log(path);\n\\ No newline at end of file\n+const a = path.basename('C:\\\\temp\\\\myfile.html');\r\n+ console.log(a);\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1772172554253,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,7 @@\n const path=require('path');\r\n const a = path.basename('C:\\\\temp\\\\myfile.html');\r\n- console.log(a);\n\\ No newline at end of file\n+const a1 =path.dirname('/foo/bar/baz/asdf/quux');\r\n+\r\n+\r\n+ console.log(a);\r\n+  console.log(a1);\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1772172581343,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n const path=require('path');\r\n const a = path.basename('C:\\\\temp\\\\myfile.html');\r\n-const a1 =path.dirname('/foo/bar/baz/asdf/quux');\r\n+const a1 =path.dirname('C:\\\\temp\\\\myfile.html');\r\n \r\n \r\n  console.log(a);\r\n   console.log(a1);\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1772171838923,
+            "name": "Commit-0",
+            "content": "const path=require('path');\r\npath.basename('c:\\\\temp\\\\myfile.html');"
+        }
+    ]
+}

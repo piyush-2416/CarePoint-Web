@@ -1,0 +1,18 @@
+{
+    "sourceFile": "package.json",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1772173933886,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1772173933886,
+            "name": "Commit-0",
+            "content": "{\n  \"name\": \"node\",\n  \"version\": \"1.0.0\",\n  \"description\": \"My first Node.js project\",\n  \"license\": \"ISC\",\n  \"author\": \"Piyush\",\n   \"type\":\"module\",\n  \"main\": \"index.js\",\n  \"scripts\": {\n    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n  },\n  \"keywords\": [],\n  \"dependencies\": {\n    \"express\": \"^5.2.1\"\n  },\n  \"devDependencies\": {\n    \"nodemon\": \"^3.1.14\"\n  }\n}\n"
+        }
+    ]
+}

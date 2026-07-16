@@ -1,0 +1,22 @@
+{
+    "sourceFile": "Backend/Routes/ProductRoutes.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1774965957772,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1774969285574,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,18 @@\n+import express from \"express\";\r\n+import Product from \"../models/Product.js\";\r\n+\r\n+const router = express.Router();\r\n+\r\n+// ✅ Get all products\r\n+router.get(\"/\", async (req, res) => {\r\n+  const products = await Product.find();\r\n+  res.json(products);\r\n+});\r\n+\r\n+// ✅ Get single product\r\n+router.get(\"/:id\", async (req, res) => {\r\n+  const product = await Product.findById(req.params.id);\r\n+  res.json(product);\r\n+});\r\n+\r\n+export default router;\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1774965957772,
+            "name": "Commit-0",
+            "content": "import express from \"express\"\r\nconst router = express.Router();\r\nconst Product = require(\"../models/Product\");\r\n\r\n// GET all products\r\nrouter.get(\"/\", async (req, res) => {\r\n  const products = await Product.find();\r\n  res.json(products);\r\n});\r\n\r\n// GET single product by ID\r\nrouter.get(\"/:id\", async (req, res) => {\r\n  const product = await Product.findById(req.params.id);\r\n  res.json(product);\r\n});\r\n\r\nmodule.exports = router;"
+        }
+    ]
+}

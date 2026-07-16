@@ -1,0 +1,42 @@
+{
+    "sourceFile": "Frontend-prject/src/Pages/Schemes.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 6,
+            "patches": [
+                {
+                    "date": 1782753686797,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1782753714508,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,13 @@\n+import React from 'react'\r\n+import Navbar from '../Components/Navbar'\r\n+import { Link } from 'react-router-dom'\r\n+function Schemes() {\r\n+  return (\r\n+    <div>\r\n+        <Navbar/>\r\n+      <h1>Goverment-Schemes</h1>\r\n+    </div>\r\n+  )\r\n+}\r\n+\r\n+export default Schemes\r\n"
+                },
+                {
+                    "date": 1783620383952,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,24 +1,13 @@\n import React from 'react'\r\n import Navbar from '../Components/Navbar'\r\n-import { Link } from 'react-router-dom'\r\n+// import { Link } from 'react-router-dom'\r\n function Schemes() {\r\n   return (\r\n     <div>\r\n         <Navbar/>\r\n-      <h1>Goverment-Schemes</h1>\r\n+      <img src=\"https://static.toiimg.com/thumb/msid-110268129,imgsize-41358,width-400,resizemode-4/110268129.jpg\"/>\r\n     </div>\r\n   )\r\n }\r\n \r\n export default Schemes\r\n-import React from 'react'\r\n-\r\n-function Schemes() {\r\n-  return (\r\n-    <div>\r\n-      <h1>Goverment-Schemes</h1>\r\n-    </div>\r\n-  )\r\n-}\r\n-\r\n-export default Schemes\r\n"
+                },
+                {
+                    "date": 1783620411087,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,10 +4,11 @@\n function Schemes() {\r\n   return (\r\n     <div>\r\n         <Navbar/>\r\n+        <div className='schemes-img'>\r\n       <img src=\"https://static.toiimg.com/thumb/msid-110268129,imgsize-41358,width-400,resizemode-4/110268129.jpg\"/>\r\n-    </div>\r\n+  </div>  </div>\r\n   )\r\n }\r\n \r\n export default Schemes\r\n"
+                },
+                {
+                    "date": 1783620424673,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,9 @@\n function Schemes() {\r\n   return (\r\n     <div>\r\n         <Navbar/>\r\n-        <div className='schemes-img'>\r\n+        <div className='schemes-sec'>\r\n       <img src=\"https://static.toiimg.com/thumb/msid-110268129,imgsize-41358,width-400,resizemode-4/110268129.jpg\"/>\r\n   </div>  </div>\r\n   )\r\n }\r\n"
+                },
+                {
+                    "date": 1783620552952,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,14 @@\n+import React from 'react'\r\n+import Navbar from '../Components/Navbar'\r\n+// import { Link } from 'react-router-dom'\r\n+function Schemes() {\r\n+  return (\r\n+    <div>\r\n+        <Navbar/>\r\n+        <div className='schemes-sec'>\r\n+      <img src=\"https://static.toiimg.com/thumb/msid-110268129,imgsize-41358,width-400,resizemode-4/110268129.jpg\"/>\r\n+  </div>  </div>\r\n+  )\r\n+}\r\n+\r\n+export default Schemes\r\n"
+                },
+                {
+                    "date": 1783620584893,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,18 +11,4 @@\n   )\r\n }\r\n \r\n export default Schemes\r\n-import React from 'react'\r\n-import Navbar from '../Components/Navbar'\r\n-// import { Link } from 'react-router-dom'\r\n-function Schemes() {\r\n-  return (\r\n-    <div>\r\n-        <Navbar/>\r\n-        <div className='schemes-sec'>\r\n-      <img src=\"https://static.toiimg.com/thumb/msid-110268129,imgsize-41358,width-400,resizemode-4/110268129.jpg\"/>\r\n-  </div>  </div>\r\n-  )\r\n-}\r\n-\r\n-export default Schemes\r\n"
+                }
+            ],
+            "date": 1782753686796,
+            "name": "Commit-0",
+            "content": "import React from 'react'\r\n\r\nfunction Schemes() {\r\n  return (\r\n    <div>\r\n      <h1>Goverment-Schemes</h1>\r\n    </div>\r\n  )\r\n}\r\n\r\nexport default Schemes\r\n"
+        }
+    ]
+}

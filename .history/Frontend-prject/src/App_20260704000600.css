@@ -1,0 +1,195 @@
+ @plugin "daisyui";
+ /* .main-sec img{
+   height:25rem;
+  width:100%;
+}  */
+  
+.content{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  color:white;
+}
+.Doctors-image img{
+height: 22rem;
+width:100%;
+      filter: brightness(60%) contrast(110%);
+
+}
+ 
+.main-sec img{
+      background-image: url("carepoint.jpg");
+      width: 70rem;
+      /* filter: brightness(90%) contrast(110%); */
+      object-fit: cover;
+      height: 30rem;
+      color: darkred;
+      background-size: cover;
+      background-position: center;
+    display: flex;
+
+}.emergency-image img {
+  height: 15rem;
+  width:100%;
+
+}.emergency-image {
+  background-color:beige;
+  height:19rem;
+
+}
+
+.emergency-image button1{
+    color:white;
+  border:2px solid  red;
+  /* padding:1rem; */
+  background-color:red;
+  position:relative;right:1rem;padding:0.5rem;
+  border-radius:2rem;font-size: 19px;
+}
+.emergency-image button2{
+    color:white;
+  border:2px solid  skyblue;
+
+  /* padding:1rem; */
+  background-color:skyblue;
+  position:relative;right:1rem;padding:0.5rem;
+  border-radius:2rem;font-size: 19px;
+}
+.emergency-image button3{
+    color:black;
+  border:2px solid  black;
+  /* padding:1rem; */
+  background-color:white;
+  position:relative;right:1rem;padding:0.5rem;
+  border-radius:2rem;font-size: 19px;
+}
+.emergency-image button4{
+    color:white;
+  border:2px solid firebrick ;
+  /* padding:1rem; */
+  background-color:firebrick;
+  position:relative;right:1rem;padding:0.5rem;
+  border-radius:2rem;font-size: 19px;
+}
+.emergency-image ul {
+  display:flex;
+ position: absolute;
+ left:15rem;
+ gap:1rem;
+ /* bottom:2rem; */
+}
+.service-sec img{
+  width:29rem;position: relative;
+  left:2rem;
+  border-radius: 2rem;
+  height:20rem;border:2px solid darkgray;
+}
+.service-sec ul{
+  display:flex;
+}
+.service-sec input{
+  position: absolute;
+  left:10rem;
+}
+    .dropdown a{
+color: white;
+
+}body{
+  background: linear-gradient(
+    to right,
+    #f8ffff,
+    #e8f9f9
+  );
+}
+.problem-sec ul li img{
+  width:12rem;
+  height:10rem;
+ border:2px solid darkturquoise;
+border-radius:10rem;
+}
+.problem-sec ul{
+  display:flex;
+  gap:0.5rem;
+  /* border: 1px solid black; */
+}
+.navbar{
+background-color: darkturquoise;
+}
+.navbar-center{
+  gap:1rem;
+}
+.navbar-center button{color:white;
+/* border:1.3px solid white; */
+/* border:1.5px solid white; */
+font-size:25px;
+}
+.emergency-sec{
+  display:flex;
+  
+}
+.emergency-sec img{
+  width:29rem;position: relative;
+  left:2rem;
+  border-radius: 2rem;
+  height:20rem;border:2px solid darkgray;
+}
+.About-section img{
+    width:25rem;
+    border-radius: 8rem 2rem 3rem 4rem;
+    height:28rem;
+    /*padding:1rem;*/
+
+ }.About-section {
+    display: flex;
+    padding:0.2rem;
+
+   }
+.emergency-sec p{
+  position: relative;
+  top:0rem;
+  background-color: darkturquoise;
+  left:7rem;color:white;
+  padding:1rem;
+  font-size:20px;
+  /* gap:5rem; */
+  height:23rem;
+  width:20rem;border:1.8px solid black;
+  border-radius:2rem;
+}.emergency-sec p button{
+  color:black;
+  border:2px solid  white;
+  /* padding:1rem; */
+  background-color:white;
+  position:relative;left:1.7rem;
+  border-radius:2rem;font-size: 17px;
+  padding: 0.3rem;
+}.emergency-sec p button2{
+  color:white;
+  border:2px solid  red;
+  /* padding:1rem; */
+  background-color:red;
+  position:relative;right:1rem;padding:0.5rem;
+  border-radius:2rem;font-size: 19px;
+}
+.doctor-sec button{
+  font-size:2rem;
+
+}
+.doctor-sec{
+  overflow:hidden;
+}
+.health-tips-sec img{
+width:29rem;
+height:20rem;border:1px solid darkturquoise;
+border-radius:2rem;
+}
+.health-tips-sec{
+  display:flex;
+  padding:1rem;
+}.Accordion{
+  background-color: darkturquoise;
+  position:relative;
+  top:1rem;
+}

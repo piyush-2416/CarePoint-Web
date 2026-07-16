@@ -1,0 +1,14 @@
+ @plugin "daisyui";
+.main-sec img{
+  height:25rem;
+  width:100%;
+}
+.problem-sec ul li img{
+  width:15rem;
+  height:15rem;
+ 
+
+}
+.problem-sec ul{
+  display:flex;
+}

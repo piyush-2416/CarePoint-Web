@@ -1,0 +1,36 @@
+ @plugin "daisyui";
+.main-sec img{
+  height:25rem;
+  width:100%;
+}
+.problem-sec ul li img{
+  width:12rem;
+  height:10rem;
+ border:1px solid darkturquoise;
+border-radius:10rem;
+}
+.problem-sec ul{
+  display:flex;
+  gap:0.5rem;
+  /* border: 1px solid black; */
+}
+.navbar{
+background-color: darkturquoise;
+}
+.emergency-sec{
+  display:flex;
+}
+.emergency-sec img{
+  width:20rem;position: relative;
+  left:2rem;
+  height:20rem;border:2px solid darkgray;
+}
+.emergency-sec p{
+  position: relative;
+  top:5rem;
+  background-color: darkturquoise;
+  left:8rem;
+  font-size:20px;
+  gap:5rem;
+  height:10px;
+}

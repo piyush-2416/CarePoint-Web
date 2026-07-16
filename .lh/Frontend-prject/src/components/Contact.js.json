@@ -1,0 +1,18 @@
+{
+    "sourceFile": "Frontend-prject/src/components/Contact.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1774685867698,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1774685867698,
+            "name": "Commit-0",
+            "content": "function Contact() {\r\n    return (\r\n        <>\r\n\r\n            <div className={\"contact-sec\"}>\r\n                <ul className={\"section-1\"}>\r\n                <h3>Quick Link</h3>\r\n                <p>Home</p>\r\n                <p>Address</p>\r\n                <p>Contact</p>\r\n                <p>About</p>\r\n                <p>Shop</p>\r\n                    <p>Review</p></ul>\r\n                <br/> <ul  className={\"section-2\"}>\r\n                <h3>Follow Us</h3>\r\n                <p><i  className=\"fa-brands fa-square-instagram\"\r\n                ></i>Instagram</p>\r\n                <p><i className=\"fa-brands fa-square-twitter\"></i> Twitter</p>\r\n                <p><i className=\"fa-brands fa-linkedin\"></i> Linkedin</p>\r\n                <p><i className=\"fa-brands fa-facebook\"></i>Facebook</p>\r\n                <p><i className=\"fa-brands fa-square-whatsapp\"></i>Whatsapp</p></ul>\r\n                <br/>\r\n              <ul  className={\"section-3\"}>  <h2>Newsletter</h2>\r\n                <h4>Don't miss any offer</h4>\r\n                <input className=\"secc\" placeholder=\"Enter your Name\"/><br/>\r\n                <input className=\"secd\" placeholder=\"Enter your Number \"/><br/>\r\n                <input className=\"secd\" placeholder=\"Enter your E-Mail Address \"/><br/>\r\n                <input className=\"secd\" placeholder=\"Enter your current-Addres \"/><br/>\r\n            </ul>\r\n\r\n            </div>\r\n        </>)\r\n}\r\n\r\nexport default Contact;"
+        }
+    ]
+}

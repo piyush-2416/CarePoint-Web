@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../../../../SecodeMern-Project"
+		},
+		{
+			"path": "../../.."
+		},
+		{
+			"path": "../../../../../Doctor-Appointment-mern-web"
+		}
+	],
+	"settings": {}
+}

@@ -1,0 +1,55 @@
+import React from 'react'
+import "./App.css";
+function App() {
+  return (
+    <>
+<div className="shadow-sm bg-base-100 navbar">
+  <div className="navbar-start">
+    <div className="dropdown">
+      <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h7" /> </svg>
+      </div>
+      <ul
+        tabIndex="-1"
+        className="p-2 mt-3 shadow z-1 bg-base-100 rounded-box w-52 menu menu-sm dropdown-content">
+        <li><a>Homepage</a></li>
+        <li><a>Portfolio</a></li>
+        <li><a>About</a></li>
+      </ul>
+    </div>
+  </div>
+  <div className="navbar-center">
+    <a className="text-xl btn btn-ghost">CarePoint</a>
+  </div>
+  <div className="navbar-end">
+    <button className="btn btn-ghost btn-circle">
+      <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /> </svg>
+    </button>
+    <button className="btn btn-ghost btn-circle">
+      <div className="indicator">
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /> </svg>
+        <span className="badge badge-xs badge-primary indicator-item"></span>
+      </div>
+    </button>
+  </div>
+</div>  
+<div  className="main-sec">
+<img  src="https://www.teahub.io/photos/full/175-1758988_doctors-images-hd.jpg"/></div> 
+
+
+<h1>Find by Speciality</h1>
+<p>For different Problem We have multiple Solutions</p>
+<ul><li><img src="https://static.vecteezy.com/system/resources/previews/002/143/996/large_2x/medical-doctor-general-practitioner-physician-cartoon-illustration-vector.jpg"/> </li>
+  <li><img src="https://thumbs.dreamstime.com/b/pediatrician-examining-baby-cartoon-illustration-depicting-doctor-wearing-light-blue-coat-stethoscope-looking-393242186.jpg"/></li>
+  <li><img src="https://thf.bing.com/th?id=OIF.L%2bLp%2brzx3Xy7U8EHrB17uQ&cb=thfc1falcon2&rs=1&pid=ImgDetMain&o=7&rm=3"/></li>
+  <li><img src="https://media.istockphoto.com/id/1423372814/vector/traumatology-examines-and-bandages-childs-broken-leg-treatment-in-hospital.jpg?s=612x612&w=0&k=20&c=FZUUcVrwk5uWxqP0XmE0XsGrrfihhrjAC2-vaA9Y7F4="/></li> <li></li>
+  <li><img src=""/></li>
+  <li></li>
+  </ul>
+
+ </>
+  )
+}
+
+
+export default App

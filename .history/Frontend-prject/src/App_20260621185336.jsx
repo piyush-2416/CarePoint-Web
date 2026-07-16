@@ -1,0 +1,22 @@
+import React from 'react'
+import "./App.css";
+import { Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./Pages/Home.jsx";
+
+function App() {
+  return (
+    <>
+      <BrowserRouter>
+     <Routes>
+        <Route path="/" element={<Home />} />
+       {/* <Route path='/sidebad' element={<Sidebar/>}/> */}
+
+      </Routes>
+    </BrowserRouter>
+ </>
+  )
+}
+
+
+export default App

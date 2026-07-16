@@ -1,0 +1,46 @@
+{
+    "sourceFile": "fsmodule.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 7,
+            "patches": [
+                {
+                    "date": 1772173759629,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1772174002411,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,6 @@\n const fs = require('node:fs');\r\n-fs.readFile('file.txt','utf8');\r\n+fs.readFile('data.txt','utf8');\r\n (err,data)=>{\r\n     console.log(err,data)\r\n }\r\n console.log(\"finished reading file\");\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1772174040883,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,12 @@\n-const fs = require('node:fs');\r\n-fs.readFile('data.txt','utf8');\r\n-(err,data)=>{\r\n-    console.log(err,data)\r\n-}\r\n-console.log(\"finished reading file\");\n\\ No newline at end of file\n+import fs from 'fs';\r\n+\r\n+// readFile method\r\n+fs.readFile('data.txt', 'utf8', (err, data) => {\r\n+    if (err) {\r\n+        console.log(\"Error:\", err);\r\n+        return;\r\n+    }\r\n+\r\n+    console.log(\"File Content:\");\r\n+    console.log(data);\r\n+});\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1772174068811,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import fs from 'fs';\r\n \r\n // readFile method\r\n-fs.readFile('data.txt', 'utf8', (err, data) => {\r\n+fs.readFile('text.txt', 'utf8', (err, data) => {\r\n     if (err) {\r\n         console.log(\"Error:\", err);\r\n         return;\r\n     }\r\n"
+                },
+                {
+                    "date": 1772174958829,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,12 +1,15 @@\n-import fs from 'fs';\r\n+// import fs from 'fs';\r\n \r\n // readFile method\r\n-fs.readFile('text.txt', 'utf8', (err, data) => {\r\n-    if (err) {\r\n-        console.log(\"Error:\", err);\r\n-        return;\r\n-    }\r\n+// fs.readFile('text.txt', 'utf8', (err, data) => {\r\n+//     if (err) {\r\n+//         console.log(\"Error:\", err);\r\n\\ No newline at end of file\n+//         return;\r\n+//     }\r\n \r\n-    console.log(\"File Content:\");\r\n-    console.log(data);\r\n-});\n+//     console.log(\"File Content:\");\r\n+//     console.log(data);\r\n+// });\r\n+ const fs=require('fs');\r\n+ fs.readFile('data.txt','utf8',(err,data)=>{console.log(err,data)})\r\n+ console.log(\"finished reading file\");\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1772174984068,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,7 +9,7 @@\n \r\n //     console.log(\"File Content:\");\r\n //     console.log(data);\r\n // });\r\n- const fs=require('fs');\r\n+ const fs= Require('fs');\r\n  fs.readFile('data.txt','utf8',(err,data)=>{console.log(err,data)})\r\n  console.log(\"finished reading file\");\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1772175120622,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,15 +1,15 @@\n-// import fs from 'fs';\r\n+import fs from 'fs';\r\n \r\n // readFile method\r\n-// fs.readFile('text.txt', 'utf8', (err, data) => {\r\n-//     if (err) {\r\n-//         console.log(\"Error:\", err);\r\n-//         return;\r\n-//     }\r\n+fs.readFile('text.txt', 'utf8', (err, data) => {\r\n+    if (err) {\r\n+        console.log(\"Error:\", err);\r\n+        return;\r\n+    }\r\n \r\n\\ No newline at end of file\n-//     console.log(\"File Content:\");\r\n-//     console.log(data);\r\n-// });\r\n- const fs= Require('fs');\r\n- fs.readFile('data.txt','utf8',(err,data)=>{console.log(err,data)})\r\n- console.log(\"finished reading file\");\n+    console.log(\"File Content:\");\r\n+    console.log(data);\r\n+});\r\n+//  const fs= Require('fs');\r\n+//  fs.readFile('data.txt','utf8',(err,data)=>{console.log(err,data)})\r\n+//  console.log(\"finished reading file\");\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1772175142942,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import fs from 'fs';\r\n \r\n // readFile method\r\n-fs.readFile('text.txt', 'utf8', (err, data) => {\r\n+fs.readFile('data.txt', 'utf8', (err, data) => {\r\n     if (err) {\r\n         console.log(\"Error:\", err);\r\n         return;\r\n     }\r\n"
+                }
+            ],
+            "date": 1772173759629,
+            "name": "Commit-0",
+            "content": "const fs = require('node:fs');\r\nfs.readFile('file.txt','utf8');\r\n(err,data)=>{\r\n    console.log(err,data)\r\n}\r\nconsole.log(\"finished reading file\");"
+        }
+    ]
+}

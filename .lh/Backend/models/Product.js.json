@@ -1,0 +1,18 @@
+{
+    "sourceFile": "Backend/models/Product.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1774969263697,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1774969263697,
+            "name": "Commit-0",
+            "content": "import mongoose from \"mongoose\";\r\n\r\nconst productSchema = new mongoose.Schema({\r\n  name: String,\r\n  price: Number,\r\n  image: String,\r\n  description: String\r\n});\r\n\r\nexport default mongoose.model(\"Product\", productSchema);"
+        }
+    ]
+}

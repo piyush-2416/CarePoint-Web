@@ -1,0 +1,18 @@
+{
+    "sourceFile": "Frontend-prject/src/Pages/Product.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1776318057012,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1776318057012,
+            "name": "Commit-0",
+            "content": "\r\n \r\nimport { useEffect, useState } from \"react\";\r\nimport { useParams, Link } from \"react-router-dom\";\r\nimport axios from \"axios\";\r\n\r\nfunction Product() {\r\n  const { id } = useParams([]);\r\n  const [product, setProduct] = useState([]);   // ✅ null, not []\r\n  const [loading, setLoading] = useState(true);   // ✅ true, not false\r\n\r\n  useEffect(() => {\r\n    axios\r\n      .get(`http://localhost:3000/api/products/${id}`)\r\n     .then((res) => {\r\n  console.log(\"Data aaya:\", res.data); // ✅ Debug ke liye\r\n  setProduct(res.data);  // res.data directly product object hai\r\n  setLoading(false);\r\n})\r\n      .catch((err) => {\r\n        console.log(err);\r\n        setLoading(false);\r\n      });\r\n  }, [id]);\r\n\r\n  if (loading) {\r\n    return (\r\n      <h2 style={{ textAlign: \"center\", marginTop: \"50px\" }}>\r\n        Loading...\r\n      </h2>\r\n    );\r\n  }\r\n\r\n  if (!product) {\r\n    return (\r\n      <h2 style={{ textAlign: \"center\", marginTop: \"50px\", color: \"red\" }}>\r\n        Product nahi mila!\r\n      </h2>\r\n    );\r\n  }\r\n\r\n  return (\r\n   <>\r\n  <p>{product.name}piyush ver</p>\r\n   <h3 style={{ margin: \"10px 0 5px\" }}>{product.description}shagun</h3>\r\n\r\n  <img src={product.imagesss} alt=\"\"/>\r\n<h1>{product.name}piyush</h1>\r\n\r\n<button>{product.Price}hmm</button>\r\n\r\n   </>\r\n  );\r\n}\r\n\r\nexport default Product;"
+        }
+    ]
+}
