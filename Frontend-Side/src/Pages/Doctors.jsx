@@ -45,7 +45,7 @@ const [loading, setLoading] = useState(true);   // 👈 ye add karo
         >
           {products.map((product) => (
             // 👇 Click karo toh /product/:id pe jayega
-            <Link
+            <Link    
   to={`/products/${product._id}`}   
               key={product._id}
               style={{ textDecoration: "none", color: "black" }}
@@ -103,7 +103,7 @@ const [loading, setLoading] = useState(true);   // 👈 ye add karo
                   </p>
                 )}
                 <p></p>
-                <button className="card-btn">Details</button>
+                <button style={{backgroundColor:"darkturquoise",borderRadius:"5rem",padding:"4px"}}>View Profile</button>
               </div>
             </Link>
           ))}
