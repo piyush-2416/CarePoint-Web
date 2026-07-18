@@ -269,6 +269,14 @@ color: white;
     #e8f9f9
   );
 }
+.Doctor-card ul {
+display:flex;
+gap:3rem;
+}
+.Doctor-card ul doclistsec{
+  position: absolute;
+  top:15rem;
+} 
 .problem-sec ul li img{
   width:12rem;
   height:10rem;
@@ -308,12 +316,18 @@ font-size:25px;
     width:25rem;
     border-radius: 8rem 2rem 3rem 4rem;
     height:28rem;
+  
     /*padding:1rem;*/
 
  }.About-section {
     display: flex;
     padding:0.2rem;
 
+   }
+   .Doctor-About{
+    width:70%;
+    height:60%;
+    background-color:dodgerblue;
    }
 .emergency-sec p{
   position: relative;
