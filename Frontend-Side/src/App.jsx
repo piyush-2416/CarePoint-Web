@@ -26,10 +26,10 @@ function App() {
           <Route path="/Login" element={<Login />} />
           <Route path="/Emergency" element={<Emergency />} />
           <Route path="/Schemes" element={<Schemes />} />
-          {/* <Route path="/Appointment" element={<Appointment />} /> */}
+          <Route path="/Appointment" element={<Appointment />} />
           <Route path="/Medicines" element={<Medicines />} />
        <Route path="/Signin" element={<SignIn />} />
-<Route path="/Appointment/:id" element={<Appointment />} /> 
+<Route path="/Doctorid/:id" element={<Doctorid />} /> 
 
 <Route path="/products/:id" element={<ProductPage />} /> 
         </Routes>
