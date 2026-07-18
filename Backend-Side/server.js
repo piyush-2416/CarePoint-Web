@@ -156,7 +156,7 @@ app.get("/api/products/:id", async (req, res) => {
   }
 });
 // // ✅ Route 2: Single product by ID (Product detail page ke liye)
-app.get("/api/Appointment/:id", async (req, res) => {
+app.get("/api/Doctorid/:id", async (req, res) => {
   try {
     const productId = req.params.id;
 
