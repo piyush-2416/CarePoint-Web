@@ -6,13 +6,26 @@ import axios from "axios";
 import Appointment from "./Appointment";
 import Navbar from "../Components/Navbar";
 function Doctorid() {
-  const myTodo = "Buy groceries";
+  const myTodo =<div className="Todos-btn"> <ul ><li> <button
+  onClick={(event) => {
+    event.target.style.backgroundColor =
+      event.target.style.backgroundColor === "pink" ? "white" : "pink";
+  }}
+>
+  Mon <br />
+  20
+</button>
+ <button>Web<br/>22</button><button>Fri<br/>24</button> <button>Sat<br/>26</button></li> <li><button>2:00</button> <button>5:00</button><button>10:00</button> <button>1:00</button></li></ul><br/><button style={{border:" 2px solid gray"
+,borderRadius:" 2rem",
+fontSize:"17px",
+padding:"8px"}}>Submit</button></div>;
   const { id } = useParams(); // URL se product ID lega
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [todos, setTodos] = useState([]);
- 
+  //  const [color, setColor] = useState("black");
+
   const addTodo = () => {
     setTodos([...todos, { id: Date.now(), text: myTodo  }]  );
   
@@ -60,7 +73,7 @@ function Doctorid() {
     <Navbar/>
   <div style={{ padding: "20px", maxWidth: "200rem", margin: "0 auto" }}>
         {/* Product Card */}
-        <div
+<div
           className="Doctor-card"
           style={{
             border: "1px solid #ddd",
@@ -69,7 +82,8 @@ function Doctorid() {
             backgroundColor: "#fff",
             boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
           }}
-        >
+        >            <h2 style={{color:"skyblue"}}>Your Appointment</h2>
+
           <ul>
             <li>
               {/* Product Image */}
@@ -173,6 +187,7 @@ function Doctorid() {
         >
           Add Todo
         </button>
+        
       </div> */}
  
       <ul style={{ listStyle: "none", padding: 0 }}>
@@ -186,16 +201,16 @@ function Doctorid() {
               padding: "10px",
               borderBottom: "1px solid #eee",
             }}
-          >
+          >  
             <span>{t.text}</span>
           
           </li>
         ))}
       </ul>
  
-      {todos.length === 0 && (
+      {/* {todos.length === 0 && (
         <p style={{ textAlign: "center", color: "gray" }}>No tasks yet. Click "Add Todo" above!</p>
-      )}
+     )} */}
     </div>
         </div></>
   );
