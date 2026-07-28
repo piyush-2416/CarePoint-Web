@@ -1130,5 +1130,31 @@ display:table-column;
 
 .fc-ended-panel p {
   margin-bottom: 14px;
+  
   color: #9db3bf;
+}
+.appointment-todo  button{
+background-color: cornflowerblue;
+
+border-radius: 5rem;
+}
+.appointment-todo  {
+  width:50rem;
+  gap:90rem;
+  padding:0.2rem;
+  background-color: #087a6b;
+
+}.Todos-btn ul li button {
+border: 2px solid gray;
+border-radius: 2rem;
+font-size:17px;
+padding:8px;
+}
+.Todos-btn{
+  background-color:white;
+  width: 25rem;
+  height:15rem;
+  border-radius: 2rem;
+  padding:2rem;
+
 }
