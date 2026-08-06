@@ -268,10 +268,9 @@ function ProductPage() {
       <h1>About-sec</h1>
 
       <div className={"About-section"}>
-        <img
-          src={
-            "https://thumbs.dreamstime.com/b/hospital-isolated-transparent-background-360699901.jpg"
-          }
+        <img   
+          src={product.image}
+           
         />
         <a>
           <h2 style={{ color: "skyblue" }}>
