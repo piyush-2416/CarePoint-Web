@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-
+import Home from './Home';
+import Navbar from '../Components/Navbar';
+import { Link } from 'react-router-dom';
 export default function Signin() {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
@@ -97,12 +99,12 @@ export default function Signin() {
           <span className="cp-field__line" />
         </div>
 
-        <button type="submit" className="cp-submit" disabled={loading}>
+      <Link to="/">  <button type="submit" className="cp-submit" disabled={loading}>
           <span className={loading ? 'cp-submit__text cp-submit__text--hidden' : 'cp-submit__text'}>
             Sign In
           </span>
           {loading && <span className="cp-spinner" />}
-        </button>
+        </button></Link>
 
         <p className="cp-footer">
           Already have an account? <a href="#login">Log in instead</a>
