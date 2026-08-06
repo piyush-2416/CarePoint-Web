@@ -103,7 +103,7 @@ const [loading, setLoading] = useState(true);   // 👈 ye add karo
                   </p>
                 )}
                 <p></p>
-                <button style={{backgroundColor:"darkturquoise",borderRadius:"5rem",padding:"4px"}}>View Profile</button>
+                {/* <button style={{backgroundColor:"darkturquoise",borderRadius:"5rem",padding:"4px"}}>View Profile</button> */}
               </div>
             </Link>
           ))}
