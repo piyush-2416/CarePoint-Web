@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
  import Appointment from '../Pages/Appointment'
  import Schemes from '../Pages/Schemes'
  import SignIn from '../Pages/Signin'
+ import Profile from '../Pages/Profile'
 //  import { BrowserRouter, Routes, Route } from "react-router-dom";
  import Doctors from '../Pages/Doctors'
  function Navbar() {
@@ -48,7 +49,7 @@ Medicine      <span className="badge badge-xs badge-primary indicator-item"></sp
        <span className="badge badge-xs badge-primary indicator-item"></span>
       </div>
     </button></Link> */}
-   <Link to="/Signin"> <button1 className="btn btn-ghost btn-circle">
+   <Link to="/Profile"> <button1 className="btn btn-ghost btn-circle">
       <div className="indicator">
 👤        <span className="badge badge-xs badge-primary indicator-item"></span>
       </div>
