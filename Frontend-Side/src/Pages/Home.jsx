@@ -1,14 +1,9 @@
 import React from "react";
-//  import Sidebar from './sidebar';
-// import {Link} from "react-router-dom";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import Doctors from "./Doctors";
+import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../Components/Navbar";
-import Medicines from "./Medicines";
-import Schemes from "./Schemes";import Blogs from "../Components/Blogs";
-import SignIn from "./Signin";
+import Blogs from "../Components/Blogs";
 import HealthTips from "../Components/HealthTips";
-import Emergency from "./Emergency";
+
 import {
   FaUserMd,
   FaTint,
@@ -19,19 +14,9 @@ import {
   FaLinkedinIn,
   FaTwitter,
   FaHeart,
-  FaBrain,
-  FaCarCrash,
-  FaLungs,
-  FaBone,
-  FaBurn,
-  FaAllergies,
-  FaBaby,
   FaAmbulance,
-  FaUserInjured,
   FaEnvelope,
-  FaHeartbeat,
   FaHospital,
-  FaArrowRight,
   FaYoutube,
   FaChevronRight,
   FaPills,
@@ -41,6 +26,7 @@ import {
   FaLock,
   FaHeadset,
 } from "react-icons/fa";
+
 function Home() {
   const messages = [
     "🩺 Free Home Consultation*",
@@ -48,137 +34,361 @@ function Home() {
     "🧪 Lab Tests at ₹0 Booking Fee",
     "❤️ 24x7 Emergency Support",
   ];
-  // const [isOpen, setIsOpen] = useState(true);
+    const STATS = [
+    { n: "30+", l: "Years of Experience", icon: "🏆" },
+    { n: "15+", l: "Clinic Locations", icon: "🏥" },
+    { n: "100%", l: "Patient Satisfaction", icon: "😊" },
+  ];
+  const FACILITY_GROUPS = [
+    {
+      group: "Emergency",
+      icon: "🚨",
+      items: [
+        { icon: "🚑", label: "24/7 Ambulance", sub: "Rapid response fleet" },
+        { icon: "💉", label: "Emergency Services", sub: "Turant ilaaj, har samay" },
+        { icon: "🏥", label: "ICU & Critical Care", sub: "Advanced life support" },
+        { icon: "🩸", label: "Blood Bank", sub: "Sabhi blood groups" },
+      ],
+    },
+    {
+      group: "Diagnostics",
+      icon: "🔬",
+      items: [
+        { icon: "🔬", label: "Advanced Laboratory", sub: "Fast aur sahi reports" },
+        { icon: "🩻", label: "MRI & CT Scan", sub: "Modern imaging" },
+      ],
+    },
+    {
+      group: "Care",
+      icon: "🩺",
+      items: [
+        { icon: "🩺", label: "Multi-Specialty Care", sub: "Har bimari ke specialist" },
+        { icon: "❤️", label: "Cardiac Care Unit", sub: "Heart ki poori dekhbhal" },
+        { icon: "💊", label: "24/7 Pharmacy", sub: "Dawai hamesha available" },
+      ],
+    },
+    {
+      group: "Digital",
+      icon: "📱",
+      items: [
+        { icon: "📱", label: "Online Appointment", sub: "Ghar baithe booking" },
+        { icon: "🎥", label: "Video Consultation", sub: "Doctor se video par baat" },
+        { icon: "📄", label: "Digital Health Records", sub: "Reports hamesha saath" },
+      ],
+    },
+  ];
+  const SERVICES = [
+    { title: "Doctors", desc: "Best doctors dhundo aur appointment lo", icon: "🩺", to: "/doctors" },
+    { title: "Medicines", desc: "Dawaiyan online order karo", icon: "💊", to: "/medicines" },
+    { title: "AI Safety Planner", desc: "Emergency ke liye pehle se taiyari", icon: "🛡️", to: "/safety-planner", ai: true },
+    { title: "AI Safety Checker", desc: "Abhi ki situation ka khatra check karo", icon: "🔍", to: "/safety-checker", ai: true },
+    { title: "Document Wallet", desc: "Reports aur prescriptions ek jagah", icon: "📁", to: "/documents" },
+    { title: "Smart Contact List", desc: "Apno ke emergency contacts", icon: "👨‍👩‍👧", to: "/relatives" },
+    { title: "Government Schemes", desc: "Kin yojanaon ke liye eligible ho", icon: "🏛️", to: "/schemes" },
+    { title: "Need Help", desc: "Koi sawal ya dikkat? Hum madad karenge", icon: "💬", to: "/help" },
+  ];
 
+  const navigate = useNavigate();
+  const [facTab, setFacTab] = React.useState(0);
   return (
     <>
       <Navbar />
       <div className="main-sec">
         <img src="" alt="" />
-      </div>
-      <div style={{ backgroundColor: "rgb(82, 244, 190)" }}>
-        <ul style={{ display: "flex" ,padding:"1rem" ,position:"relative",left:"11rem",gap:"3rem"}}>
-          <h2 style={{color:"yellow"}}>
-            30+ <br />
+      </div>      <div className="main-sec"></div>
 
-            
-            Years of experiance
-          </h2>
-          <h2 style={{color:"purple"}}>
-            15+
-            <br />
-            Clinic Location
-          </h2>
-          <h2 style={{color:"dodgerblue"}}>
-            100% <br />
-            Paitient Satisfaction
-          </h2>
-        </ul>
+      {/* ================= Stats strip ================= */}
+      <div style={{ width: "100%", padding: "16px 12px", boxSizing: "border-box" }}>
+        <div
+          className="bg-white shadow-sm border border-emerald-100 rounded-2xl"
+          style={{
+            maxWidth: 900,
+            margin: "0 auto",
+            display: "flex",
+            alignItems: "stretch",
+            overflow: "hidden",
+            background: "linear-gradient(90deg, #ecfdf5, #f0fdfa)",
+          }}
+        >
+          {STATS.map((s, i) => (
+            <div
+              key={s.l}
+              style={{
+                flex: 1,
+                minWidth: 0,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
+                padding: "14px 6px",
+                borderLeft: i === 0 ? "none" : "1px solid #a7f3d0",
+              }}
+            >
+              <div style={{ fontSize: 20, lineHeight: 1, marginBottom: 6 }}>{s.icon}</div>
+              <div
+                className="font-extrabold text-emerald-700"
+                style={{ fontSize: "clamp(20px, 5vw, 30px)", lineHeight: 1.1 }}
+              >
+                {s.n}
+              </div>
+              <div
+                className="font-medium text-slate-600"
+                style={{ fontSize: "clamp(10px, 2.6vw, 13px)", marginTop: 4, lineHeight: 1.25 }}
+              >
+                {s.l}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-      <div className="problem-sec">
-        <h1>Find by Speciality</h1>
-        <p>For different Problem We have multiple Solutions</p>
-        <br />
-        <ul>
-          <li>
-            <img src="https://static.vecteezy.com/system/resources/previews/016/186/392/large_2x/optometrist-with-ophthalmologist-checks-patient-sight-optical-eye-test-and-spectacles-technology-in-flat-cartoon-hand-drawn-templates-illustration-vector.jpg" />{" "}
-          </li>
-          <li>
-            <img src="https://thumbs.dreamstime.com/b/pediatrician-examining-baby-cartoon-illustration-depicting-doctor-wearing-light-blue-coat-stethoscope-looking-393242186.jpg" />
-          </li>
-          <li>
-            <img src="https://img.freepik.com/premium-photo/male-female-cardiologists-examine-human-heart-with-magnifiers-illustration-flat-cartoon-design_717906-64135.jpg?w=2000" />
-          </li>
-          <li>
-            <img src="https://media.istockphoto.com/id/1423372814/vector/traumatology-examines-and-bandages-childs-broken-leg-treatment-in-hospital.jpg?s=612x612&w=0&k=20&c=FZUUcVrwk5uWxqP0XmE0XsGrrfihhrjAC2-vaA9Y7F4=" />
-          </li>{" "}
-          <li>
-            <img src="https://static.vecteezy.com/system/resources/previews/007/179/113/non_2x/doctor-dentist-cartoon-checking-boy-teeth-free-vector.jpg" />
-          </li>
-          {/* <li>
-            <img src="https://png.pngtree.com/png-clipart/20211116/original/pngtree-surgeon-doing-surgery-cartoon-png-image_6938397.png" />
-          </li> */}
-        </ul>
-      </div>{" "}
-      <br />
-      <hr />
-      <br />
-      <section className="mx-auto px-4 sm:px-6 lg:px-8 py-16 max-w-6xl">
-  <div className="mb-10 text-center">
-    
-    <h1 className="font-bold text-slate-900 text-3xl sm:text-4xl">
-      Our Facilities
-    </h1>
-     
-  </div>
-
-  <div1 className="items-center gap-8 lg:gap-12 grid grid-cols-1 lg:grid-cols-2 bg-white shadow-sm p-4 sm:p-8 border border-slate-100 rounded-3xl">
-    {/* Image side */}
-    <div className="relative order-1 rounded-2xl h-64 sm:h-80 lg:h-[420px] overflow-hidden">
-      <img
-        src="https://wallup.net/wp-content/uploads/2019/09/332176-2013-mercedes-benz-sprinter-notarzt-906-ambulance-emergency.jpg"
-        alt="Emergency ambulance"
-        className="w-full h-full object-cover"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-      <div className="top-4 left-4 absolute flex items-center gap-2 bg-white/90 backdrop-blur px-3 py-1.5 rounded-full font-semibold text-red-600 text-xs">
-        <span className="bg-red-500 rounded-full w-2 h-2 animate-pulse" />
-        24/7 Emergency Active
-      </div>
-      <div className="right-4 bottom-4 left-4 absolute text-white">
-        <p className="font-semibold text-lg">Always Ready, Always Near</p>
-        <p className="text-white/80 text-xs">Rapid response ambulance fleet on standby round the clock.</p>
-      </div>
-    </div>
-
-    {/* Facilities side */}
-    <div className="order-2">
-      <h2 className="mb-1 font-semibold text-slate-900 text-xl">
-        Multi-Specialty Care, Under One Roof
-      </h2>
-      <p className="mb-6 text-slate-500 text-sm">
-        From emergency response to routine consultations — everything you need, close by.
-      </p>
-
-      <div className="gap-3 grid grid-cols-2 sm:grid-cols-3 mb-8">
-        {[
-          { icon: "🩺", label: "Multi-Specialty Care" },
-          { icon: "🚑", label: "24/7 Ambulance" },
-          { icon: "💉", label: "Emergency Services" },
-          { icon: "🩸", label: "Blood Bank" },
-          { icon: "🔬", label: "Advanced Laboratory" },
-          { icon: "🩻", label: "MRI & CT Scan" },
-          { icon: "❤️", label: "Cardiac Care Unit" },
-          { icon: "🏥", label: "ICU & Critical Care" },
-          { icon: "💊", label: "24/7 Pharmacy" },
-          { icon: "📱", label: "Online Appointment" },
-          { icon: "🎥", label: "Video Consultation" },
-          { icon: "📄", label: "Digital Health Records" },
-        ].map(({ icon, label }) => (
-          <div
-            key={label}
-            className="flex flex-col items-start gap-2 bg-slate-50 hover:bg-emerald-50 p-3 border border-slate-100 hover:border-emerald-200 rounded-xl transition-colors"
-          >
-            <span className="text-xl">{icon}</span>
-            <span className="font-medium text-slate-700 text-xs leading-snug">{label}</span>
+      
+ 
+        {/* ================= Explore Our Services ================= */}
+      <div style={{ width: "100%", padding: "28px 16px 8px", boxSizing: "border-box" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", textAlign: "left" }}>
+          {/* Heading */}
+          <div style={{ textAlign: "center", marginBottom: 18 }}>
+            <div
+              className="font-semibold text-emerald-600 text-xs uppercase tracking-widest"
+              style={{ marginBottom: 4 }}
+            >
+              Sab kuch ek jagah
+            </div>
+            <div className="font-bold text-slate-900 text-2xl sm:text-3xl" style={{ margin: 0 }}>
+              Explore Our Services
+            </div>
+            <div className="text-slate-500 text-sm" style={{ marginTop: 4 }}>
+              Ek healthier, safer aur secure life ke liye jo kuch chahiye, sab yahan hai.
+            </div>
           </div>
-        ))}
-      </div>
 
-      <div className="flex sm:flex-row flex-col gap-3">
-        <Link to="/Emergency" className="flex-1">
-          <button className="flex justify-center items-center gap-2 bg-red-600 hover:bg-red-700 shadow-red-200 shadow-sm px-5 py-3 rounded-full w-full font-semibold text-white text-sm transition-colors">
-            🚨 Emergency Call
-          </button>
-        </Link>
-        <button className="flex-1 px-5 py-3 border border-slate-200 hover:border-slate-300 rounded-full font-semibold text-slate-700 text-sm transition-colors">
-          Check More
-        </button>
+          {/* Emergency strip */}
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={() => navigate("/emergency")}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                navigate("/emergency");
+              }
+            }}
+            className="flex items-center bg-red-50 hover:bg-red-100 border border-red-200 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-red-300 transition-colors cursor-pointer"
+            style={{ gap: 12, padding: "10px 14px", marginBottom: 14 }}
+          >
+            <div
+              className="flex justify-center items-center bg-red-100 rounded-lg text-xl shrink-0"
+              style={{ width: 40, height: 40 }}
+            >
+              🚨
+            </div>
+            <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
+              <div className="font-bold text-red-700 text-sm sm:text-base">Emergency Services</div>
+              <div className="text-red-600/80 text-xs">
+                Har second keemti hai. Ambulance aur turant madad, 24x7.
+              </div>
+            </div>
+            <a
+              href="tel:112"
+              onClick={(e) => e.stopPropagation()}
+              className="bg-red-600 hover:bg-red-700 rounded-full font-semibold text-white text-sm whitespace-nowrap transition-colors"
+              style={{ padding: "7px 16px", textDecoration: "none" }}
+            >
+              Call 112
+            </a>
+          </div>
+
+          {/* Service cards (compact: icon left, text right) */}
+          <div className="gap-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+            {SERVICES.map((s) => (
+              <div
+                key={s.title}
+                role="button"
+                tabIndex={0}
+                onClick={() => navigate(s.to)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    navigate(s.to);
+                  }
+                }}
+                className="group relative flex items-center bg-white hover:shadow-md border border-slate-200 hover:border-emerald-400 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 transition-all cursor-pointer"
+                style={{ gap: 12, padding: "12px 14px", textAlign: "left" }}
+              >
+                <div
+                  className="flex justify-center items-center bg-emerald-50 rounded-lg text-xl shrink-0"
+                  style={{ width: 44, height: 44 }}
+                >
+                  {s.icon}
+                </div>
+
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div className="flex items-center" style={{ gap: 6 }}>
+                    <span className="font-semibold text-slate-900 text-sm truncate">{s.title}</span>
+                    {s.ai && (
+                      <span
+                        className="bg-emerald-50 border border-emerald-200 rounded-full font-semibold text-[10px] text-emerald-700 shrink-0"
+                        style={{ padding: "1px 6px" }}
+                      >
+                        AI
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-slate-500 text-xs leading-snug" style={{ marginTop: 2 }}>
+                    {s.desc}
+                  </div>
+                </div>
+
+                <span className="font-bold text-emerald-500 group-hover:text-emerald-700 shrink-0">→</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
-  </div1>
-  <br/><br/>
-</section>
+            {/* ================= Our Facilities ================= */}
+      <div style={{ width: "100%", padding: "32px 16px", boxSizing: "border-box" }}>
+        <div style={{ maxWidth: 1000, margin: "0 auto", textAlign: "left" }}>
+          {/* Heading */}
+          <div style={{ textAlign: "center", marginBottom: 20 }}>
+            <div
+              className="font-semibold text-emerald-600 text-xs uppercase tracking-widest"
+              style={{ marginBottom: 4 }}
+            >
+              Hamari suvidhayein
+            </div>
+            <div className="font-bold text-slate-900 text-2xl sm:text-3xl">Our Facilities</div>
+          </div>
+
+          {/* Card */}
+          <div
+            className="gap-4 grid grid-cols-1 md:grid-cols-5 bg-white shadow-sm border border-slate-200 rounded-2xl"
+            style={{ padding: 14 }}
+          >
+            {/* LEFT: image */}
+            <div
+              className="md:col-span-2 rounded-xl"
+              style={{
+                position: "relative",
+                minHeight: 260,
+                overflow: "hidden",
+                backgroundImage:
+                  "url(https://wallup.net/wp-content/uploads/2019/09/332176-2013-mercedes-benz-sprinter-notarzt-906-ambulance-emergency.jpg)",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            >
+              <div
+                className="bg-gradient-to-t from-black/70 via-black/10 to-transparent"
+                style={{ position: "absolute", inset: 0 }}
+              />
+              <div
+                className="flex items-center bg-white/95 rounded-full font-semibold text-red-600 text-xs"
+                style={{ position: "absolute", top: 12, left: 12, gap: 6, padding: "5px 10px" }}
+              >
+                <div className="bg-red-500 rounded-full animate-pulse" style={{ width: 7, height: 7 }} />
+                24/7 Emergency Active
+              </div>
+              <div style={{ position: "absolute", left: 14, right: 14, bottom: 14, color: "#fff" }}>
+                <div className="font-bold text-base">Always Ready, Always Near</div>
+                <div className="text-white/80 text-xs" style={{ marginTop: 2 }}>
+                  Ambulance fleet standby par, din-raat.
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT: tabs + items */}
+            <div className="md:col-span-3" style={{ display: "flex", flexDirection: "column", padding: "4px 6px" }}>
+              <div className="font-bold text-slate-900 text-lg" style={{ lineHeight: 1.2 }}>
+                Multi-Specialty Care, Under One Roof
+              </div>
+              <div className="text-slate-500 text-xs" style={{ marginTop: 3, marginBottom: 12 }}>
+                Emergency se routine checkup tak, sab kuch paas mein.
+              </div>
+
+              {/* Tabs */}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 12 }}>
+                {FACILITY_GROUPS.map((g, i) => (
+                  <div
+                    key={g.group}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => setFacTab(i)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setFacTab(i);
+                      }
+                    }}
+                    className={`rounded-full font-semibold text-xs cursor-pointer transition-colors ${
+                      facTab === i
+                        ? "bg-emerald-600 text-white"
+                        : "bg-slate-100 text-slate-600 hover:bg-emerald-50 hover:text-emerald-700"
+                    }`}
+                    style={{ padding: "6px 12px" }}
+                  >
+                    {g.icon} {g.group}
+                  </div>
+                ))}
+              </div>
+
+              {/* Items */}
+              <div className="gap-2 grid grid-cols-1 sm:grid-cols-2" style={{ flex: 1, alignContent: "start" }}>
+                {FACILITY_GROUPS[facTab].items.map((f) => (
+                  <div
+                    key={f.label}
+                    className="flex items-center bg-slate-50 hover:bg-emerald-50 border border-slate-100 hover:border-emerald-200 rounded-xl transition-colors"
+                    style={{ gap: 10, padding: "9px 12px" }}
+                  >
+                    <div
+                      className="flex justify-center items-center bg-white shadow-sm rounded-lg text-lg shrink-0"
+                      style={{ width: 36, height: 36 }}
+                    >
+                      {f.icon}
+                    </div>
+                    <div style={{ minWidth: 0 }}>
+                      <div className="font-semibold text-slate-800 text-sm" style={{ lineHeight: 1.2 }}>
+                        {f.label}
+                      </div>
+                      <div className="text-slate-500 text-xs" style={{ marginTop: 1 }}>
+                        {f.sub}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Buttons */}
+              <div className="flex sm:flex-row flex-col" style={{ gap: 8, marginTop: 14 }}>
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => navigate("/emergency")}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      navigate("/emergency");
+                    }
+                  }}
+                  className="flex flex-1 justify-center items-center bg-red-600 hover:bg-red-700 rounded-full font-semibold text-white text-sm transition-colors cursor-pointer"
+                  style={{ gap: 6, padding: "9px 16px" }}
+                >
+                  🚨 Emergency Call
+                </div>
+                <div
+                  role="button"
+                  tabIndex={0}
+                  className="flex flex-1 justify-center items-center hover:bg-slate-50 border border-slate-300 rounded-full font-semibold text-slate-700 text-sm transition-colors cursor-pointer"
+                  style={{ padding: "9px 16px" }}
+                >
+                  Check More →
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* ================= Marquee ================= */}
       <div
         style={{
           backgroundColor: "#0c3b36",
@@ -215,23 +425,19 @@ function Home() {
       </div>
       <br />
       <div className="package-section">
-        <h2 className="bg-darkturquoise">Our Best packages</h2>
-        <img
-          src="https://ponjeslyhospital.in/wp-content/uploads/2022/12/11.-Master-Health-Check.jpg"
+         <img
+          src="/CarePoint_ Healthier Families Together.png"
           alt=""
         />
       </div>
+      <hr/>
       <br />
-      <hr /><HealthTips/>
-       
-      <br></br>
-      <hr />
-    <br/><br/>
 
-    <Blogs/>
-<h1>Our Top 5 Doctors section  </h1>
+      <Blogs />
+       
+      {/* ================= Footer ================= */}
       <footer className="cp-footer">
-        {/* ================= Newsletter Section ================= */}
+        {/* Newsletter Section */}
         <div className="cp-newsletter">
           <div className="cp-newsletter-inner">
             <div className="cp-newsletter-left">
@@ -271,7 +477,7 @@ function Home() {
           </div>
         </div>
 
-        {/* ================= Main Footer ================= */}
+        {/* Main Footer */}
         <div className="cp-main">
           {/* Brand */}
           <div className="cp-col cp-brand">
@@ -422,46 +628,26 @@ function Home() {
 
             <h3 className="cp-heading cp-follow-heading">Follow Us</h3>
             <div className="cp-socials">
-              <a
-                href="#"
-                className="cp-social cp-social-fb"
-                aria-label="Facebook"
-              >
+              <a href="#" className="cp-social cp-social-fb" aria-label="Facebook">
                 <FaFacebookF />
               </a>
-              <a
-                href="#"
-                className="cp-social cp-social-ig"
-                aria-label="Instagram"
-              >
+              <a href="#" className="cp-social cp-social-ig" aria-label="Instagram">
                 <FaInstagram />
               </a>
-              <a
-                href="#"
-                className="cp-social cp-social-tw"
-                aria-label="Twitter"
-              >
+              <a href="#" className="cp-social cp-social-tw" aria-label="Twitter">
                 <FaTwitter />
               </a>
-              <a
-                href="#"
-                className="cp-social cp-social-li"
-                aria-label="LinkedIn"
-              >
+              <a href="#" className="cp-social cp-social-li" aria-label="LinkedIn">
                 <FaLinkedinIn />
               </a>
-              <a
-                href="#"
-                className="cp-social cp-social-yt"
-                aria-label="YouTube"
-              >
+              <a href="#" className="cp-social cp-social-yt" aria-label="YouTube">
                 <FaYoutube />
               </a>
             </div>
           </div>
         </div>
 
-        {/* ================= Trust Section ================= */}
+        {/* Trust Section */}
         <div className="cp-trust">
           <div className="cp-trust-item">
             <span className="cp-trust-icon">
@@ -494,7 +680,7 @@ function Home() {
           </div>
         </div>
 
-        {/* ================= Bottom Bar ================= */}
+        {/* Bottom Bar */}
         <div className="cp-bottom">
           <p className="cp-copyright">© 2026 CarePoint. All Rights Reserved.</p>
 
