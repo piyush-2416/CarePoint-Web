@@ -265,35 +265,31 @@ function ProductPage() {
       </div>
       <br />
       <hr />
-      <h1>About-sec</h1>
+   
+<h1 className="about-title">About Our Doctor</h1>
 
-      <div className={"About-section"}>
-        <img   
-          src={product.image}
-           
-        />
-        <a>
-          <h2 style={{ color: "skyblue" }}>
-      {product.name}</h2>
-             Dedicated to providing compassionate, ethical, and patient-centered
-          healthcare, this medical professional is committed to delivering the
-          highest standards of medical care with a focus on accuracy, empathy,
-          and excellence. Every patient is treated with respect and individual
-          attention, ensuring that their concerns are carefully understood and
-          addressed through personalized treatment plans. By combining extensive
-          clinical knowledge with a caring approach, they strive to offer
-          accurate diagnoses, effective treatments, and preventive healthcare
-          solutions that support long-term wellness. Continuous learning and
-          staying updated with the latest advancements in medical science allow
-          them to provide evidence-based care while maintaining the highest
-          level of professionalism, safety, and quality in every consultation.
-          Believing that quality healthcare extends beyond treating illness,
-          this healthcare provider emphasizes building lasting relationships
-          based on trust, transparency, and open communication. Patients are
-          encouraged to actively participate in their healthcare journey through
-          clear guidance, education, and informed decision-making.
-        </a>
-      </div><br/><br />
+<div className="About-section">
+  <div className="doctor-img-box">
+    <img src={product.image} alt={product.name} />
+  </div>
+
+  <div className="about-content">
+    <span className="about-tag">ABOUT DOCTOR</span>
+
+    <h2>{product.name}</h2>
+
+    <div className="title-line"></div>
+
+    <p>
+      Dedicated to providing compassionate, ethical, and patient-centered
+      healthcare. This medical professional focuses on accurate diagnosis,
+      personalized treatment, and creating a comfortable environment where
+      every patient feels heard and cared for.
+    </p>
+  </div>
+</div>
+ <br/><br/>
+
 
       <footer className="bg-base-200 p-10 text-base-content footer sm:footer-horizontal">
         <nav>
