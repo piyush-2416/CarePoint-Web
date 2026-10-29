@@ -3,11 +3,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 // Aapke Server.js ka port 3000 hai
 const API = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
-// Backend (routes/Plans.js) ki lists se bilkul same
-const COMMUNITY_TYPES = ["Housing society", "Mohalla / colony", "Gaon", "College campus", "Apartment tower", "Other"];
-const RISKS = ["Baarish / baadh", "Aag", "Bhukamp", "Heatwave / loo", "Cold wave", "Bijli / paani outage", "Medical emergency", "Gas leak", "Chori / security", "Building / structure damage"];
-const VULNERABLE = ["Bujurg", "Chhote bachche", "Divyang", "Garbhwati mahilayein", "Lambi bimari wale"];
-const RESOURCES = ["Generator", "First-aid kit", "Fire extinguisher", "CCTV", "Security guard", "WhatsApp group", "Community hall", "Paani ki tanki", "Ambulance access"];
+// Backend (Routes/Plans.js) ki lists se bilkul same
+const LIVING_SITUATIONS = ["Ghar par akela", "Parivaar ke saath", "Hospital me admit", "Surgery ke baad recovery", "Hostel / PG", "Other"];
+const CONDITIONS = ["Diabetes", "BP / Hypertension", "Heart disease", "Asthma / COPD", "Kidney disease", "Epilepsy (mirgi)", "Stroke recovery", "Cancer treatment", "Pregnancy", "Post-surgery recovery"];
+const EMERGENCY_RISKS = ["Seene me dard / heart attack", "Saans phoolna", "Sugar bahut low / high", "BP bahut high / low", "Daura (seizure)", "Girna / chot lagna", "Allergy reaction", "Zyada bleeding", "Dawai chhoot jaana / galat dawai"];
+const CARE_NEEDS = ["Chal-phir nahi sakte", "Wheelchair / walker use karte hain", "Kam dikhai deta hai", "Kam sunai deta hai", "Yaaddasht kamzor hai", "Dusron par nirbhar"];
+const RESOURCES = ["Dawai ka stock", "BP machine", "Glucometer", "Oxygen cylinder / concentrator", "Nebulizer", "Caretaker / nurse", "Emergency contact list", "Ambulance access", "Nazdiki hospital paas me", "Health insurance", "Medical reports ek jagah"];
 
 const EMERGENCY = [
   { n: "112", l: "Sabhi emergency", c: "#0b1f66" },
@@ -22,15 +23,24 @@ const LEVEL = {
   high: { label: "Zyada" },
 };
 
+// FIX: credentials: "include" ke bina login cookie server tak jaati hi nahi,
+// aur /api/plans requireAuth ke peeche hai. Isi wajah se "Server error" aa raha tha.
 async function api(path, opts = {}) {
   let res;
   try {
-    res = await fetch(`${API}${path}`, { headers: { "Content-Type": "application/json" }, ...opts });
+    res = await fetch(`${API}${path}`, {
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      ...opts,
+    });
   } catch {
     throw new Error("Backend se connect nahi ho paya. Server (port 3000) chal raha hai?");
   }
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || "Server error");
+  if (!res.ok) {
+    if (res.status === 401) throw new Error("Pehle login karo, phir plan banao.");
+    throw new Error(data.error || data.message || `Server error (${res.status})`);
+  }
   return data;
 }
 
@@ -197,7 +207,7 @@ const css = `
   .no-print{display:none!important}
   .sp{background:#fff}
   .sp-card{box-shadow:none}
-    .sp-hero{padding:32px 16px 44px;
+  .sp-hero{padding:32px 16px 44px;
     background:linear-gradient(180deg,rgba(244,250,255,.93) 0%,rgba(244,250,255,.85) 100%),
     url("https://blog.edcafe.ai/wp-content/uploads/2026/06/AI-Chatbot-safety-scaled.png") 65% center/cover no-repeat}
   .sp-main{padding:0 14px 60px}
@@ -209,7 +219,6 @@ const css = `
   .sp-dark{background:#fff!important;color:#000!important;border:1px solid #cbd5e1;box-shadow:none}
   .sp-dark p{color:#334155!important}
   .sp-main{max-width:none;padding:0}
-
 }
 `;
 
@@ -249,11 +258,12 @@ function Chips({ n, label, hint, options, value, onChange, single = false }) {
 export default function SafetyPlanner() {
   // form
   const [name, setName] = useState("");
-  const [kind, setKind] = useState("Housing society");
-  const [households, setHouseholds] = useState("");
+  const [age, setAge] = useState("");
+  const [living, setLiving] = useState("Parivaar ke saath");
   const [location, setLocation] = useState("");
-  const [risks, setRisks] = useState([]);
-  const [vulnerable, setVulnerable] = useState([]);
+  const [conditions, setConditions] = useState([]);
+  const [emergencyRisks, setEmergencyRisks] = useState([]);
+  const [careNeeds, setCareNeeds] = useState([]);
   const [resources, setResources] = useState([]);
   const [notes, setNotes] = useState("");
   // data
@@ -285,9 +295,11 @@ export default function SafetyPlanner() {
 
   const generate = async () => {
     setError("");
-    if (!name.trim()) return setError("Community ka naam likho.");
-    if (!Number(households) || Number(households) < 1) return setError("Gharon ki sankhya likho.");
-    if (risks.length === 0) return setError("Kam se kam ek risk chuno.");
+    if (!name.trim()) return setError("Patient ka naam likho.");
+    const ageNum = Number(age);
+    if (!Number.isInteger(ageNum) || ageNum < 0 || ageNum > 120) return setError("Sahi umar likho (0 se 120).");
+    if (conditions.length === 0 && emergencyRisks.length === 0)
+      return setError("Kam se kam ek bimari ya emergency risk chuno.");
 
     setLoading(true);
     setDoc(null);
@@ -297,11 +309,12 @@ export default function SafetyPlanner() {
         method: "POST",
         body: JSON.stringify({
           name: name.trim(),
-          kind,
-          households: Number(households),
+          age: ageNum,
+          livingSituation: living,
           location: location.trim(),
-          risks,
-          vulnerable,
+          conditions,
+          emergencyRisks,
+          careNeeds,
           resources,
           notes: notes.trim(),
         }),
@@ -373,14 +386,14 @@ export default function SafetyPlanner() {
                 AI Powered · Hinglish mein plan
               </span>
               <h1 className="sp-title">
-                Community Safety <span>Planner</span>
+                Patient Safety <span>Planner</span>
               </h1>
               <svg className="sp-swoosh" viewBox="0 0 240 16" fill="none" aria-hidden="true">
                 <path d="M4 10 C60 3, 130 3, 214 8" stroke="#16a34a" strokeWidth="5" strokeLinecap="round" />
                 <circle cx="230" cy="8" r="4.5" fill="#16a34a" />
               </svg>
               <p className="sp-sub">
-                Apni community ke risks batao, AI poora preparedness plan banayega: checklist, roles, evacuation aur drills.
+                Patient ki bimari aur zarooraten batao, AI poora emergency care plan banayega: checklist, red flags, hospital plan aur routine.
               </p>
 
               <div className="sp-sos">
@@ -414,16 +427,16 @@ export default function SafetyPlanner() {
           <div>
             <div className="sp-step">
               <i>1</i>
-              <span>Community ki jaankari</span>
+              <span>Patient ki jaankari</span>
             </div>
             <div className="sp-grid2">
               <label className="sp-label">
-                Community ka naam
-                <input className="sp-field" value={name} maxLength={80} onChange={(e) => setName(e.target.value)} placeholder="Jaise: Shanti Nagar Society" />
+                Patient ka naam
+                <input className="sp-field" value={name} maxLength={80} onChange={(e) => setName(e.target.value)} placeholder="Jaise: Ramesh Kumar" />
               </label>
               <label className="sp-label">
-                Kitne ghar / parivaar?
-                <input className="sp-field" type="number" min="1" inputMode="numeric" value={households} onChange={(e) => setHouseholds(e.target.value)} placeholder="Jaise: 120" />
+                Umar (saal)
+                <input className="sp-field" type="number" min="0" max="120" inputMode="numeric" value={age} onChange={(e) => setAge(e.target.value)} placeholder="Jaise: 62" />
               </label>
               <label className="sp-label sp-span2">
                 Jagah (optional)
@@ -432,10 +445,11 @@ export default function SafetyPlanner() {
             </div>
           </div>
 
-          <Chips n="2" label="Community ka type" options={COMMUNITY_TYPES} value={kind} onChange={setKind} single />
-          <Chips n="3" label="Kin risks ki taiyari chahiye?" hint="ek ya zyada chuno" options={RISKS} value={risks} onChange={setRisks} />
-          <Chips n="4" label="Community mein kaun-kaun hai?" hint="optional" options={VULNERABLE} value={vulnerable} onChange={setVulnerable} />
-          <Chips n="5" label="Abhi aapke paas kya hai?" hint="optional" options={RESOURCES} value={resources} onChange={setResources} />
+          <Chips n="2" label="Patient kahan / kaise rehta hai?" options={LIVING_SITUATIONS} value={living} onChange={setLiving} single />
+          <Chips n="3" label="Kaun si bimari / condition hai?" hint="ek ya zyada chuno" options={CONDITIONS} value={conditions} onChange={setConditions} />
+          <Chips n="4" label="Kin emergencies ka darr hai?" hint="optional" options={EMERGENCY_RISKS} value={emergencyRisks} onChange={setEmergencyRisks} />
+          <Chips n="5" label="Kis cheez mein madad chahiye?" hint="optional" options={CARE_NEEDS} value={careNeeds} onChange={setCareNeeds} />
+          <Chips n="6" label="Abhi patient ke paas kya hai?" hint="optional" options={RESOURCES} value={resources} onChange={setResources} />
 
           <label className="sp-label">
             Koi aur baat? (optional)
@@ -446,7 +460,7 @@ export default function SafetyPlanner() {
               maxLength={300}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Jaise: nadi paas hai, pichhli baarish mein ground floor mein paani bhar gaya tha..."
+              placeholder="Jaise: raat ko akele rehte hain, seedhiyan chadhne me dikkat hoti hai..."
             />
             <small className="sp-count-txt">{notes.length}/300</small>
           </label>
@@ -461,7 +475,7 @@ export default function SafetyPlanner() {
                 Plan ban raha hai...
               </>
             ) : (
-              <>Safety plan banao <span aria-hidden="true">→</span></>
+              <>Care plan banao <span aria-hidden="true">→</span></>
             )}
           </button>
         </div>
@@ -485,7 +499,7 @@ export default function SafetyPlanner() {
         )}
 
         {/* ================= RESULT ================= */}
-        {doc && plan && (
+        {doc && plan && doc.patient && (
           <div ref={resultRef} className="sp-stack" aria-live="polite">
             {doc.fallback && (
               <div className="sp-warn">
@@ -497,11 +511,14 @@ export default function SafetyPlanner() {
             <section className="sp-card">
               <div className="sp-ov-head">
                 <div>
-                  <h2 className="sp-title2">{doc.community.name}</h2>
+                  <h2 className="sp-title2">{doc.patient.name}</h2>
                   <p className="sp-meta">
-                    {doc.community.kind} · {doc.community.households} ghar
-                    {doc.community.location && ` · ${doc.community.location}`} · {fmtDate(doc.createdAt)}
+                    {doc.patient.age} saal · {doc.patient.livingSituation}
+                    {doc.patient.location && ` · ${doc.patient.location}`} · {fmtDate(doc.createdAt)}
                   </p>
+                  {(doc.conditions ?? []).length > 0 && (
+                    <p className="sp-meta">{doc.conditions.join(" · ")}</p>
+                  )}
                 </div>
                 <div className="sp-actions no-print">
                   <button type="button" className="sp-btn" onClick={() => window.print()}>
@@ -522,10 +539,20 @@ export default function SafetyPlanner() {
               <p className="sp-text">{plan.overview}</p>
             </section>
 
+            {/* Red flags */}
+            {(plan.redFlags ?? []).length > 0 && (
+              <section className="sp-amber">
+                <h3>Ye dikhe to turant 108 / 112 par call karo</h3>
+                <ul className="sp-list">
+                  {plan.redFlags.map((s, i) => <li key={i}>{s}</li>)}
+                </ul>
+              </section>
+            )}
+
             {/* Risks */}
             {(plan.risks ?? []).length > 0 && (
               <section className="sp-card">
-                <h3 className="sp-h3">Risk assessment</h3>
+                <h3 className="sp-h3">Emergency risks</h3>
                 <div className="sp-grid-r">
                   {plan.risks.map((r) => {
                     const lv = LEVEL[r.level] ? r.level : "medium";
@@ -536,10 +563,21 @@ export default function SafetyPlanner() {
                           <span className={`sp-pill lv-${lv}`}>{LEVEL[lv].label}</span>
                         </div>
                         {r.why && <p className="sp-mini-text">{r.why}</p>}
+                        {(r.warningSigns ?? []).length > 0 && (
+                          <>
+                            <p className="sp-mini-text"><b>Pehle ke sanket:</b></p>
+                            <ul className="sp-list">
+                              {r.warningSigns.map((p, i) => <li key={i}>{p}</li>)}
+                            </ul>
+                          </>
+                        )}
                         {(r.prepare ?? []).length > 0 && (
-                          <ul className="sp-list">
-                            {r.prepare.map((p, i) => <li key={i}>{p}</li>)}
-                          </ul>
+                          <>
+                            <p className="sp-mini-text"><b>Taiyari:</b></p>
+                            <ul className="sp-list">
+                              {r.prepare.map((p, i) => <li key={i}>{p}</li>)}
+                            </ul>
+                          </>
                         )}
                       </div>
                     );
@@ -599,35 +637,35 @@ export default function SafetyPlanner() {
               </section>
             )}
 
-            {/* Communication + Evacuation */}
+            {/* Communication + Hospital plan */}
             <div className="sp-grid2" style={{ alignItems: "start" }}>
               {plan.communicationPlan && (
                 <section className="sp-dark">
-                  <h3>Alert aur communication</h3>
+                  <h3>Emergency mein kisko batayein</h3>
                   <p>{plan.communicationPlan}</p>
                 </section>
               )}
-              {(plan.evacuation?.assemblyPoint || (plan.evacuation?.steps ?? []).length > 0) && (
+              {(plan.hospitalPlan?.whereToGo || (plan.hospitalPlan?.steps ?? []).length > 0) && (
                 <section className="sp-card">
-                  <h3 className="sp-h3">Evacuation plan</h3>
-                  {plan.evacuation.assemblyPoint && (
+                  <h3 className="sp-h3">Hospital plan</h3>
+                  {plan.hospitalPlan.whereToGo && (
                     <p className="sp-assembly">
-                      <b>Assembly point:</b> {plan.evacuation.assemblyPoint}
+                      <b>Kahan jana hai:</b> {plan.hospitalPlan.whereToGo}
                     </p>
                   )}
                   <ol className="sp-steps">
-                    {(plan.evacuation.steps ?? []).map((s, i) => <li key={i}>{s}</li>)}
+                    {(plan.hospitalPlan.steps ?? []).map((s, i) => <li key={i}>{s}</li>)}
                   </ol>
                 </section>
               )}
             </div>
 
-            {/* Drills */}
-            {(plan.drills ?? []).length > 0 && (
+            {/* Routine */}
+            {(plan.routine ?? []).length > 0 && (
               <section className="sp-card">
-                <h3 className="sp-h3">Mock drills</h3>
+                <h3 className="sp-h3">Rozana / hafte ka routine</h3>
                 <div className="sp-grid-r">
-                  {plan.drills.map((d) => (
+                  {plan.routine.map((d) => (
                     <div key={d.name} className="sp-mini">
                       <div className="sp-mini-top">
                         <b>{d.name}</b>
@@ -640,14 +678,14 @@ export default function SafetyPlanner() {
               </section>
             )}
 
-            {/* Vulnerable + contacts */}
-            {((plan.vulnerableSupport ?? []).length > 0 || (plan.contactsToCollect ?? []).length > 0) && (
+            {/* Care support + contacts */}
+            {((plan.careSupport ?? []).length > 0 || (plan.contactsToCollect ?? []).length > 0) && (
               <div className="sp-grid2" style={{ alignItems: "start" }}>
-                {(plan.vulnerableSupport ?? []).length > 0 && (
+                {(plan.careSupport ?? []).length > 0 && (
                   <section className="sp-amber">
-                    <h3>Khaas madad chahiye unko</h3>
+                    <h3>Khaas madad</h3>
                     <ul className="sp-list">
-                      {plan.vulnerableSupport.map((s, i) => <li key={i}>{s}</li>)}
+                      {plan.careSupport.map((s, i) => <li key={i}>{s}</li>)}
                     </ul>
                   </section>
                 )}
@@ -663,7 +701,7 @@ export default function SafetyPlanner() {
             )}
 
             <p className="sp-note">
-              Ye AI ke sujhav hain, professional safety advice nahi. Kisi bhi emergency mein 112 / 108 / 101 par call karo, aur apne local disaster management office se plan confirm karo.
+              Ye AI ke sujhav hain, doctor ki salah nahi. Dawai ya ilaaj mein koi badlav apne doctor se poochh kar hi karo. Kisi bhi emergency mein turant 112 / 108 par call karo.
             </p>
           </div>
         )}
@@ -673,16 +711,18 @@ export default function SafetyPlanner() {
           <section className="no-print">
             <h2 className="sp-saved-title">Aapke saved plans</h2>
             <div className="sp-grid2" style={{ marginTop: 16 }}>
-              {saved.map((s) => (
+              {saved.filter((s) => s.patient).map((s) => (
                 <div key={s._id} className={`sp-saved ${doc?._id === s._id ? "sel" : ""}`}>
                   <div className="sp-saved-top">
                     <div style={{ minWidth: 0 }}>
-                      <b className="sp-trunc">{s.community.name}</b>
-                      <small>{s.community.kind} · {fmtDate(s.createdAt)}</small>
+                      <b className="sp-trunc">{s.patient.name}</b>
+                      <small>{s.patient.age} saal · {fmtDate(s.createdAt)}</small>
                     </div>
                     {s.fallback && <span className="sp-pill lv-medium">General</span>}
                   </div>
-                  <p className="sp-saved-risks sp-trunc">{(s.risks ?? []).join(" · ")}</p>
+                  <p className="sp-saved-risks sp-trunc">
+                    {[...(s.conditions ?? []), ...(s.emergencyRisks ?? [])].join(" · ")}
+                  </p>
                   <div className="sp-saved-btns">
                     <button type="button" className="sp-btn solid" onClick={() => openPlan(s._id)}>
                       Kholo
