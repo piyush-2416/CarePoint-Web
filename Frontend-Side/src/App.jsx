@@ -1,100 +1,11 @@
-// import React from "react";
-// import "./App.css";
-// import { Link } from "react-router-dom";
-// import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import Home from "./Pages/Home.jsx";
-// import Navbar from "./Components/Navbar.jsx";
-// import About from "./Components/About.jsx";
-// import Doctors from "./Pages/Doctors.jsx";
-// import Medicines from "./Pages/Medicines.jsx";
-// import Appointment from "./Pages/Appointment.jsx";
-// import Schemes from "./Pages/Schemes.jsx";
-// // import Login from "./Pages/Login.jsx";
-// import Emergency from "./Pages/Emergency.jsx";
-// import Doctorid from "./Pages/Doctorid.jsx";
-// import Auth from "./Pages/Auth.jsx";
-// import Profile from "./Pages/Profile.jsx";
-// import Relatives from "./Pages/Relatives.jsx";
-// import Documents from "./Pages/Documents.jsx";
-// import SignIn from "./Pages/Signup.jsx";
-// import Blogs from "./Components/Blogs.jsx";
-// import HealthTips from "./Components/HealthTips.jsx";import Help from "./Pages/Help.jsx";
-// import SafetyChecker from "./Pages/SafetyCheck.jsx";
-// import { AuthProvider } from "./context/AuthContext";
-// import ProtectedRoute from "./Components/ProtectedRoute";
-// // import Login from "./Pages/Login";
-// import Login from "./Pages/Login.jsx";
-// import Signup from "./Pages/Signup";
-// import SafetyPlanner from "./Pages/Safetyplanner.jsx";
-// import ProductPage from "./Pages/ProductPage.jsx";
-// function App() {
-//   return (
-//     <>
-//       <BrowserRouter>
-//         <Routes>
-
-//           <Route path="/Auth" element={<Auth />} />
-//           <Route path="/Relatives" element={<Relatives />} />
-//           <Route path="/Documents" element={<Documents />} />
-//           <Route path="/Help" element={<Help />} />
-//           <Route path="/SafetyChecker" element={<SafetyChecker />} />
-//           <Route path="/SafetyPlanner" element={<SafetyPlanner />} />
-
-//           <Route path="/" element={<Home />} />
-//           <Route path="/Navbar" element={<Navbar />} />
-//           <Route path="/About" element={<About />} />
-//           <Route path="/Doctors" element={<Doctors />} />
-//           <Route path="/Login" element={<Login />} />
-//           <Route path="/Emergency" element={<Emergency />} />
-//           <Route path="/HealthTips" element={<HealthTips />} />
-//           <Route path="/Blogs" element={<Blogs />} />
-
-//           <Route path="/Schemes" element={<Schemes />} />
-//           <Route path="/Appointment" element={<Appointment />} />
-//           <Route path="/Medicines" element={<Medicines />} />
-//           <Route path="/Signin" element={<SignIn />} />
-//           <Route path="/Profile" element={<Profile />} />
-//           <Route path="/Doctorid/:id" element={<Doctorid />} />
-// {/* <Route path="/products/:id" element={<ProductPage />} />
-// <Route path="/Doctorid/:id" element={<Doctorid />} /> */}
-//           <Route path="/products/:id" element={<ProductPage />} />
-//         </Routes>
-//         <AuthProvider>
-//     <Routes>
-//       <Route path="/login" element={<Login />} />
-//       <Route path="/signup" element={<Signup />} /> 
-
-//     {/* Public page */}       <Route path="/" element={<Home />} /> 
-
-//       {/* Login ke peeche wale pages */}
-//      <Route
-//         path="/documents"
-//         element={
-//           <ProtectedRoute>
-//             <Documents />
-//           </ProtectedRoute>
-//         }
-//       /> 
-//       {/* baaki routes yahin, jo protect karne hain unhe ProtectedRoute mein wrap karo */}
-//    </Routes>
-//   </AuthProvider> 
-//       </BrowserRouter>
-//     </>
-//   );
-// }
-
-// export default App;
-
-
 import React from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./Components/ProtectedRoute";
 
 import Home from "./Pages/Home.jsx";
-import Navbar from "./Components/Navbar.jsx";
 import About from "./Components/About.jsx";
 import Blogs from "./Components/Blogs.jsx";
 import HealthTips from "./Components/HealthTips.jsx";
@@ -108,43 +19,75 @@ import Emergency from "./Pages/Emergency.jsx";
 import Help from "./Pages/Help.jsx";
 import Login from "./Pages/Login.jsx";
 import Signup from "./Pages/Signup.jsx";
+import Logout from "./Pages/Logout.jsx";
 import Profile from "./Pages/Profile.jsx";
 import Relatives from "./Pages/Relatives.jsx";
 import Documents from "./Pages/Documents.jsx";
 import SafetyChecker from "./Pages/SafetyCheck.jsx";
 import SafetyPlanner from "./Pages/Safetyplanner.jsx";
+import Patients from "./Pages/Patients.jsx";
+import PatientDetail from "./Pages/PatientDetail.jsx";
+
+// Sirf patient ke pages: doctor ko nahi dikhte (wo apne home par bhej diya jaata hai)
+const NoDoctor = ({ children }) => (
+  <ProtectedRoute deny={["doctor"]}>{children}</ProtectedRoute>
+);
+// Patient aur doctor dono, par login zaroori
+const AnyRole = ({ children }) => (
+  <ProtectedRoute roles={["patient", "doctor"]}>{children}</ProtectedRoute>
+);
+// Sirf doctor ke liye
+const DoctorOnly = ({ children }) => (
+  <ProtectedRoute roles={["doctor"]}>{children}</ProtectedRoute>
+);
 
 function App() {
   return (
     <BrowserRouter>
-      {/* AuthProvider sabse bahar: Navbar, Login, ProtectedRoute sab isi ke andar */}
       <AuthProvider>
         <Routes>
-          {/* ---------- Public pages ---------- */}
-          <Route path="/" element={<Home />} />
-          <Route path="/Navbar" element={<Navbar />} />
-          <Route path="/About" element={<About />} />
-          <Route path="/Blogs" element={<Blogs />} />
-          <Route path="/HealthTips" element={<HealthTips />} />
-          <Route path="/Doctors" element={<Doctors />} />
-          <Route path="/products/:id" element={<ProductPage />} />
-          <Route path="/Doctorid/:id" element={<Doctorid />} />
-          <Route path="/Medicines" element={<Medicines />} />
-          <Route path="/Appointment" element={<Appointment />} />
-          <Route path="/Schemes" element={<Schemes />} />
-          <Route path="/Emergency" element={<Emergency />} />
-          <Route path="/Help" element={<Help />} />
-
-          {/* ---------- Auth pages ---------- */}
+          {/* ---------- Auth ---------- */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/logout" element={<Logout />} />
 
-          {/* ---------- Login ke peeche wale pages ---------- */}
-          <Route path="/Profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-          <Route path="/Relatives" element={<ProtectedRoute><Relatives /></ProtectedRoute>} />
-          <Route path="/Documents" element={<ProtectedRoute><Documents /></ProtectedRoute>} />
-          <Route path="/SafetyChecker" element={<ProtectedRoute><SafetyChecker /></ProtectedRoute>} />
-          <Route path="/SafetyPlanner" element={<ProtectedRoute><SafetyPlanner /></ProtectedRoute>} />
+          {/* ---------- Sirf Patient wale pages (doctor ko nahi dikhte) ---------- */}
+          <Route path="/" element={<NoDoctor><Home /></NoDoctor>} />
+          <Route path="/About" element={<NoDoctor><About /></NoDoctor>} />
+          <Route path="/Blogs" element={<NoDoctor><Blogs /></NoDoctor>} />
+          <Route path="/HealthTips" element={<NoDoctor><HealthTips /></NoDoctor>} />
+          <Route path="/Doctors" element={<NoDoctor><Doctors /></NoDoctor>} />
+          <Route path="/products/:id" element={<NoDoctor><ProductPage /></NoDoctor>} />
+          <Route path="/Doctorid/:id" element={<NoDoctor><Doctorid /></NoDoctor>} />
+          <Route path="/Schemes" element={<NoDoctor><Schemes /></NoDoctor>} />
+
+          {/* ---------- Patient + Doctor dono (public) ---------- */}
+          <Route path="/Emergency" element={<Emergency />} />
+          <Route path="/Appointment" element={<Appointment />} />
+
+          {/* ---------- Patient + Doctor dono (login zaroori) ---------- */}
+          <Route path="/Profile" element={<AnyRole><Profile /></AnyRole>} />
+          <Route path="/Documents" element={<AnyRole><Documents /></AnyRole>} />
+
+          {/* Medicines: ab doctor ke liye bhi */}
+          <Route path="/Medicines" element={<AnyRole><Medicines /></AnyRole>} />
+
+          {/* Contacts (Relatives): doctor ke liye bhi */}
+          <Route path="/Relatives" element={<AnyRole><Relatives /></AnyRole>} />
+
+          {/* Help & Support: doctor ke liye bhi */}
+          <Route path="/Help" element={<AnyRole><Help /></AnyRole>} />
+
+          {/* AI features: doctor ke liye bhi */}
+          <Route path="/SafetyChecker" element={<AnyRole><SafetyChecker /></AnyRole>} />
+          <Route path="/SafetyPlanner" element={<AnyRole><SafetyPlanner /></AnyRole>} />
+          {/* Home ke cards in hyphen wale links par jaate hain, unhe sahi route par bhej do */}
+          <Route path="/safety-checker" element={<Navigate to="/SafetyChecker" replace />} />
+          <Route path="/safety-planner" element={<Navigate to="/SafetyPlanner" replace />} />
+
+          {/* ---------- Sirf Doctor ---------- */}
+          <Route path="/patients" element={<DoctorOnly><Patients /></DoctorOnly>} />
+          <Route path="/patients/:id" element={<DoctorOnly><PatientDetail /></DoctorOnly>} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
