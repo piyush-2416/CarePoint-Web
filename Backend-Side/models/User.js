@@ -10,10 +10,10 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    password: { type: String, required: true, select: false }, // query mein default nahi aayega
-    role: { type: String, enum: ["user", "admin"], default: "user" },
+    password: { type: String, required: true, select: false },
+    role: { type: String, enum: ["patient", "doctor", "admin"], default: "patient" },
   },
   { timestamps: true }
 );
 
-export default mongoose.model("User", userSchema);
+export default mongoose.models.User|| mongoose.model("User", userSchema);
