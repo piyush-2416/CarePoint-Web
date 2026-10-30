@@ -1,25 +1,41 @@
 import React, { useEffect, useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
-
+// import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+ 
 const navLinks = [
-  { to: "/Doctors", icon: "🩺", label: "Doctor" },
-  { to: "/Medicines", icon: "💊", label: "Medicine" },
-  { to: "/About", icon: "ℹ️", label: "About" },
-    { to: "/Emergency", icon: "🆘", label: "Emergency" },
-];
+  { to: "/Doctors", icon: "🩺", label: "Doctors" },
+  { to: "/Medicines", icon: "💊", label: "Medicines" },
+    { to: "/Emergency", icon: "🚨", label: "Emergency" },
+    { to: "/Appointment", icon: "📅", label: "Appointments" },
+  { to: "/schemes", icon: "🏛️", label: "Govt. Schemes" },
 
+  { to: "/About", icon: "ℹ️", label: "About Us" },
+
+];
+const doctorLinks = [
+  { to: "/patients", icon: "🧑‍⚕️", label: "Patients" },
+    { to: "/Medicines", icon: "💊", label: "Medicines" },
+
+  { to: "/Emergency", icon: "🚨", label: "Emergency" },
+
+     { to: "/SafetyChecker", icon: "🛡️", label: "AI Safety Checker" },
+  { to: "/SafetyPlanner", icon: "🧭", label: "AI Safety Planner" },
+  { to: "/Documents", icon: "📂", label: "My Documents" },  { to: "/Profile", icon: "👤", label: "My Profile", dot: true },
+
+];
 const iconLinks = [
-  { to: "/Documents", icon: "📁", label: "Documents" },
-   { to: "/Help", icon: "🙋", label: "Help" },
-   { to: "/Relatives", icon: "📞", label: "Contact-list" },
-   { to: "/SafetyChecker", icon: "🛡️", label: "Ai  Safety-Checker" },
-   { to: "/SafetyPlanner", icon: "🔐", label: "Ai Safety-Planner" },
+  { to: "/SafetyChecker", icon: "🛡️", label: "AI Safety Checker" },
+  { to: "/SafetyPlanner", icon: "🧭", label: "AI Safety Planner" },
+  { to: "/Documents", icon: "📂", label: "My Documents" },
+  { to: "/Relatives", icon: "👥", label: "Emergency Contacts" },
+  { to: "/Help", icon: "💬", label: "Help & Support" },
+  { to: "/HealthTips", icon: "🙂", label: "Yours Health-Tips" },
 
-
-  { to:"/Appointment", icon: "📅", label: "Appointment" },
-  { to: "/schemes", icon: "🏛️", label: "Schemes" },
-  { to: "/Profile", icon: "👤", label: "Profile", dot: true },
+  { to: "/Profile", icon: "👤", label: "My Profile", dot: true },
 ];
+ 
+
 
 const DESKTOP_Q = "(min-width: 768px)";
 const W_SIDE = 260;
@@ -41,6 +57,16 @@ function writeSaved(value) {
   }
 }
 
+// TODO: Agar tumhare paas AuthContext hai to is function ki jagah
+// `const { user } = useAuth();` use karo (component ke andar).
+function readUser() {
+  try {
+    return JSON.parse(localStorage.getItem("user"));
+  } catch {
+    return null;
+  }
+}
+
 function Brand({ imgClass = "cpn-logo-img" }) {
   return (
     <>
@@ -54,6 +80,20 @@ function Brand({ imgClass = "cpn-logo-img" }) {
 
 function Navbar() {
   const location = useLocation();
+
+  const { user, loading, logout } = useAuth();
+const navigate = useNavigate();
+
+const handleLogout = async () => {
+  await logout();
+  navigate("/login");
+};
+  // ---- Doctor / Patient role ----
+  // const user = readUser(); // <- yahan apna auth user lagao
+  const isDoctor = user?.role === "doctor";
+  const menuLinks = isDoctor ? doctorLinks : navLinks;
+  const featureLinks = isDoctor ? [] : iconLinks;
+  const homePath = isDoctor ? "/patients" : "/";
 
   const [isDesktop, setIsDesktop] = useState(
     () => typeof window !== "undefined" && window.matchMedia(DESKTOP_Q).matches
@@ -255,20 +295,36 @@ function Navbar() {
       <header className={`cpn-header ${scrolled ? "scrolled" : ""}`}>
         <div className="cpn-line" />
         <div className="cpn-bar">
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            aria-label="Open sidebar"
-            aria-expanded={open}
-            aria-controls="cpn-sidebar"
-            className="cpn-round-btn"
-          >
-            <span className="cpn-bars" aria-hidden="true"><i /><i /><i /></span>
-          </button>
+         {!loading && (
+  <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 10 }}>
+    {user ? (
+      <>
+        <span style={{ fontWeight: 700 }}>Hi, {user.name}</span>
+        {/* <button
+          type="button"
+          onClick={handleLogout}
+          style={{ padding: "8px 16px", borderRadius: 999, border: "1.5px solid #fff", background: "rgba(255,255,255,.35)", fontWeight: 700, cursor: "pointer" }}
+        >
+          Lowout
+        </button> */}
+      </>
+    ) : (
+      <>
+        <Link to="/login" style={{ padding: "8px 16px", borderRadius: 999, background: "rgba(255,255,255,.35)", border: "1.5px solid #fff", fontWeight: 700, textDecoration: "none", color: "inherit" }}>
+          Login
+        </Link>
+        <Link to="/signup" style={{ padding: "8px 16px", borderRadius: 999, background: "#0b6b6b", color: "#fff", fontWeight: 700, textDecoration: "none" }}>
+          Sign up
+        </Link>
+      </>
+    )}
+  </div>
+)}
 
           {/* Desktop par sidebar khula ho to logo sidebar me dikhta hai, isliye yahan chhupa hai */}
           {(!isDesktop || !open) && (
-            <Link to="/" className="cpn-logo" aria-label="CarePoint Home">
+            <Link         aria-expanded={open}       onClick={() => setOpen(true)}
+  to={homePath} className="cpn-logo" aria-label="CarePoint Home">
               <Brand />
             </Link>
           )}
@@ -283,7 +339,7 @@ function Navbar() {
       {/* ================= SIDEBAR ================= */}
       <aside id="cpn-sidebar" aria-label="Sidebar" className={`cpn-side ${open ? "show" : ""}`}>
         <div className="cpn-side-head">
-          <Link to="/" className="cpn-logo" aria-label="CarePoint Home" onClick={close}>
+          <Link to={homePath} className="cpn-logo" aria-label="CarePoint Home" onClick={close}>
             <Brand />
           </Link>
           <button type="button" onClick={close} aria-label="Close sidebar" className="cpn-round-btn">
@@ -294,7 +350,7 @@ function Navbar() {
         <div className="cpn-side-scroll">
           <p className="cpn-s-title">Menu</p>
           <nav className="cpn-s-list" aria-label="Main">
-            {navLinks.map((l) => (
+            {menuLinks.map((l) => (
               <NavLink
                 key={l.to}
                 to={l.to}
@@ -310,22 +366,27 @@ function Navbar() {
 
 
 
-          <p className="cpn-s-title second">Features</p>
-          <div className="cpn-s-list">
-            {iconLinks.map((l) => (
-              <NavLink
-                key={l.to}
-                to={l.to}
-                onClick={close}
-                className={({ isActive }) => `cpn-s-link ${isActive ? "active" : ""}`}
-              >
-                <span className="cpn-s-emoji" aria-hidden="true">{l.icon}</span>
-                {l.label}
-                {l.dot && <span className="cpn-dot" />}
-              </NavLink>
-            ))}
-          </div>
+          {featureLinks.length > 0 && (
+            <>
+              <p className="cpn-s-title second">Features</p>
+              <div className="cpn-s-list">
+                {featureLinks.map((l) => (
+                  <NavLink
+                    key={l.to}
+                    to={l.to}
+                    onClick={close}
+                    className={({ isActive }) => `cpn-s-link ${isActive ? "active" : ""}`}
+                  >
+                    <span className="cpn-s-emoji" aria-hidden="true">{l.icon}</span>
+                    {l.label}
+                    {l.dot && <span className="cpn-dot" />}
+                  </NavLink>
+                ))}
+              </div>
+            </>
+          )}
         </div>
+     
       </aside>
     </>
   );
