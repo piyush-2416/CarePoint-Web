@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   Mail, Lock, Eye, EyeOff, User, ArrowRight, Stethoscope, CalendarDays, Pill,
   ShieldPlus, Clock, Heart, HeartPulse, Building2, Play,
+  ShieldCheck, Search, FolderOpen, Users, Landmark, LifeBuoy, Siren,
 } from "lucide-react";
 
 /* Brand icons (naye lucide-react mein nahi aate) - inline SVG, footer ke liye */
@@ -36,10 +37,17 @@ const why = [
 ];
 
 const services = [
-  { icon: Stethoscope, t: "Doctors", d: "Consult top specialists near you.", img: IMG.svcDoctors },
-  { icon: Building2, t: "Hospitals", d: "Find the best hospitals near you.", img: IMG.svcHospitals },
-  { icon: Pill, t: "Medicines", d: "Order medicines online with ease.", img: IMG.svcMedicines },
-  { icon: CalendarDays, t: "Appointments", d: "Book your slot in a few clicks.", img: IMG.svcAppointments },
+  { icon: Stethoscope, t: "Doctors", d: "Consult top specialists near you.", img: IMG.svcDoctors, href: "/doctors" },
+  { icon: Building2, t: "Hospitals", d: "Find the best hospitals near you.", img: IMG.svcHospitals, href: "/hospitals" },
+  { icon: Pill, t: "Medicines", d: "Order medicines online with ease.", img: IMG.svcMedicines, href: "/medicines" },
+  { icon: CalendarDays, t: "Appointments", d: "Book your slot in a few clicks.", img: IMG.svcAppointments, href: "/appointments" },
+  { icon: ShieldCheck, t: "AI Safety Planner", d: "Prepare for emergencies in advance.",img :"https://verityai.co/_next/image?url=https:%2F%2Fcdn.sanity.io%2Fimages%2F5v26bvj8%2Fproduction%2F6f435aa4e6278b4345a91cec90c3a10ef6e02e40-1536x1024.png&w=1200&q=75", ai: true, tone: "linear-gradient(135deg,#0b8f89,#34c3a4)", href: "/safety-planner" },
+  { icon: Search, t: "AI Safety Checker", d: "Check your current situation's risk.", img:"https://cdn.vectorstock.com/i/500p/43/45/businessman-is-talking-or-chatting-with-chat-bot-vector-46624345.jpg",ai: true, tone: "linear-gradient(135deg,#0e7490,#22b8cf)", href: "/safety-checker" },
+  { icon: FolderOpen, t: "Document Wallet", d: "Keep reports and prescriptions together.", img:"https://www.shutterstock.com/image-vector/digital-wallet-icon-wireframe-hand-600nw-2586641487.jpg",tone: "linear-gradient(135deg,#0f766e,#2dd4bf)", href: "/documents" },
+  { icon: Users, t: "Smart Contact List", d: "Your family's emergency contacts.",img:'https://tse2.mm.bing.net/th/id/OIP.PmXcJ-YOXjhgFmD3nN1SfwHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3', tone: "linear-gradient(135deg,#047857,#4ade80)", href: "/relatives" },
+  { icon: Landmark, t: "Government Schemes", d: "See which schemes you are eligible for.",img:"https://media.assettype.com/outlookmoney/2026-06-09/jk9r2482/ayushman-bharat-west-bengal.png?auto=format%2Ccompress&fit=max&format=webp&w=768&dpr=1.0", tone: "linear-gradient(135deg,#0b6e75,#38bdf8)", href: "/schemes" },
+  { icon: LifeBuoy, t: "Need Help", d: "Questions or problems? We are here.", tone: "linear-gradient(135deg,#115e59,#5eead4)",img:"https://img.freepik.com/premium-vector/medical-social-worker-helps-patients-families-cope-with-medical-challenges_701961-4370.jpg", href: "/help" },
+  { icon: Siren, t: "Emergency", d: "Every second counts. Get help right away.", urgent: true, wide: true, tone: "linear-gradient(135deg,#dc2626,#f87171)", img:"https://static.vecteezy.com/system/resources/previews/026/994/779/large_2x/911-emergency-call-on-web-site-assistant-manager-online-ambulance-service-hotline-call-center-modern-flat-cartoon-style-illustration-on-white-background-vector.jpg",href: "/emergency" },
 ];
 
 const reviews = [
@@ -223,15 +231,31 @@ export default function Auth() {
         <h3>Healthcare Made Simple</h3>
         <p className="cp-secsub">Explore our wide range of services designed for your well-being.</p>
         <div className="cp-grid4 cp-wrap">
-          {services.map(({ icon: I, t, d, img }) => (
-            <div className="cp-svc" key={t}>
-              <div className="cp-svc-img" style={{ backgroundImage: `url(${img})` }} />
+          {services.map(({ icon: I, t, d, img, tone, ai, urgent, wide, href }) => (
+            <a
+              className={`cp-svc ${urgent ? "urgent" : ""} ${wide ? "wide" : ""}`}
+              key={t}
+              href={href}
+            >
+              {img ? (
+                <div className="cp-svc-img" style={{ backgroundImage: `url(${img})` }} />
+              ) : (
+                <div className="cp-svc-img ph" style={{ background: tone }}>
+                  <I size={30} />
+                </div>
+              )}
               <div className="cp-svc-body">
                 <span className="cp-circle sm"><I size={16} /></span>
-                <div><b>{t}</b><small>{d}</small></div>
+                <div>
+                  <b>
+                    {t}
+                    {ai && <span className="cp-ai">AI</span>}
+                  </b>
+                  <small>{d}</small>
+                </div>
                 <span className="cp-arrow"><ArrowRight size={14} /></span>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </section>
@@ -440,6 +464,16 @@ const css = `
 .cp-svc-body small{font-size:10.5px;color:var(--muted)}
 .cp-arrow{width:26px;height:26px;border-radius:50%;background:var(--tint);color:var(--teal);display:grid;place-items:center}
 
+/* service cards (links) */
+.cp-svc{display:block;transition:transform .15s,box-shadow .15s}
+.cp-svc:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(14,100,100,.14)}
+.cp-svc-img.ph{display:grid;place-items:center;color:rgba(255,255,255,.92)}
+.cp-ai{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:20px;background:var(--tint);border:1px solid var(--line);color:var(--teal);font-size:9px;font-weight:700;vertical-align:middle}
+.cp-svc.wide{grid-column:span 2}
+.cp-svc.urgent{border:1px solid #fecaca}
+.cp-svc.urgent .cp-circle{background:#fee2e2;color:#dc2626}
+.cp-svc.urgent .cp-arrow{background:#dc2626;color:#fff}
+
 .cp-cta{background:linear-gradient(90deg,#0b8f87 0%,#16a99d 45%,rgba(22,169,157,.2) 100%),var(--cta) right/cover no-repeat,#13a095;
  padding:50px 24px;color:#fff}
 .cp-cta-in{max-width:1180px;margin:auto}
@@ -477,5 +511,6 @@ const css = `
 }
 @media(max-width:560px){
  .cp-grid4,.cp-foot-grid{grid-template-columns:1fr}
+ .cp-svc.wide{grid-column:span 1}
 }
 `;
