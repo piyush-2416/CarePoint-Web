@@ -14,8 +14,8 @@ import { fileURLToPath } from "url";
 import authRouter from "./Routes/Auth.js";
 import plansRouter from "./Routes/Plans.js";
 import safetyRouter from "./Routes/Safety.js";
-import { requireAuth } from "./Middleware/auth.js";
-
+import { requireAuth, requireRole } from "./Middleware/auth.js";
+import patientsRouter from "./Routes/Patients.js";
 // ---------- Config ----------
 const MONGODB_URI = process.env.MONGODB_URI;
 const DATABASE_NAME = process.env.DB_NAME || "hospital-data";
@@ -46,6 +46,9 @@ if (!process.env.GEMINI_API_KEY) {
 if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
   console.error("❌ .env mein JWT_SECRET (kam se kam 32 characters) daalo.");
   process.exit(1);
+}
+if (!process.env.DOCTOR_INVITE_CODE) {
+  console.warn("⚠️ DOCTOR_INVITE_CODE .env me nahi mila: doctor signup band rahega.");
 }
 
 // ---------- App setup ----------
@@ -307,11 +310,12 @@ relativesRouter.delete("/:id", async (req, res) => {
 
 // ---------- Login ke peeche wale routes ----------
 // requireAuth HAMESHA router se PEHLE lagta hai, warna wo kabhi chalta hi nahi
-app.use("/api/documents", requireAuth, documentsRouter);
-app.use("/api/relatives", requireAuth, relativesRouter);
-app.use("/api/plans", requireAuth, plansRouter);
-app.use("/api/safety", requireAuth, safetyRouter);
-
+// ---------- Login + role ke peeche wale routes ----------
+app.use("/api/documents", requireAuth, requireRole("patient", "doctor"), documentsRouter);
+app.use("/api/relatives", requireAuth, requireRole("patient"), relativesRouter);
+app.use("/api/plans", requireAuth, requireRole("patient"), plansRouter);
+app.use("/api/safety", requireAuth, requireRole("patient"), safetyRouter);
+app.use("/api/patients", requireAuth, requireRole("doctor"), patientsRouter);
 // ---------- 404 ----------
 app.use((req, res) => {
   res.status(404).json({ error: `Route nahi mila: ${req.method} ${req.originalUrl}` });
