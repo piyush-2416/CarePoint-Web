@@ -34,7 +34,7 @@ function Home() {
     "🧪 Lab Tests at ₹0 Booking Fee",
     "❤️ 24x7 Emergency Support",
   ];
-    const STATS = [
+  const STATS = [
     { n: "30+", l: "Years of Experience", icon: "🏆" },
     { n: "15+", l: "Clinic Locations", icon: "🏥" },
     { n: "100%", l: "Patient Satisfaction", icon: "😊" },
@@ -142,9 +142,9 @@ function Home() {
           ))}
         </div>
       </div>
-      
- 
-        {/* ================= Explore Our Services ================= */}
+
+
+      {/* ================= Explore Our Services ================= */}
       <div style={{ width: "100%", padding: "28px 16px 8px", boxSizing: "border-box" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", textAlign: "left" }}>
           {/* Heading */}
@@ -246,7 +246,7 @@ function Home() {
           </div>
         </div>
       </div>
-            {/* ================= Our Facilities ================= */}
+      {/* ================= Our Facilities ================= */}
       <div style={{ width: "100%", padding: "32px 16px", boxSizing: "border-box" }}>
         <div style={{ maxWidth: 1000, margin: "0 auto", textAlign: "left" }}>
           {/* Heading */}
@@ -425,16 +425,16 @@ function Home() {
       </div>
       <br />
       <div className="package-section">
-         <img
+        <img
           src="/CarePoint_ Healthier Families Together.png"
           alt=""
         />
       </div>
-      <hr/>
+      <hr />
       <br />
 
       <Blogs />
-       
+
       {/* ================= Footer ================= */}
       <footer className="cp-footer">
         {/* Newsletter Section */}
