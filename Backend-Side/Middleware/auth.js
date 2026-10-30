@@ -1,7 +1,10 @@
 import jwt from "jsonwebtoken";
-import User from "../Models/User.js";
+import User from "../models/User.js";
 
-// Jin routes ko login ke peeche rakhna hai, unpe ye lagao
+// Purane accounts ka role "user" tha, unhe patient maano
+export const roleOf = (u) => (!u?.role || u.role === "user" ? "patient" : u.role);
+
+// Login zaroori
 export async function requireAuth(req, res, next) {
   try {
     const token = req.cookies?.token;
@@ -18,10 +21,13 @@ export async function requireAuth(req, res, next) {
   }
 }
 
-// Sirf admin ke liye (optional)
-export function requireAdmin(req, res, next) {
-  if (req.user?.role !== "admin") {
-    return res.status(403).json({ message: "Sirf admin ko allowed hai" });
-  }
-  next();
+// Sirf diye gaye roles ko allow karo: requireRole("doctor") ya requireRole("patient", "doctor")
+// requireAuth ke BAAD lagana
+export function requireRole(...roles) {
+  return (req, res, next) => {
+    if (!roles.includes(roleOf(req.user))) {
+      return res.status(403).json({ message: "Is page ka access aapko nahi hai" });
+    }
+    next();
+  };
 }
