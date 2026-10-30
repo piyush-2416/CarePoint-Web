@@ -22,12 +22,11 @@ export function AuthProvider({ children }) {
     return res.data.user;
   }, []);
 
-  const signup = useCallback(async (name, email, password) => {
-    const res = await api.post("/auth/signup", { name, email, password });
-    setUser(res.data.user);
-    return res.data.user;
-  }, []);
-
+  const signup = useCallback(async (name, email, password, role = "patient", inviteCode = "") => {
+  const res = await api.post("/auth/signup", { name, email, password, role, inviteCode });
+  setUser(res.data.user);
+  return res.data.user;
+}, []);
   const logout = useCallback(async () => {
     try {
       await api.post("/auth/logout");
