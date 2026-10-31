@@ -9,7 +9,7 @@ import path from "path";
 import fs from "fs";
 import crypto from "crypto";
 import { fileURLToPath } from "url";
-
+import doctorProfileRouter from "./Routes/DoctorProfile.js";
 // NOTE: folder ka naam exactly "Routes" / "Middleware" hona chahiye (Linux/Render par case-sensitive hota hai)
 import authRouter from "./Routes/Auth.js";
 import plansRouter from "./Routes/Plans.js";
@@ -102,7 +102,10 @@ app.use("/api/auth", authRouter);
 //   /api/doctors   (naya naam)
 app.get(["/api/products", "/api/doctors"], async (req, res) => {
   try {
-    const doctors = await getDb(req).collection(DOCTORS_COLLECTION).find({}).toArray();
+    const doctors = await getDb(req)
+      .collection(DOCTORS_COLLECTION)
+      .find({ isProfileComplete: { $ne: false } })
+      .toArray();
     res.json(doctors);
   } catch (err) {
     console.error("❌ Doctors load error:", err.message);
@@ -113,9 +116,11 @@ app.get(["/api/products", "/api/doctors"], async (req, res) => {
 // Ek doctor ki detail (id ya _id se)
 app.get(["/api/products/:id", "/api/doctors/:id", "/api/Doctorid/:id"], async (req, res) => {
   try {
-    const doctor = await findDoctorById(getDb(req), req.params.id);
-    if (!doctor) return res.status(404).json({ error: "Doctor nahi mila" });
-    res.json(doctor);
+  const doctor = await findDoctorById(getDb(req), req.params.id);
+if (!doctor || doctor.isProfileComplete === false) {
+  return res.status(404).json({ error: "Doctor nahi mila" });
+}
+res.json(doctor);
   } catch (err) {
     console.error("❌ Doctor error:", err.message);
     res.status(500).json({ error: "Server error" });
@@ -312,6 +317,7 @@ relativesRouter.delete("/:id", async (req, res) => {
 // requireAuth HAMESHA router se PEHLE lagta hai, warna wo kabhi chalta hi nahi
 // ---------- Login + role ke peeche wale routes ----------
 app.use("/api/documents", requireAuth, requireRole("patient", "doctor"), documentsRouter);
+app.use("/api/doctor/profile", requireAuth, requireRole("doctor"), doctorProfileRouter);
 app.use("/api/relatives", requireAuth, requireRole("patient"), relativesRouter);
 app.use("/api/plans", requireAuth, requireRole("patient"), plansRouter);
 app.use("/api/safety", requireAuth, requireRole("patient"), safetyRouter);
