@@ -6,10 +6,11 @@ import { generatePlan } from "../Gemini.js";
 const router = express.Router();
 
 // Frontend ki lists se bilkul same honi chahiye
-const COMMUNITY_TYPES = ["Housing society", "Mohalla / colony", "Gaon", "College campus", "Apartment tower", "Other"];
-const RISKS = ["Baarish / baadh", "Aag", "Bhukamp", "Heatwave / loo", "Cold wave", "Bijli / paani outage", "Medical emergency", "Gas leak", "Chori / security", "Building / structure damage"];
-const VULNERABLE = ["Bujurg", "Chhote bachche", "Divyang", "Garbhwati mahilayein", "Lambi bimari wale"];
-const RESOURCES = ["Generator", "First-aid kit", "Fire extinguisher", "CCTV", "Security guard", "WhatsApp group", "Community hall", "Paani ki tanki", "Ambulance access"];
+const LIVING_SITUATIONS = ["Ghar par akela", "Parivaar ke saath", "Hospital me admit", "Surgery ke baad recovery", "Hostel / PG", "Other"];
+const CONDITIONS = ["Diabetes", "BP / Hypertension", "Heart disease", "Asthma / COPD", "Kidney disease", "Epilepsy (mirgi)", "Stroke recovery", "Cancer treatment", "Pregnancy", "Post-surgery recovery"];
+const EMERGENCY_RISKS = ["Seene me dard / heart attack", "Saans phoolna", "Sugar bahut low / high", "BP bahut high / low", "Daura (seizure)", "Girna / chot lagna", "Allergy reaction", "Zyada bleeding", "Dawai chhoot jaana / galat dawai"];
+const CARE_NEEDS = ["Chal-phir nahi sakte", "Wheelchair / walker use karte hain", "Kam dikhai deta hai", "Kam sunai deta hai", "Yaaddasht kamzor hai", "Dusron par nirbhar"];
+const RESOURCES = ["Dawai ka stock", "BP machine", "Glucometer", "Oxygen cylinder / concentrator", "Nebulizer", "Caretaker / nurse", "Emergency contact list", "Ambulance access", "Nazdiki hospital paas me", "Health insurance", "Medical reports ek jagah"];
 
 const clean = (v, max) => String(v ?? "").trim().slice(0, max);
 const onlyAllowed = (v, allowed) =>
@@ -30,8 +31,8 @@ function rateLimit(req, res, next) {
   next();
 }
 
-// TODO: login ke baad yahan auth middleware lagao aur Plan mein owner save karo,
-// warna koi bhi dusre ke plans dekh ya delete kar sakta hai.
+// TODO: login ke baad yahan auth middleware lagao aur Plan mein owner (patientId) save karo.
+// Ye medical data hai, warna koi bhi dusre ke plans dekh ya delete kar sakta hai.
 
 // 1) Naya plan banao (AI) aur save karo
 router.post("/generate", rateLimit, async (req, res) => {
@@ -39,35 +40,39 @@ router.post("/generate", rateLimit, async (req, res) => {
     const b = req.body || {};
     const input = {
       name: clean(b.name, 80),
-      kind: COMMUNITY_TYPES.includes(b.kind) ? b.kind : null,
-      households: Number(b.households),
+      age: Number(b.age),
+      livingSituation: LIVING_SITUATIONS.includes(b.livingSituation) ? b.livingSituation : null,
       location: clean(b.location, 100),
       notes: clean(b.notes, 300),
-      risks: onlyAllowed(b.risks, RISKS),
-      vulnerable: onlyAllowed(b.vulnerable, VULNERABLE),
+      conditions: onlyAllowed(b.conditions, CONDITIONS),
+      emergencyRisks: onlyAllowed(b.emergencyRisks, EMERGENCY_RISKS),
+      careNeeds: onlyAllowed(b.careNeeds, CARE_NEEDS),
       resources: onlyAllowed(b.resources, RESOURCES),
     };
 
-    if (!input.name) return res.status(400).json({ error: "Community ka naam likho." });
-    if (!input.kind) return res.status(400).json({ error: "Community ka type chuno." });
-    if (!Number.isInteger(input.households) || input.households < 1 || input.households > 100000) {
-      return res.status(400).json({ error: "Gharon ki sankhya 1 se 1,00,000 ke beech honi chahiye." });
+    if (!input.name) return res.status(400).json({ error: "Patient ka naam likho." });
+    if (!Number.isInteger(input.age) || input.age < 0 || input.age > 120) {
+      return res.status(400).json({ error: "Umar 0 se 120 ke beech honi chahiye." });
     }
-    if (input.risks.length === 0) {
-      return res.status(400).json({ error: "Kam se kam ek risk chuno." });
+    if (!input.livingSituation) {
+      return res.status(400).json({ error: "Patient kahan rehta hai, ye chuno." });
+    }
+    if (input.conditions.length === 0 && input.emergencyRisks.length === 0) {
+      return res.status(400).json({ error: "Kam se kam ek bimari ya emergency risk chuno." });
     }
 
     const { plan, fallback } = await generatePlan(input);
 
     const doc = await Plan.create({
-      community: {
+      patient: {
         name: input.name,
-        kind: input.kind,
-        households: input.households,
+        age: input.age,
+        livingSituation: input.livingSituation,
         location: input.location,
       },
-      risks: input.risks,
-      vulnerable: input.vulnerable,
+      conditions: input.conditions,
+      emergencyRisks: input.emergencyRisks,
+      careNeeds: input.careNeeds,
       resources: input.resources,
       notes: input.notes,
       plan,
@@ -76,7 +81,7 @@ router.post("/generate", rateLimit, async (req, res) => {
 
     res.status(201).json(doc);
   } catch (err) {
-    console.error(err);
+    console.error("POST /plans/generate:", err);
     res.status(500).json({ error: "Plan nahi ban paya" });
   }
 });
@@ -84,14 +89,14 @@ router.post("/generate", rateLimit, async (req, res) => {
 // 2) Saved plans ki list
 router.get("/", async (req, res) => {
   try {
-    const list = await Plan.find()
+    const list = await Plan.find({ patient: { $exists: true } }) // purane community plans skip
       .sort({ createdAt: -1 })
       .limit(50)
-      .select("community risks fallback createdAt")
+      .select("patient conditions emergencyRisks fallback createdAt")
       .lean();
     res.json(list);
   } catch (err) {
-    console.error(err);
+    console.error("GET /plans:", err);
     res.status(500).json({ error: "Plans load nahi ho paye" });
   }
 });
@@ -103,7 +108,7 @@ router.get("/:id", validId, async (req, res) => {
     if (!doc) return res.status(404).json({ error: "Plan nahi mila" });
     res.json(doc);
   } catch (err) {
-    console.error(err);
+    console.error("GET /plans/:id:", err);
     res.status(500).json({ error: "Plan load nahi ho paya" });
   }
 });
@@ -111,8 +116,9 @@ router.get("/:id", validId, async (req, res) => {
 // 4) Checklist progress save karo: body = { done: ["0-1", "2-3"] }
 router.patch("/:id/progress", validId, async (req, res) => {
   try {
-    const done = Array.isArray(req.body.done)
-      ? [...new Set(req.body.done.filter((x) => typeof x === "string" && x.length <= 12))].slice(0, 200)
+    const raw = req.body?.done;
+    const done = Array.isArray(raw)
+      ? [...new Set(raw.filter((x) => typeof x === "string" && x.length <= 12))].slice(0, 200)
       : null;
     if (!done) return res.status(400).json({ error: "done array chahiye" });
 
@@ -120,10 +126,10 @@ router.patch("/:id/progress", validId, async (req, res) => {
     if (!doc) return res.status(404).json({ error: "Plan nahi mila" });
     res.json({ done: doc.done });
   } catch (err) {
-    console.error(err);
+    console.error("PATCH /plans/:id/progress:", err);
     res.status(500).json({ error: "Progress save nahi hua" });
   }
-});   
+});
 
 // 5) Plan delete
 router.delete("/:id", validId, async (req, res) => {
@@ -131,7 +137,7 @@ router.delete("/:id", validId, async (req, res) => {
     await Plan.findByIdAndDelete(req.params.id);
     res.json({ ok: true });
   } catch (err) {
-    console.error(err);
+    console.error("DELETE /plans/:id:", err);
     res.status(500).json({ error: "Delete nahi ho paya" });
   }
 });
