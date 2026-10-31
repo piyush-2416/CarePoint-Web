@@ -1,41 +1,36 @@
 import React, { useEffect, useState } from "react";
-// import { Link, NavLink, useLocation } from "react-router-dom";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
- 
-const navLinks = [
-  { to: "/Doctors", icon: "🩺", label: "Doctors" },
-  { to: "/Medicines", icon: "💊", label: "Medicines" },
-    { to: "/Emergency", icon: "🚨", label: "Emergency" },
-    { to: "/Appointment", icon: "📅", label: "Appointments" },
-  { to: "/schemes", icon: "🏛️", label: "Govt. Schemes" },
 
-  { to: "/About", icon: "ℹ️", label: "About Us" },
-
-];
-const doctorLinks = [
-  { to: "/patients", icon: "🧑‍⚕️", label: "Patients" },
-    { to: "/Medicines", icon: "💊", label: "Medicines" },
-
-  { to: "/Emergency", icon: "🚨", label: "Emergency" },
-
-     { to: "/SafetyChecker", icon: "🛡️", label: "AI Safety Checker" },
-  { to: "/SafetyPlanner", icon: "🧭", label: "AI Safety Planner" },
-  { to: "/Documents", icon: "📂", label: "My Documents" },  { to: "/Profile", icon: "👤", label: "My Profile", dot: true },
-
-];
-const iconLinks = [
+// Features ki common list (My Profile par laal dot)
+const featureLinksAll = [
   { to: "/SafetyChecker", icon: "🛡️", label: "AI Safety Checker" },
   { to: "/SafetyPlanner", icon: "🧭", label: "AI Safety Planner" },
   { to: "/Documents", icon: "📂", label: "My Documents" },
   { to: "/Relatives", icon: "👥", label: "Emergency Contacts" },
   { to: "/Help", icon: "💬", label: "Help & Support" },
   { to: "/HealthTips", icon: "🙂", label: "Yours Health-Tips" },
-
   { to: "/Profile", icon: "👤", label: "My Profile", dot: true },
 ];
- 
 
+// ---------- Patient (aur logged-out visitor) ----------
+const patientMenu = [
+  { to: "/Doctors", icon: "🩺", label: "Doctors" },
+  { to: "/Medicines", icon: "💊", label: "Medicines" },
+  { to: "/Emergency", icon: "🚨", label: "Emergency" },
+  { to: "/Appointment", icon: "📅", label: "Appointments" },
+  { to: "/Schemes", icon: "🏛️", label: "Govt. Schemes" },
+  { to: "/About", icon: "ℹ️", label: "About Us" },
+];
+const patientFeatures = featureLinksAll;
+
+// ---------- Doctor ----------
+const doctorMenu = [
+  { to: "/patients", icon: "🧑‍⚕️", label: "Patients" },
+  { to: "/Emergency", icon: "🚨", label: "Emergency" },
+  { to: "/Appointment", icon: "📅", label: "Appointments" },
+];
+const doctorFeatures = featureLinksAll.filter((l) => l.to !== "/HealthTips");
 
 const DESKTOP_Q = "(min-width: 768px)";
 const W_SIDE = 260;
@@ -57,19 +52,10 @@ function writeSaved(value) {
   }
 }
 
-// TODO: Agar tumhare paas AuthContext hai to is function ki jagah
-// `const { user } = useAuth();` use karo (component ke andar).
-function readUser() {
-  try {
-    return JSON.parse(localStorage.getItem("user"));
-  } catch {
-    return null;
-  }
-}
-
 function Brand({ imgClass = "cpn-logo-img" }) {
   return (
     <>
+    
       <img src="/Logo.png" alt="CarePoint Logo" className={imgClass} />
       <span className="cpn-brand">
         Care<span>Point</span>
@@ -80,20 +66,19 @@ function Brand({ imgClass = "cpn-logo-img" }) {
 
 function Navbar() {
   const location = useLocation();
-
+  const navigate = useNavigate();
   const { user, loading, logout } = useAuth();
-const navigate = useNavigate();
 
-const handleLogout = async () => {
-  await logout();
-  navigate("/login");
-};
   // ---- Doctor / Patient role ----
-  // const user = readUser(); // <- yahan apna auth user lagao
   const isDoctor = user?.role === "doctor";
-  const menuLinks = isDoctor ? doctorLinks : navLinks;
-  const featureLinks = isDoctor ? [] : iconLinks;
+  // Auth check hone tak menu khali, taaki galat role ka menu na chamke
+  const menuLinks = loading ? [] : isDoctor ? doctorMenu : patientMenu;
+  const featureLinks = loading ? [] : isDoctor ? doctorFeatures : patientFeatures;
   const homePath = isDoctor ? "/patients" : "/";
+
+  const firstName = (user?.name || "").trim().split(" ")[0];
+  const greetName = isDoctor && !/^dr\.?$/i.test(firstName) ? `Dr. ${firstName}` : firstName;
+  const initial = (user?.name || "?").trim().charAt(0).toUpperCase();
 
   const [isDesktop, setIsDesktop] = useState(
     () => typeof window !== "undefined" && window.matchMedia(DESKTOP_Q).matches
@@ -121,7 +106,7 @@ const handleLogout = async () => {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
-  // 2) Desktop par open/close ka choice save karo (remount hone par bhi yaad rahe)
+  // 2) Desktop par open/close ka choice save karo
   useEffect(() => {
     if (isDesktop) writeSaved(open);
   }, [open, isDesktop]);
@@ -169,6 +154,16 @@ const handleLogout = async () => {
 
   const close = () => setOpen(false);
 
+  const handleLogout = async () => {
+    if (!window.confirm("Kya aap logout karna chahte hain?")) return;
+    try {
+      await logout();
+    } finally {
+      close();
+      navigate("/login", { replace: true });
+    }
+  };
+
   return (
     <>
       <style>{`
@@ -205,14 +200,11 @@ const handleLogout = async () => {
           transition: background-color .25s ease, color .25s ease;
         }
         .cpn-round-btn:hover { background: #fff; }
-        .cpn-round-btn:focus-visible, .cpn-s-link:focus-visible, .cpn-logo:focus-visible {
+        .cpn-round-btn:focus-visible, .cpn-s-link:focus-visible, .cpn-logo:focus-visible,
+        .cpn-auth-link:focus-visible, .cpn-me:focus-visible {
           outline: 3px solid var(--deep); outline-offset: 2px;
         }
-        .cpn-bars, .cpn-x { position: relative; width: 20px; height: 16px; display: block; }
-        .cpn-bars i { position: absolute; left: 0; width: 20px; height: 2px; border-radius: 2px; background: currentColor; }
-        .cpn-bars i:nth-child(1) { top: 0; }
-        .cpn-bars i:nth-child(2) { top: 7px; }
-        .cpn-bars i:nth-child(3) { top: 14px; }
+        .cpn-x { position: relative; width: 20px; height: 16px; display: block; }
         .cpn-x i { position: absolute; left: 0; top: 7px; width: 20px; height: 2px; border-radius: 2px; background: currentColor; }
         .cpn-x i:nth-child(1) { transform: rotate(45deg); }
         .cpn-x i:nth-child(2) { transform: rotate(-45deg); }
@@ -226,6 +218,25 @@ const handleLogout = async () => {
         }
         .cpn-brand { font-size: 21px; font-weight: 800; letter-spacing: .3px; line-height: 1; white-space: nowrap; color: var(--ink); }
         .cpn-brand span { color: #fff; text-shadow: 0 1px 2px rgba(5,61,61,0.35); }
+
+        /* ---------- Login / Signup / Hi, name ---------- */
+        .cpn-auth { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+        .cpn-auth-link {
+          height: 40px; padding: 0 18px; display: inline-flex; align-items: center; justify-content: center;
+          border-radius: 999px; font-size: 15px; font-weight: 700; text-decoration: none; white-space: nowrap;
+          color: var(--ink); background: var(--glass); border: 1.5px solid var(--glass-border);
+          transition: background-color .25s ease, color .25s ease;
+        }
+        .cpn-auth-link:hover { background: #fff; }
+        .cpn-auth-link.primary { background: var(--deep); border-color: var(--deep); color: #fff; }
+        .cpn-auth-link.primary:hover { background: var(--ink); }
+        .cpn-me { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); font-weight: 700; border-radius: 999px; }
+        .cpn-avatar {
+          width: 40px; height: 40px; flex: 0 0 40px; border-radius: 50%;
+          display: inline-flex; align-items: center; justify-content: center;
+          background: var(--deep); color: #fff; font-weight: 800; font-size: 17px; border: 2px solid #fff;
+        }
+        .cpn-hi { max-width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
         /* ---------- Sidebar ---------- */
         .cpn-side {
@@ -267,6 +278,13 @@ const handleLogout = async () => {
         .cpn-s-arrow { margin-left: auto; margin-right: 6px; opacity: .6; font-size: 20px; }
         .cpn-dot { position: absolute; top: 8px; left: 36px; width: 11px; height: 11px; border-radius: 50%; background: var(--red); border: 2px solid #fff; }
 
+        .cpn-side-foot {
+          flex: 0 0 auto; padding: 12px 14px 16px; border-top: 3px solid var(--deep);
+          display: flex; flex-direction: column; gap: 8px;
+        }
+        button.cpn-foot-btn { width: 100%; cursor: pointer; font-family: inherit; text-align: left; }
+        button.cpn-foot-btn:hover { background: #fff; }
+
         .cpn-backdrop {
           position: fixed; inset: 0; z-index: 55; background: rgba(5,61,61,0.45);
           opacity: 0; pointer-events: none; transition: opacity .3s ease;
@@ -282,12 +300,14 @@ const handleLogout = async () => {
           .cpn-logo-img { width: 42px; height: 42px; min-width: 42px; flex-basis: 42px; }
           .cpn-brand { font-size: 19px; }
           .cpn-side { width: min(82vw, ${W_SIDE + 30}px); }
+          .cpn-auth-link { height: 38px; padding: 0 14px; font-size: 14px; }
         }
+        @media (max-width: 520px) { .cpn-hi { display: none; } }
         @media (max-width: 340px) { .cpn-bar .cpn-brand { display: none; } }
 
         @media (prefers-reduced-motion: reduce) {
           .cpn-header, .cpn-line { animation: none; }
-          .cpn-side, .cpn-backdrop, .cpn-round-btn, .cpn-s-link { transition: none; }
+          .cpn-side, .cpn-backdrop, .cpn-round-btn, .cpn-s-link, .cpn-auth-link { transition: none; }
         }
       `}</style>
 
@@ -295,38 +315,34 @@ const handleLogout = async () => {
       <header className={`cpn-header ${scrolled ? "scrolled" : ""}`}>
         <div className="cpn-line" />
         <div className="cpn-bar">
-         {!loading && (
-  <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 10 }}>
-    {user ? (
-      <>
-        <span style={{ fontWeight: 700 }}>Hi, {user.name}</span>
-        {/* <button
-          type="button"
-          onClick={handleLogout}
-          style={{ padding: "8px 16px", borderRadius: 999, border: "1.5px solid #fff", background: "rgba(255,255,255,.35)", fontWeight: 700, cursor: "pointer" }}
-        >
-          Lowout
-        </button> */}
-      </>
-    ) : (
-      <>
-        <Link to="/login" style={{ padding: "8px 16px", borderRadius: 999, background: "rgba(255,255,255,.35)", border: "1.5px solid #fff", fontWeight: 700, textDecoration: "none", color: "inherit" }}>
-          Login
-        </Link>
-        <Link to="/signup" style={{ padding: "8px 16px", borderRadius: 999, background: "#0b6b6b", color: "#fff", fontWeight: 700, textDecoration: "none" }}>
-          Sign up
-        </Link>
-      </>
-    )}
-  </div>
-)}
-
           {/* Desktop par sidebar khula ho to logo sidebar me dikhta hai, isliye yahan chhupa hai */}
           {(!isDesktop || !open) && (
-            <Link         aria-expanded={open}       onClick={() => setOpen(true)}
-  to={homePath} className="cpn-logo" aria-label="CarePoint Home">
+            <Link
+              to={homePath}
+              className="cpn-logo"
+              aria-label="CarePoint Home"
+              aria-expanded={open}
+              onClick={() => setOpen(true)}
+            >
               <Brand />
             </Link>
+          )}
+
+          {/* Login / Signup ya "Hi, naam" */}
+          {!loading && (
+            <div className="cpn-auth">
+              {user ? (
+                <Link to="/Profile" className="cpn-me" aria-label="My Profile">
+                  {/* <span className="cpn-avatar" aria-hidden="true">{initial}</span> */}
+                  <span className="cpn-hi">Hi, {greetName}</span>
+                </Link>
+              ) : (
+                <>
+                  <Link to="/login" className="cpn-auth-link">Login</Link>
+                  <Link to="/signup" className="cpn-auth-link primary">Sign up</Link>
+                </>
+              )}
+            </div>
           )}
         </div>
       </header>
@@ -339,7 +355,7 @@ const handleLogout = async () => {
       {/* ================= SIDEBAR ================= */}
       <aside id="cpn-sidebar" aria-label="Sidebar" className={`cpn-side ${open ? "show" : ""}`}>
         <div className="cpn-side-head">
-          <Link to={homePath} className="cpn-logo" aria-label="CarePoint Home" onClick={close}>
+          <Link   className="cpn-logo" aria-label="CarePoint Home" onClick={close}>
             <Brand />
           </Link>
           <button type="button" onClick={close} aria-label="Close sidebar" className="cpn-round-btn">
@@ -364,8 +380,6 @@ const handleLogout = async () => {
             ))}
           </nav>
 
-
-
           {featureLinks.length > 0 && (
             <>
               <p className="cpn-s-title second">Features</p>
@@ -386,7 +400,29 @@ const handleLogout = async () => {
             </>
           )}
         </div>
-     
+
+        {/* Sidebar ke neeche: Login / Signup ya Logout */}
+        {/* {!loading && (
+          <div className="cpn-side-foot">
+            {user ? (
+              <button type="button" className="cpn-s-link cpn-foot-btn" onClick={handleLogout}>
+                <span className="cpn-s-emoji" aria-hidden="true">🚪</span>
+                Logooout
+              </button>
+            ) : (
+              <>
+                <NavLink to="/login" onClick={close} className="cpn-s-link">
+                  <span className="cpn-s-emoji" aria-hidden="true">🔑</span>
+                  Login
+                </NavLink>
+                <NavLink to="/signup" onClick={close} className="cpn-s-link">
+                  <span className="cpn-s-emoji" aria-hidden="true">📝</span>
+                  Sign up
+                </NavLink>
+              </>
+            )} */}
+          {/* </div> */}
+        {/* )} */}
       </aside>
     </>
   );
