@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import api from "../api";
+import Navbar from "../Components/Navbar";
+
+const GENDERS = ["Male", "Female", "Other"];
+const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
 // Khali value ke liye dash dikhao
 const show = (v) => (v === undefined || v === null || String(v).trim() === "" ? "—" : v);
@@ -10,13 +15,13 @@ const fmtDate = (d) =>
     ? new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
     : "—";
 
-/* Scoped CSS: sab kuch .pf ke andar, taaki global CSS (reset / Vite default) isse na bigaade */
+/* Scoped CSS: sab kuch .pf ke andar, taaki global CSS isse na bigaade */
 const css = `
 .pf{width:100%;min-height:100vh;padding:40px 20px 64px;text-align:left;color:#0f172a;font-family:inherit;line-height:1.5;
   background:linear-gradient(180deg,#ecfdf5 0%,#f7fffb 320px,#ffffff 100%)}
 .pf *,.pf *::before,.pf *::after{box-sizing:border-box}
 .pf h1,.pf h2,.pf h3,.pf p{margin:0;padding:0}
-.pf button:focus-visible{outline:3px solid rgba(16,185,129,.5);outline-offset:2px}
+.pf button:focus-visible,.pf a:focus-visible{outline:3px solid rgba(16,185,129,.5);outline-offset:2px}
 
 .pf-wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
 .pf-card{background:#fff;border:1px solid #e2e8f0;border-radius:24px;box-shadow:0 10px 28px -18px rgba(15,23,42,.22)}
@@ -38,12 +43,26 @@ const css = `
 .pf .pf-title{display:flex;align-items:center;gap:12px;font-size:1.1rem;font-weight:800;color:#0f172a}
 .pf-title::before{content:"";width:6px;height:22px;border-radius:4px;background:linear-gradient(#10b981,#14b8a6)}
 .pf-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
-.pf-field{padding:14px 18px;border:1px solid #edf2f7;border-radius:16px;background:#f8fafc}
+.pf-field{display:block;padding:14px 18px;border:1px solid #edf2f7;border-radius:16px;background:#f8fafc}
 .pf-label{display:block;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#94a3b8}
 .pf-value{display:block;margin-top:6px;font-size:.95rem;font-weight:600;color:#1e293b;word-break:break-word}
 
-/* alert */
+/* edit form */
+.pf-input{width:100%;margin-top:6px;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;
+  font:inherit;font-size:.95rem;color:#1e293b}
+.pf-input:focus{outline:none;border-color:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.18)}
+.pf-form-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.pf .pf-edit{display:inline-block;margin-top:22px;padding:12px 26px;border:0;border-radius:999px;background:#10b981;color:#fff;
+  font:inherit;font-size:.9rem;font-weight:700;text-decoration:none;cursor:pointer;transition:background .15s}
+.pf .pf-edit:hover{background:#059669}
+.pf-form-actions .pf-edit{margin-top:0}
+.pf button.pf-cancel{padding:12px 26px;border-radius:999px;border:1px solid #cbd5e1;background:#fff;color:#334155;
+  font:inherit;font-size:.9rem;font-weight:700;cursor:pointer}
+.pf button.pf-cancel:hover{background:#f1f5f9}
+
+/* alerts */
 .pf-alert{padding:14px 20px;border-radius:16px;border:1px solid #fecaca;background:#fef2f2;color:#b91c1c;font-size:.9rem}
+.pf-alert.warn{margin-top:16px;border-color:#fde68a;background:#fffbeb;color:#92400e}
 
 /* logout */
 .pf-logout{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px 32px;border-color:#fee2e2}
@@ -87,13 +106,29 @@ function Field({ label, value }) {
 }
 
 export default function Profile() {
-  const { user, logout } = useAuth();
+  const { user, loading, logout, updateProfile } = useAuth();
   const navigate = useNavigate();
 
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const [error, setError] = useState("");
   const noBtnRef = useRef(null);
+
+  const [doc, setDoc] = useState(null); // doctor ki professional details (Doctors-data se)
+
+  // Patient ki personal details edit
+  const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState({ phone: "", age: "", gender: "", bloodGroup: "" });
+
+  // Sirf doctor ke liye: Doctors-data se uski saved profile lao
+  useEffect(() => {
+    if (user?.role !== "doctor") return;
+    api
+      .get("/doctor/profile")
+      .then((res) => setDoc(res.data))
+      .catch(() => setDoc(null));
+  }, [user?.role]);
 
   // Modal khula ho to: Escape se band ho, aur focus safe option ("Nahi") par rahe
   useEffect(() => {
@@ -106,10 +141,41 @@ export default function Profile() {
     return () => window.removeEventListener("keydown", onKey);
   }, [confirmOpen, loggingOut]);
 
+  // ----- Saare hooks upar ho chuke, ab guards -----
+  if (loading) return null;
   if (!user) return <Navigate to="/login" replace />;
 
   const isDoctor = user.role === "doctor";
   const initial = (user.name || "?").trim().charAt(0).toUpperCase();
+  const displayName =
+    isDoctor && !/^dr\.?\s/i.test(user.name || "") ? `Dr. ${user.name}` : user.name;
+
+  const startEdit = () => {
+    setError("");
+    setForm({
+      phone: user.phone || "",
+      age: user.age ?? "",
+      gender: user.gender || "",
+      bloodGroup: user.bloodGroup || "",
+    });
+    setEditing(true);
+  };
+
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSaving(true);
+    try {
+      await updateProfile(form);
+      setEditing(false);
+    } catch (err) {
+      setError(err?.response?.data?.message || "Save nahi ho paya, dobara try karo");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const handleLogout = async () => {
     setLoggingOut(true);
@@ -125,114 +191,164 @@ export default function Profile() {
   };
 
   return (
-    <div className="pf">
-      <style>{css}</style>
+    <>
+      <Navbar />
+      <div className="pf">
+        <style>{css}</style>
 
-      <div className="pf-wrap">
-        {/* ================= Header ================= */}
-        <section className="pf-card">
-          <div className="pf-banner" />
-          <div className="pf-head">
-            <div className="pf-avatar" aria-hidden="true">
-              {initial}
-            </div>
-            <div className="pf-info">
-              <div className="pf-name-row">
-                <h1 className="pf-name">
-                  {isDoctor ? "Dr. " : ""}
-                  {show(user.name)}
-                </h1>
-                <span className="pf-badge">{isDoctor ? "🩺 Doctor" : "🧑 Patient"}</span>
+        <div className="pf-wrap">
+          {/* ================= Header ================= */}
+          <section className="pf-card">
+            <div className="pf-banner" />
+            <div className="pf-head">
+              <div className="pf-avatar" aria-hidden="true">{initial}</div>
+              <div className="pf-info">
+                <div className="pf-name-row">
+                  <h1 className="pf-name">{show(displayName)}</h1>
+                  <span className="pf-badge">{isDoctor ? "🩺 Doctor" : "🧑 Patient"}</span>
+                </div>
+                <p className="pf-email">📧 {show(user.email)}</p>
               </div>
-              <p className="pf-email">📧 {show(user.email)}</p>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {error && (
-          <div role="alert" className="pf-alert">
-            ⚠️ {error}
-          </div>
-        )}
+          {error && (
+            <div role="alert" className="pf-alert">⚠️ {error}</div>
+          )}
 
-        {/* ================= Account info ================= */}
-        <section className="pf-card pf-sec">
-          <h2 className="pf-title">Account Information</h2>
-          <div className="pf-grid">
-            <Field label="Naam" value={show(user.name)} />
-            <Field label="Email" value={show(user.email)} />
-            <Field label="Role" value={isDoctor ? "Doctor" : "Patient"} />
-            <Field label="Account banaya" value={fmtDate(user.createdAt)} />
-          </div>
-        </section>
+          {/* ================= Account info ================= */}
+          <section className="pf-card pf-sec">
+            <h2 className="pf-title">Account Information</h2>
+            <div className="pf-grid">
+              <Field label="Naam" value={show(user.name)} />
+              <Field label="Email" value={show(user.email)} />
+              <Field label="Role" value={isDoctor ? "Doctor" : "Patient"} />
+              <Field label="Account banaya" value={fmtDate(user.createdAt)} />
+            </div>
+          </section>
 
-        {/* ================= Details ================= */}
-        <section className="pf-card pf-sec">
-          <h2 className="pf-title">{isDoctor ? "Professional Details" : "Personal Details"}</h2>
-          <div className="pf-grid">
-            <Field label="Phone" value={show(user.phone)} />
+          {/* ================= Details (Doctor: professional, Patient: personal) ================= */}
+          <section className="pf-card pf-sec">
+            <h2 className="pf-title">{isDoctor ? "Professional Details" : "Personal Details"}</h2>
+
+            {isDoctor && doc && !doc.isProfileComplete && (
+              <div className="pf-alert warn">
+                ⚠️ Profile adhuri hai, patients aapko Doctors list mein nahi dekh paa rahe.
+              </div>
+            )}
+
             {isDoctor ? (
               <>
-                <Field label="Specialization" value={show(user.specialization)} />
-                <Field label="Experience" value={show(user.experience)} />
-                <Field label="Hospital / Clinic" value={show(user.hospital)} />
+                <div className="pf-grid">
+                  <Field label="Phone" value={show(doc?.phone)} />
+                  <Field label="Specialization" value={show(doc?.specialization)} />
+                  <Field label="Qualification" value={show(doc?.qualification)} />
+                  <Field label="Experience" value={show(doc?.experience)} />
+                  <Field
+                    label="Consultation fee"
+                    value={doc?.consultationFee ? `₹${doc.consultationFee}` : "—"}
+                  />
+                  <Field label="Available timing" value={show(doc?.availableTime)} />
+                  <Field label="Hospital / Clinic" value={show(doc?.hospital)} />
+                </div>
+                <Link to="/doctor/profile" className="pf-edit">✏️ Profile edit karo</Link>
               </>
+            ) : editing ? (
+              <form onSubmit={handleSave}>
+                <div className="pf-grid">
+                  <label className="pf-field">
+                    <span className="pf-label">Phone</span>
+                    <input
+                      className="pf-input" name="phone" inputMode="numeric" maxLength={15}
+                      value={form.phone} onChange={handleChange} placeholder="10 digit mobile number"
+                    />
+                  </label>
+                  <label className="pf-field">
+                    <span className="pf-label">Umar</span>
+                    <input
+                      className="pf-input" name="age" type="number" min="0" max="120"
+                      value={form.age} onChange={handleChange}
+                    />
+                  </label>
+                  <label className="pf-field">
+                    <span className="pf-label">Gender</span>
+                    <select className="pf-input" name="gender" value={form.gender} onChange={handleChange}>
+                      <option value="">Chuno</option>
+                      {GENDERS.map((g) => <option key={g} value={g}>{g}</option>)}
+                    </select>
+                  </label>
+                  <label className="pf-field">
+                    <span className="pf-label">Blood Group</span>
+                    <select className="pf-input" name="bloodGroup" value={form.bloodGroup} onChange={handleChange}>
+                      <option value="">Chuno</option>
+                      {BLOOD_GROUPS.map((b) => <option key={b} value={b}>{b}</option>)}
+                    </select>
+                  </label>
+                </div>
+                <div className="pf-form-actions">
+                  <button type="submit" className="pf-edit" disabled={saving}>
+                    {saving ? "Save ho raha hai..." : "Save karo"}
+                  </button>
+                  <button type="button" className="pf-cancel" onClick={() => setEditing(false)} disabled={saving}>
+                    Cancel
+                  </button>
+                </div>
+              </form>
             ) : (
               <>
-                <Field label="Umar" value={show(user.age)} />
-                <Field label="Gender" value={show(user.gender)} />
-                <Field label="Blood Group" value={show(user.bloodGroup)} />
+                <div className="pf-grid">
+                  <Field label="Phone" value={show(user.phone)} />
+                  <Field label="Umar" value={show(user.age)} />
+                  <Field label="Gender" value={show(user.gender)} />
+                  <Field label="Blood Group" value={show(user.bloodGroup)} />
+                </div>
+                <button type="button" className="pf-edit" onClick={startEdit}>✏️ Details edit karo</button>
               </>
             )}
-          </div>
-        </section>
+          </section>
 
-        {/* ================= Logout ================= */}
-        <section className="pf-card pf-logout">
-          <div>
-            <h2>Logout</h2>
-            <p>Is device se apne account se bahar niklo.</p>
-          </div>
-          <button type="button" className="pf-out" onClick={() => setConfirmOpen(true)}>
-            Logout karo
-          </button>
-        </section>
-      </div>
-
-      {/* ================= Logout confirm (Yes / No) ================= */}
-      {confirmOpen && (
-        <div className="pf-overlay" onClick={() => !loggingOut && setConfirmOpen(false)}>
-          <div
-            className="pf-modal"
-            role="alertdialog"
-            aria-modal="true"
-            aria-labelledby="logout-title"
-            aria-describedby="logout-desc"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="pf-warn" aria-hidden="true">
-              ⚠️
+          {/* ================= Logout ================= */}
+          <section className="pf-card pf-logout">
+            <div>
+              <h2>Logout</h2>
+              <p>Is device se apne account se bahar niklo.</p>
             </div>
-            <h3 id="logout-title">Kya aap logout karna chahte hain?</h3>
-            <p id="logout-desc">Logout karne ke baad dobara login karna padega.</p>
-
-            <div className="pf-actions">
-              <button
-                ref={noBtnRef}
-                type="button"
-                className="pf-no"
-                onClick={() => setConfirmOpen(false)}
-                disabled={loggingOut}
-              >
-                Nahi
-              </button>
-              <button type="button" className="pf-yes" onClick={handleLogout} disabled={loggingOut}>
-                {loggingOut ? "Ho raha hai..." : "Haan, logout"}
-              </button>
-            </div>
-          </div>
+            <button type="button" className="pf-out" onClick={() => setConfirmOpen(true)}>
+              Logout karo
+            </button>
+          </section>
         </div>
-      )}
-    </div>
+
+        {/* ================= Logout confirm (Yes / No) ================= */}
+        {confirmOpen && (
+          <div className="pf-overlay" onClick={() => !loggingOut && setConfirmOpen(false)}>
+            <div
+              className="pf-modal"
+              role="alertdialog"
+              aria-modal="true"
+              aria-labelledby="logout-title"
+              aria-describedby="logout-desc"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="pf-warn" aria-hidden="true">⚠️</div>
+              <h3 id="logout-title">Kya aap logout karna chahte hain?</h3>
+              <p id="logout-desc">Logout karne ke baad dobara login karna padega.</p>
+
+              <div className="pf-actions">
+                <button
+                  ref={noBtnRef} type="button" className="pf-no"
+                  onClick={() => setConfirmOpen(false)} disabled={loggingOut}
+                >
+                  Nahi
+                </button>
+                <button type="button" className="pf-yes" onClick={handleLogout} disabled={loggingOut}>
+                  {loggingOut ? "Ho raha hai..." : "Haan, logout"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 }
