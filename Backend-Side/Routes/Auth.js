@@ -39,10 +39,22 @@ function setAuthCookie(res, user) {
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
   res.cookie("token", token, { ...cookieBase, maxAge: SEVEN_DAYS });
 }
-
 function publicUser(u) {
-  return { id: u._id, name: u.name, email: u.email, role: roleOf(u) };
+  return {
+    id: u._id,
+    name: u.name,
+    email: u.email,
+    role: roleOf(u),
+    createdAt: u.createdAt,
+    phone: u.phone || "",
+    age: u.age ?? null,
+    gender: u.gender || "",
+    bloodGroup: u.bloodGroup || "",
+  };
 }
+// function publicUser(u) {
+//   return { id: u._id, name: u.name, email: u.email, role: roleOf(u) };
+// }
 
 // ---------- POST /api/auth/signup ----------
 router.post("/signup", authLimiter, async (req, res) => {
@@ -96,6 +108,61 @@ router.post("/signup", authLimiter, async (req, res) => {
     res.status(500).json({ message: "Signup nahi ho paya" });
   }
 });
+// ---------- PUT /api/auth/me (patient apni personal details save kare) ----------
+const GENDERS = ["Male", "Female", "Other"];
+const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+
+router.put("/me", requireAuth, async (req, res) => {
+  try {
+    if (roleOf(req.user) !== "patient") {
+      return res.status(403).json({ message: "Doctor apni details Doctor Profile page se badlein" });
+    }
+
+    const b = req.body ?? {};
+    const updates = {};
+
+    // Phone (khali chhod sakte ho)
+    let phone = String(b.phone ?? "").replace(/\D/g, "");
+    if (phone.length === 12 && phone.startsWith("91")) phone = phone.slice(2);
+    else if (phone.length === 11 && phone.startsWith("0")) phone = phone.slice(1);
+    if (phone && !/^[6-9]\d{9}$/.test(phone)) {
+      return res.status(400).json({ message: "Sahi 10 digit ka mobile number daalo" });
+    }
+    updates.phone = phone;
+
+    // Umar
+    if (b.age === "" || b.age === null || b.age === undefined) {
+      updates.age = null;
+    } else {
+      const age = Number(b.age);
+      if (!Number.isInteger(age) || age < 0 || age > 120) {
+        return res.status(400).json({ message: "Umar 0 se 120 ke beech ho" });
+      }
+      updates.age = age;
+    }
+
+    // Gender
+    const gender = String(b.gender ?? "");
+    if (gender && !GENDERS.includes(gender)) {
+      return res.status(400).json({ message: "Gender galat hai" });
+    }
+    updates.gender = gender;
+
+    // Blood group
+    const bloodGroup = String(b.bloodGroup ?? "");
+    if (bloodGroup && !BLOOD_GROUPS.includes(bloodGroup)) {
+      return res.status(400).json({ message: "Blood group galat hai" });
+    }
+    updates.bloodGroup = bloodGroup;
+
+    await User.updateOne({ _id: req.user._id }, { $set: updates });
+    const fresh = await User.findById(req.user._id);
+    res.json({ user: publicUser(fresh) });
+  } catch (error) {
+    console.error("PUT /api/auth/me:", error);
+    res.status(500).json({ message: "Details save nahi ho paayi" });
+  }
+});
 
 // ---------- POST /api/auth/login ----------
 router.post("/login", authLimiter, async (req, res) => {
@@ -127,6 +194,8 @@ router.post("/logout", (req, res) => {
   res.clearCookie("token", cookieBase);
   res.json({ message: "Logout ho gaya" });
 });
+
+
 
 // ---------- GET /api/auth/me ----------
 router.get("/me", requireAuth, (req, res) => {
