@@ -71,14 +71,14 @@ function Home() {
       group: "Digital",
       icon: "📱",
       items: [
-        { icon: "📱", label: "Online Appointment", sub: "Ghar baithe booking" },
+        { icon: "📱", label: "Online Appointments", sub: "Ghar baithe booking" },
         { icon: "🎥", label: "Video Consultation", sub: "Doctor se video par baat" },
         { icon: "📄", label: "Digital Health Records", sub: "Reports hamesha saath" },
       ],
     },
   ];
   const SERVICES = [
-    { title: "Doctors", desc: "Best doctors dhundo aur appointment lo", icon: "🩺", to: "/doctors" },
+    { title: "Doctors", desc: "Best doctors dhundo aur Appointments lo", icon: "🩺", to: "/doctors" },
     { title: "Medicines", desc: "Dawaiyan online order karo", icon: "💊", to: "/medicines" },
     { title: "AI Safety Planner", desc: "Emergency ke liye pehle se taiyari", icon: "🛡️", to: "/safety-planner", ai: true },
     { title: "AI Safety Checker", desc: "Abhi ki situation ka khatra check karo", icon: "🔍", to: "/safety-checker", ai: true },
@@ -447,7 +447,7 @@ function Home() {
               <div>
                 <h2>Stay Updated with CarePoint</h2>
                 <p>
-                  Get health tips, appointment reminders and emergency updates.
+                  Get health tips, Appointments reminders and emergency updates.
                 </p>
               </div>
             </div>
