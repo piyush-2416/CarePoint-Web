@@ -6,7 +6,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import multer from "multer";
 import path from "path";
-import fs from "fs";
+import fs from "fs";import appointmentsRouter from "./Routes/Appointments.js";
 import crypto from "crypto";
 import { fileURLToPath } from "url";
 import doctorProfileRouter from "./Routes/DoctorProfile.js";
@@ -111,8 +111,8 @@ app.get(["/api/products", "/api/doctors"], async (req, res) => {
     console.error("❌ Doctors load error:", err.message);
     res.status(500).json({ error: "Doctors load nahi ho paaye" });
   }
-});
-
+}); 
+app.use("/api/appointments", requireAuth, requireRole("patient", "doctor"), appointmentsRouter);
 // Ek doctor ki detail (id ya _id se)
 app.get(["/api/products/:id", "/api/doctors/:id", "/api/Doctorid/:id"], async (req, res) => {
   try {
