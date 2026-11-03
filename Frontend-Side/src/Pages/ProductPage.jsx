@@ -111,7 +111,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 
-import Appointment from "./Appointment";
+import Appointments from "./Appointments";
 import Doctorid from "./Doctorid";
 import Navbar from "../Components/Navbar";
 function ProductPage() {
