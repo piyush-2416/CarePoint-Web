@@ -4,12 +4,16 @@ import { useAuth } from "../context/AuthContext";
 
 // Features ki common list (My Profile par laal dot)
 const featureLinksAll = [
+  { to: "/Documents", icon: "📂", label: "My Documents" },
   { to: "/SafetyChecker", icon: "🛡️", label: "AI Safety Checker" },
   { to: "/SafetyPlanner", icon: "🧭", label: "AI Safety Planner" },
-  { to: "/Documents", icon: "📂", label: "My Documents" },
-  { to: "/Relatives", icon: "👥", label: "Emergency Contacts" },
+
+  // { to: "/Relatives", icon: "👥", label: "Emergency Contacts" },
   { to: "/Help", icon: "💬", label: "Help & Support" },
   { to: "/HealthTips", icon: "🙂", label: "Yours Health-Tips" },
+  { to: "/About", icon: "ℹ️", label: "About Us" },
+    { to: "/Feedback", icon: "ℹ️", label: "Feedback" },
+
   { to: "/Profile", icon: "👤", label: "My Profile", dot: true },
 ];
 
@@ -17,17 +21,21 @@ const featureLinksAll = [
 const patientMenu = [
   { to: "/Doctors", icon: "🩺", label: "Doctors" },
   { to: "/Medicines", icon: "💊", label: "Medicines" },
+
   { to: "/Emergency", icon: "🚨", label: "Emergency" },
-  { to: "/Appointment", icon: "📅", label: "Appointments" },
+  { to: "/Appointment", icon: "📅", label: "Appointments" },     { to: "/Relatives", icon: "📞", label: "Relatives" },
+
   { to: "/Schemes", icon: "🏛️", label: "Govt. Schemes" },
-  { to: "/About", icon: "ℹ️", label: "About Us" },
+ 
 ];
 const patientFeatures = featureLinksAll;
 
 // ---------- Doctor ----------
 const doctorMenu = [
   { to: "/patients", icon: "🧑‍⚕️", label: "Patients" },
-  { to: "/Emergency", icon: "🚨", label: "Emergency" },
+  // { to: "/Emergency", icon: "🚨", label: "Emergency" }, 
+   { to: "/Relatives", icon: "🩺", label: "Relatives" },
+
   { to: "/Appointment", icon: "📅", label: "Appointments" },
 ];
 const doctorFeatures = featureLinksAll.filter((l) => l.to !== "/HealthTips");
@@ -55,7 +63,6 @@ function writeSaved(value) {
 function Brand({ imgClass = "cpn-logo-img" }) {
   return (
     <>
-    
       <img src="/Logo.png" alt="CarePoint Logo" className={imgClass} />
       <span className="cpn-brand">
         Care<span>Point</span>
@@ -73,15 +80,20 @@ function Navbar() {
   const isDoctor = user?.role === "doctor";
   // Auth check hone tak menu khali, taaki galat role ka menu na chamke
   const menuLinks = loading ? [] : isDoctor ? doctorMenu : patientMenu;
-  const featureLinks = loading ? [] : isDoctor ? doctorFeatures : patientFeatures;
+  const featureLinks = loading
+    ? []
+    : isDoctor
+      ? doctorFeatures
+      : patientFeatures;
   const homePath = isDoctor ? "/patients" : "/";
 
   const firstName = (user?.name || "").trim().split(" ")[0];
-  const greetName = isDoctor && !/^dr\.?$/i.test(firstName) ? `Dr. ${firstName}` : firstName;
+  const greetName =
+    isDoctor && !/^dr\.?$/i.test(firstName) ? `Dr. ${firstName}` : firstName;
   const initial = (user?.name || "?").trim().charAt(0).toUpperCase();
 
   const [isDesktop, setIsDesktop] = useState(
-    () => typeof window !== "undefined" && window.matchMedia(DESKTOP_Q).matches
+    () => typeof window !== "undefined" && window.matchMedia(DESKTOP_Q).matches,
   );
 
   // Desktop: pehli baar open, uske baad jo user ne last choose kiya wahi yaad rahega
@@ -338,8 +350,12 @@ function Navbar() {
                 </Link>
               ) : (
                 <>
-                  <Link to="/login" className="cpn-auth-link">Login</Link>
-                  <Link to="/signup" className="cpn-auth-link primary">Sign up</Link>
+                  <Link to="/login" className="cpn-auth-link">
+                    Login
+                  </Link>
+                  <Link to="/signup" className="cpn-auth-link primary">
+                    Sign up
+                  </Link>
                 </>
               )}
             </div>
@@ -349,17 +365,37 @@ function Navbar() {
 
       {/* Mobile backdrop */}
       {!isDesktop && (
-        <div className={`cpn-backdrop ${open ? "show" : ""}`} onClick={close} aria-hidden="true" />
+        <div
+          className={`cpn-backdrop ${open ? "show" : ""}`}
+          onClick={close}
+          aria-hidden="true"
+        />
       )}
 
       {/* ================= SIDEBAR ================= */}
-      <aside id="cpn-sidebar" aria-label="Sidebar" className={`cpn-side ${open ? "show" : ""}`}>
+      <aside
+        id="cpn-sidebar"
+        aria-label="Sidebar"
+        className={`cpn-side ${open ? "show" : ""}`}
+      >
         <div className="cpn-side-head">
-          <Link   className="cpn-logo" aria-label="CarePoint Home" onClick={close}>
+          <Link
+            className="cpn-logo"
+            aria-label="CarePoint Home"
+            onClick={close}
+          >
             <Brand />
           </Link>
-          <button type="button" onClick={close} aria-label="Close sidebar" className="cpn-round-btn">
-            <span className="cpn-x" aria-hidden="true"><i /><i /></span>
+          <button
+            type="button"
+            onClick={close}
+            aria-label="Close sidebar"
+            className="cpn-round-btn"
+          >
+            <span className="cpn-x" aria-hidden="true">
+              <i />
+              <i />
+            </span>
           </button>
         </div>
 
@@ -371,11 +407,17 @@ function Navbar() {
                 key={l.to}
                 to={l.to}
                 onClick={close}
-                className={({ isActive }) => `cpn-s-link ${isActive ? "active" : ""}`}
+                className={({ isActive }) =>
+                  `cpn-s-link ${isActive ? "active" : ""}`
+                }
               >
-                <span className="cpn-s-emoji" aria-hidden="true">{l.icon}</span>
+                <span className="cpn-s-emoji" aria-hidden="true">
+                  {l.icon}
+                </span>
                 {l.label}
-                <span className="cpn-s-arrow" aria-hidden="true">›</span>
+                <span className="cpn-s-arrow" aria-hidden="true">
+                  ›
+                </span>
               </NavLink>
             ))}
           </nav>
@@ -389,9 +431,13 @@ function Navbar() {
                     key={l.to}
                     to={l.to}
                     onClick={close}
-                    className={({ isActive }) => `cpn-s-link ${isActive ? "active" : ""}`}
+                    className={({ isActive }) =>
+                      `cpn-s-link ${isActive ? "active" : ""}`
+                    }
                   >
-                    <span className="cpn-s-emoji" aria-hidden="true">{l.icon}</span>
+                    <span className="cpn-s-emoji" aria-hidden="true">
+                      {l.icon}
+                    </span>
                     {l.label}
                     {l.dot && <span className="cpn-dot" />}
                   </NavLink>
@@ -421,7 +467,7 @@ function Navbar() {
                 </NavLink>
               </>
             )} */}
-          {/* </div> */}
+        {/* </div> */}
         {/* )} */}
       </aside>
     </>
