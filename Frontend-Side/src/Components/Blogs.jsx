@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Users,
-  Quote,
   ThumbsUp,
   MessageCircle,
   ArrowRight,
@@ -10,10 +9,6 @@ import {
   Star,
   Heart,
 } from "lucide-react";
-
-/* NOTE: spacing / alignment / width classes use the "!" (important) prefix on purpose.
-   Your project's global CSS overrides plain Tailwind padding, margin and text-align,
-   so "!" makes this section immune to it. Still 100% Tailwind. */
 
 /* ───────── DATA ───────── */
 const voices = [
@@ -49,84 +44,64 @@ const voices = [
       "A big thank you to our maintenance team for the quick response on the water supply issue. Truly appreciate your hard work and dedication!",
     likes: 32,
     comments: 3,
-  }, 
+  },
 ];
 
 const tagStyles = {
-  Suggestion: { bg: "bg-emerald-50", text: "text-emerald-700", icon: MessageSquare },
-  Feedback: { bg: "bg-sky-50", text: "text-sky-700", icon: MessageCircle },
-  Appreciation: { bg: "bg-violet-50", text: "text-violet-700", icon: Star },
-  Idea: { bg: "bg-amber-50", text: "text-amber-700", icon: Lightbulb },
-  Experience: { bg: "bg-rose-50", text: "text-rose-700", icon: Heart },
+  Suggestion: { color: "#059669", bg: "#ecfdf5", icon: MessageSquare },
+  Feedback: { color: "#0284c7", bg: "#f0f9ff", icon: MessageCircle },
+  Appreciation: { color: "#7c3aed", bg: "#f5f3ff", icon: Star },
+  Idea: { color: "#d97706", bg: "#fffbeb", icon: Lightbulb },
+  Experience: { color: "#e11d48", bg: "#fff1f2", icon: Heart },
 };
 
 const avatarColors = [
-  "bg-orange-100 text-orange-700",
-  "bg-pink-100 text-pink-700",
-  "bg-blue-100 text-blue-700",
-  "bg-teal-100 text-teal-700",
-  "bg-purple-100 text-purple-700",
+  { bg: "#ffedd5", fg: "#c2410c" },
+  { bg: "#fce7f3", fg: "#be185d" },
+  { bg: "#dbeafe", fg: "#1d4ed8" },
+  { bg: "#ccfbf1", fg: "#0f766e" },
+  { bg: "#ede9fe", fg: "#6d28d9" },
 ];
 
 /* ───────── CARD ───────── */
 function VoiceCard({ voice, colorIndex }) {
   const tag = tagStyles[voice.tag] ?? tagStyles.Suggestion;
   const TagIcon = tag.icon;
+  const av = avatarColors[colorIndex % avatarColors.length];
 
   return (
-    <article className="flex flex-col bg-white shadow-sm hover:shadow-md !p-5 sm:!p-6 border border-emerald-100 rounded-2xl h-full !text-left transition hover:-translate-y-0.5">
-      {/* Author + tag */}
-      <header className="flex justify-between items-start gap-3">
-        <div className="flex items-center gap-3 min-w-0">
-          <div
-            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
-              avatarColors[colorIndex % avatarColors.length]
-            }`}
-          >
-            {voice.name.charAt(0)}
-          </div>
-          <div className="min-w-0">
-            <p className="font-semibold text-slate-900 text-sm !text-left truncate">{voice.name}</p>
-            <p className="!mt-1 text-slate-500 text-xs !text-left truncate">
-              {voice.flat} &middot; {voice.time}
-            </p>
+    <article className="vb-card" style={{ borderLeftColor: tag.color }}>
+      <header className="vb-top">
+        <div className="vb-avatar" style={{ background: av.bg, color: av.fg }}>
+          {voice.name.charAt(0)}
+        </div>
+        <div className="vb-who">
+          <div className="vb-name">{voice.name}</div>
+          <div className="vb-meta">
+            {voice.flat} · {voice.time}
           </div>
         </div>
-
-        <span
-          className={`inline-flex shrink-0 items-center gap-1.5 rounded-full !px-3 !py-1 text-[11px] font-semibold ${tag.bg} ${tag.text}`}
-        >
-          <TagIcon size={12} />
+        <span className="vb-tag" style={{ background: tag.bg, color: tag.color }}>
+          <TagIcon size={11} />
           {voice.tag}
         </span>
       </header>
 
-      {/* Message */}
-      <div className="flex flex-1 gap-3 !mt-5">
-        <Quote size={16} className="!mt-1.5 text-emerald-300 shrink-0" fill="currentColor" aria-hidden="true" />
-        <p className="text-[15px] text-slate-600 !text-left line-clamp-3 leading-7">{voice.message}</p>
-      </div>
+      <p className="vb-msg">{voice.message}</p>
 
-      {/* Footer */}
-      <footer className="flex justify-between items-center gap-3 !mt-6 !pt-4 border-slate-100 border-t">
-        <div className="flex items-center gap-4 text-slate-500 text-xs">
-          <span className="inline-flex items-center gap-1.5" aria-label={`${voice.likes} likes`}>
-            <ThumbsUp size={14} className="text-emerald-500" />
+      <footer className="vb-foot">
+        <div className="vb-stats">
+          <span aria-label={`${voice.likes} likes`}>
+            <ThumbsUp size={13} />
             {voice.likes}
           </span>
-          <span className="inline-flex items-center gap-1.5" aria-label={`${voice.comments} comments`}>
-            <MessageCircle size={14} className="text-slate-400" />
+          <span aria-label={`${voice.comments} comments`}>
+            <MessageCircle size={13} />
             {voice.comments}
           </span>
         </div>
-
-        <button
-          type="button"
-          aria-label={`Read more from ${voice.name}`}
-          className="inline-flex items-center gap-1.5 bg-emerald-50 hover:bg-emerald-100 !px-3.5 !py-1.5 rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-500 focus-visible:outline-offset-2 font-semibold text-emerald-700 text-xs transition-colors"
-        >
-          Read more
-          <ArrowRight size={13} />
+        <button type="button" className="vb-more" aria-label={`Read more from ${voice.name}`}>
+          Read more <ArrowRight size={12} />
         </button>
       </footer>
     </article>
@@ -136,42 +111,32 @@ function VoiceCard({ voice, colorIndex }) {
 /* ───────── SECTION ───────── */
 const Blogs = () => {
   return (
-    <section
-      aria-labelledby="community-voices-heading"
-      className="bg-gradient-to-b from-emerald-50/60 to-white !py-12 sm:!py-16 lg:!py-20 w-full overflow-hidden !text-left"
-    >
-      <div className="!mx-auto !px-4 sm:!px-6 lg:!px-8 !max-w-6xl">
-        {/* Header */}
-        <div className="flex sm:flex-row flex-col sm:justify-between sm:items-end gap-5">
+    <section className="vb" aria-labelledby="community-voices-heading">
+      <style>{css}</style>
+
+      <div className="vb-wrap">
+        <div className="vb-head">
           <div>
-            <p className="inline-flex items-center gap-2 font-semibold text-emerald-700 text-xs sm:text-sm !text-left">
-              <Users size={15} />
+            <div className="vb-eyebrow">
+              <Users size={14} />
               Community Voices &amp; Blogs
-            </p>
-            <h2
-              id="community-voices-heading"
-              className="!mt-3 font-bold text-slate-900 text-2xl sm:text-3xl !text-left tracking-tight"
-            >
+            </div>
+            <h2 id="community-voices-heading" className="vb-title">
               What your neighbours are saying
             </h2>
-            <p className="!mt-3 !max-w-xl text-slate-500 text-sm sm:text-base !text-left leading-6">
+            <p className="vb-sub">
               Suggestions, feedback and thank-yous from the people who live here.
             </p>
           </div>
 
-          <a
-            href="/blogs"
-            className="inline-flex items-center self-start sm:self-auto gap-2 bg-white hover:bg-emerald-50 !px-5 !py-2.5 border border-emerald-200 rounded-full font-semibold text-emerald-700 text-sm transition-colors"
-          >
-            View all
-            <ArrowRight size={15} />
+          <a href="/blogs" className="vb-all">
+            View all <ArrowRight size={14} />
           </a>
         </div>
 
-        {/* Cards: swipe row on mobile/tablet, 3-column grid on desktop */}
-        <ul className="[&::-webkit-scrollbar]:hidden flex gap-4 lg:gap-6 lg:grid lg:grid-cols-3 !mt-8 sm:!mt-10 !pb-4 lg:!pb-0 lg:overflow-visible overflow-x-auto snap-mandatory snap-x list-none [scrollbar-width:none]">
+        <ul className="vb-list">
           {voices.map((voice, i) => (
-            <li key={voice.id} className="!w-[85%] sm:!w-[46%] lg:!w-auto snap-start shrink-0">
+            <li key={voice.id} className="vb-item">
               <VoiceCard voice={voice} colorIndex={i} />
             </li>
           ))}
@@ -182,3 +147,47 @@ const Blogs = () => {
 };
 
 export default Blogs;
+
+/* ───────── STYLES ───────── */
+const css = `
+.vb,.vb *{box-sizing:border-box;margin:0;padding:0;text-align:left;letter-spacing:normal}
+.vb{width:100%;padding:32px 16px;background:linear-gradient(180deg,#f0fdf8,#fff);color:#0f172a;font-family:inherit}
+.vb-wrap{max-width:1100px;margin:0 auto}
+
+.vb-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.vb-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#047857}
+.vb-title{margin-top:6px;font-size:clamp(20px,3vw,26px);font-weight:800;line-height:1.2}
+.vb-sub{margin-top:4px;font-size:13.5px;color:#64748b;line-height:1.5;max-width:520px}
+.vb-all{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:1px solid #a7f3d0;border-radius:99px;background:#fff;color:#047857;font-size:13px;font-weight:600;text-decoration:none}
+
+.vb-list{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+.vb-item{display:flex;min-width:0}
+
+.vb-card{width:100%;display:flex;flex-direction:column;gap:10px;padding:14px 16px;background:#fff;border:1px solid #e2e8f0;border-left:4px solid #059669;border-radius:14px}
+.vb-top{display:flex;align-items:center;gap:10px}
+.vb-avatar{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700}
+.vb-who{flex:1;min-width:0}
+.vb-name{font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vb-meta{margin-top:1px;font-size:11.5px;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vb-tag{flex:none;display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:10.5px;font-weight:700}
+
+.vb-msg{font-size:13.5px;line-height:1.55;color:#475569;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+.vb-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:10px;border-top:1px solid #f1f5f9;margin-top:auto}
+.vb-stats{display:flex;align-items:center;gap:14px;font-size:12px;color:#64748b}
+.vb-stats span{display:inline-flex;align-items:center;gap:5px}
+.vb-more{display:inline-flex;align-items:center;gap:4px;border:0;background:none;font:inherit;font-size:12.5px;font-weight:700;color:#059669;cursor:pointer}
+.vb-more:hover{text-decoration:underline}
+
+@media(max-width:900px){
+  .vb-list{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding-bottom:6px;scrollbar-width:none}
+  .vb-list::-webkit-scrollbar{display:none}
+  .vb-item{flex:0 0 82%;scroll-snap-align:start}
+}
+@media(min-width:560px) and (max-width:900px){
+  .vb-item{flex-basis:46%}
+}
+@media(max-width:600px){
+  .vb{padding:24px 12px}
+}
+`;
