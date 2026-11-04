@@ -12,7 +12,7 @@ const featureLinksAll = [
   { to: "/Help", icon: "💬", label: "Help & Support" },
   { to: "/HealthTips", icon: "🙂", label: "Yours Health-Tips" },
   { to: "/About", icon: "ℹ️", label: "About Us" },
-    { to: "/Feedback", icon: "ℹ️", label: "Feedback" },
+  { to: "/Feedback", icon: "📄", label: "Feedback" },
 
   { to: "/Profile", icon: "👤", label: "My Profile", dot: true },
 ];
@@ -23,20 +23,20 @@ const patientMenu = [
   { to: "/Medicines", icon: "💊", label: "Medicines" },
 
   { to: "/Emergency", icon: "🚨", label: "Emergency" },
-  { to: "/Appointment", icon: "📅", label: "Appointments" },     { to: "/Relatives", icon: "📞", label: "Relatives" },
+  { to: "/Appointment", icon: "📅", label: "Appointments" },
+  { to: "/Relatives", icon: "📞", label: "Relatives" },
 
   { to: "/Schemes", icon: "🏛️", label: "Govt. Schemes" },
- 
 ];
 const patientFeatures = featureLinksAll;
 
 // ---------- Doctor ----------
 const doctorMenu = [
   { to: "/patients", icon: "🧑‍⚕️", label: "Patients" },
-  // { to: "/Emergency", icon: "🚨", label: "Emergency" }, 
-   { to: "/Relatives", icon: "🩺", label: "Relatives" },
+   { to: "/Appointment", icon: "📅", label: "Appointments" },
+ // { to: "/Emergency", icon: "🚨", label: "Emergency" },
+  { to: "/Relatives", icon: "📞", label: "Contacts" },
 
-  { to: "/Appointment", icon: "📅", label: "Appointments" },
 ];
 const doctorFeatures = featureLinksAll.filter((l) => l.to !== "/HealthTips");
 
