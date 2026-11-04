@@ -1,17 +1,16 @@
 import mongoose from "mongoose";
 
-// NOTE: nested object mein "type" naam ka field mat rakho (Mongoose use alag samajhta hai),
-// isliye community type ke liye "kind" use kiya hai.
 const planSchema = new mongoose.Schema(
   {
-    community: {   
+    patient: {
       name: { type: String, required: true },
-      kind: { type: String, required: true },
-      households: { type: Number, required: true },
+      age: { type: Number, required: true },
+      livingSituation: { type: String, required: true },
       location: { type: String, default: "" },
     },
-    risks: [String],
-    vulnerable: [String],
+    conditions: [String],
+    emergencyRisks: [String],
+    careNeeds: [String],
     resources: [String],
     notes: { type: String, default: "" },
 
