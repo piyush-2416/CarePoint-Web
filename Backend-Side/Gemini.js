@@ -1,16 +1,24 @@
-import { GoogleGenAI } from "@google/genai";
+ import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 
 dotenv.config(); // import order ki wajah se yahan bhi zaroori hai
 
-// Model ka naam badalta rehta hai: .env mein GEMINI_MODEL rakho.
-// Purana "gemini-2.5-flash" ab naye users ke liye band hai, isliye default naya rakha hai.
+// Model ka naam badalta rehta hai: .env mein GEMINI_MODEL rakho
 const MODEL = process.env.GEMINI_MODEL || "gemini-3.8-flash";
 
 // ---------- chhote helpers ----------
 const arr = (v) => (Array.isArray(v) ? v : []);
 const str = (v) => (typeof v === "string" ? v.trim() : "");
 const strs = (v) => arr(v).map(str).filter(Boolean);
+
+// AI ne red flags na diye to ye hamesha dikhenge
+const DEFAULT_RED_FLAGS = [
+  "Seene me tez dard ya dabaav",
+  "Saans lene me bahut takleef",
+  "Behoshi, daura ya bolne me dikkat",
+  "Bahut zyada khoon behna",
+  "Achanak kamzori ya chakkar jo theek na ho",
+];
 
 // ---------- Gemini ka JSON saaf karke frontend wale shape mein lao ----------
 function normalizePlan(raw) {
@@ -24,10 +32,13 @@ function normalizePlan(raw) {
           name: str(r.name),
           level: ["low", "medium", "high"].includes(level) ? level : "medium",
           why: str(r.why),
+          warningSigns: strs(r.warningSigns),
           prepare: strs(r.prepare),
         };
       })
       .filter((r) => r.name),
+
+    redFlags: strs(raw.redFlags),
 
     // item id = "<category index>-<item index>", jaise "0-1" (progress save isi se hota hai)
     checklist: arr(raw.checklist)
@@ -44,20 +55,21 @@ function normalizePlan(raw) {
 
     communicationPlan: str(raw.communicationPlan),
 
-    evacuation: {
-      assemblyPoint: str(raw.evacuation?.assemblyPoint),
-      steps: strs(raw.evacuation?.steps),
+    hospitalPlan: {
+      whereToGo: str(raw.hospitalPlan?.whereToGo),
+      steps: strs(raw.hospitalPlan?.steps),
     },
 
-    drills: arr(raw.drills)
+    routine: arr(raw.routine)
       .map((d) => ({ name: str(d.name), frequency: str(d.frequency), how: str(d.how) }))
       .filter((d) => d.name),
 
-    vulnerableSupport: strs(raw.vulnerableSupport),
+    careSupport: strs(raw.careSupport),
     contactsToCollect: strs(raw.contactsToCollect),
   };
 
   if (!plan.checklist.length) throw new Error("Gemini ne checklist nahi di");
+  if (!plan.redFlags.length) plan.redFlags = DEFAULT_RED_FLAGS;
   return plan;
 }
 
@@ -69,62 +81,86 @@ function fallbackPlan(p) {
       items: c.items.map((text, ii) => ({ id: `${ci}-${ii}`, text })),
     }));
 
+  const riskNames = p.emergencyRisks.length
+    ? p.emergencyRisks
+    : p.conditions.map((c) => `${c} se jude emergency`);
+
   return {
-    overview: `${p.name} ke liye ek general taiyari plan. Local disaster management office se ek baar confirm zaroor karo.`,
-    risks: p.risks.map((r) => ({
+    overview: `${p.name} ke liye ek general emergency taiyari plan. Ye doctor ki salah ka replacement nahi hai, apne doctor se ek baar zaroor confirm karo.`,
+    risks: riskNames.map((r) => ({
       name: r,
       level: "medium",
-      why: "Is risk ke liye pehle se taiyari rakhna zaroori hai.",
-      prepare: ["Sabko is risk ke baare mein batao", "Emergency numbers sabke paas rakho"],
+      why: "Is situation ke liye pehle se taiyari rakhna zaroori hai.",
+      warningSigns: ["Achanak tabiyat bigadna", "Normal se alag lakshan dikhna"],
+      prepare: [
+        "Parivaar ya caretaker ko is risk ke baare mein batao",
+        "Doctor se poochho ki aise me kya karna hai aur use likh kar rakho",
+      ],
     })),
+    redFlags: DEFAULT_RED_FLAGS,
     checklist: withIds([
       {
-        category: "Emergency kit",
+        category: "Dawai aur reports",
         items: [
-          "3 din ka pani aur sookha khana",
-          "First-aid box",
-          "Torch aur extra batteries",
-          "Zaroori dawaiyan",
-          "Important documents ki copy",
+          "Saari dawaiyon ki list (naam aur samay) ek jagah likho",
+          "Kam se kam 7 din ka dawai ka stock rakho",
+          "Doctor ki prescription aur purani reports ki copy rakho",
+          "Dawai khatam hone se pehle refill ki tareekh tay karo",
         ],
       },
       {
-        category: "Ghar aur building",
+        category: "Emergency taiyari",
         items: [
-          "Bijli, gas aur pani ke main switch ki jagah sabko batao",
-          "Exit raste hamesha khule rakho",
-          "Fire extinguisher ya paani ki balti check karo",
+          "Emergency contacts ki list phone aur kagaz dono par rakho",
+          "Nazdiki hospital ka raasta aur samay pata rakho",
+          "Phone hamesha charged rakho",
+          "ID aur insurance ke papers ek jagah rakho",
+        ],
+      },
+      {
+        category: "Ghar ki suraksha",
+        items: [
+          "Raste mein gire hue taar ya saamaan hatao",
+          "Bathroom aur seedhiyon par madad ke liye pakad ya grip rakho",
+          "Raat ko roshni ka intezaam rakho",
         ],
       },
     ]),
     roles: [
-      { role: "Coordinator", responsibility: "Sabko alert karna aur emergency numbers ki list rakhna" },
-      { role: "First-aid team", responsibility: "Ghayal logon ki madad aur first-aid kit sambhalna" },
+      { role: "Patient", responsibility: "Dawai samay par lena aur tabiyat bigadte hi kisi ko batana" },
+      { role: "Parivaar / caretaker", responsibility: "Rozana haal poochna aur emergency mein turant 108 par call karna" },
+      { role: "Doctor / hospital", responsibility: "Ilaaj aur follow-up ki salah dena" },
     ],
     communicationPlan:
-      "Ek WhatsApp group banao jisme har ghar ka ek member ho. Emergency mein 112 (sab), 100 (police), 101 (fire), 108 (ambulance) par call karo.",
-    evacuation: {
-      assemblyPoint: "Society ka khula maidan / parking area (pehle se tay kar lo)",
+      "Do-teen bharose ke logon ko emergency contact banao aur unhe patient ki bimari aur dawaiyon ki jaankari do. Emergency mein 112 (sab), 108 (ambulance), 100 (police), 101 (fire) par call karo.",
+    hospitalPlan: {
+      whereToGo: "Sabse nazdiki hospital jahan patient ke records hon (pehle se tay kar lo)",
       steps: [
-        "Shaanti se bahar niklo, lift mat use karo",
-        "Pehle se tay kiye gaye open area par ikattha ho",
-        "Sabki ginti karo aur coordinator ko batao",
+        "Ambulance ke liye 108 par call karo aur patient ki jagah batao",
+        "Dawaiyon ki list, reports aur ID saath le jao",
+        "Ek parivaar ka sadasya patient ke saath jaye",
       ],
     },
-    drills: [
+    routine: [
       {
-        name: "Evacuation drill",
-        frequency: "Saal mein 2 baar",
-        how: "Sab log exit route aur meeting point ki practice karein.",
+        name: "Dawai aur stock check",
+        frequency: "Har hafte",
+        how: "Dawaiyon ki list se milao aur stock kam ho to pehle se mangwa lo.",
+      },
+      {
+        name: "Emergency drill",
+        frequency: "Mahine mein 1 baar",
+        how: "Ghar ke log practice karein ki emergency mein kisko call karna hai aur kya saath le jana hai.",
       },
     ],
-    vulnerableSupport: p.vulnerable.map(
-      (g) => `${g}: ek volunteer tay karo aur inki zaroori cheezein kit mein rakho`
+    careSupport: p.careNeeds.map(
+      (g) => `${g}: is ke liye ek insaan tay karo jo hamesha madad ke liye uplabdh ho`
     ),
     contactsToCollect: [
-      "Har ghar ka ek mobile number",
-      "Nazdeeki hospital aur doctor",
-      "Society secretary / security guard",
+      "Patient ke doctor ka number",
+      "Nazdiki hospital aur ambulance ka number",
+      "Do bharose ke parivaar ya padosi ke number",
+      "Medical store ka number",
     ],
   };
 }
@@ -136,35 +172,41 @@ async function askGemini(p) {
   const ai = new GoogleGenAI({ apiKey: key });
 
   const prompt = `
-Tum ek community disaster preparedness expert ho. Neeche di gayi community ke liye practical safety plan banao.
+Tum ek patient safety aur emergency preparedness assistant ho. Neeche diye gaye patient ke liye practical emergency care plan banao.
 Bhasha: simple Hinglish. Sirf JSON do, koi extra text ya markdown nahi.
 
-Community: ${p.name} (${p.kind}), ${p.households} ghar
+Patient: ${p.name}, ${p.age} saal
+Rehne ki situation: ${p.livingSituation}
 Jagah: ${p.location || "Nahi bataya"}
-Risks: ${p.risks.join(", ")}
-Vulnerable groups: ${p.vulnerable.join(", ") || "Koi nahi bataya"}
+Bimariyan / conditions: ${p.conditions.join(", ") || "Koi nahi bataya"}
+Emergency ka darr: ${p.emergencyRisks.join(", ") || "Koi nahi bataya"}
+Madad chahiye: ${p.careNeeds.join(", ") || "Koi nahi bataya"}
 Available resources: ${p.resources.join(", ") || "Koi nahi bataya"}
 Extra baat: ${p.notes || "Koi nahi"}
 
 JSON shape bilkul aisa ho:
 {
   "overview": "2-3 line ka saransh",
-  "risks": [{ "name": "", "level": "low|medium|high", "why": "", "prepare": ["", ""] }],
+  "risks": [{ "name": "", "level": "low|medium|high", "why": "", "warningSigns": ["", ""], "prepare": ["", ""] }],
+  "redFlags": ["", ""],
   "checklist": [{ "category": "", "items": ["", ""] }],
   "roles": [{ "role": "", "responsibility": "" }],
-  "communicationPlan": "alert kaise bhejenge, 3-4 line",
-  "evacuation": { "assemblyPoint": "", "steps": ["", ""] },
-  "drills": [{ "name": "", "frequency": "", "how": "" }],
-  "vulnerableSupport": ["", ""],
+  "communicationPlan": "emergency mein kisko aur kaise batayein, 3-4 line",
+  "hospitalPlan": { "whereToGo": "", "steps": ["", ""] },
+  "routine": [{ "name": "", "frequency": "", "how": "" }],
+  "careSupport": ["", ""],
   "contactsToCollect": ["", ""]
 }
 
 Zaroori rules:
-- "risks" mein sirf wahi risks rakho jo upar diye gaye hain, har ek ke liye ek entry.
-- Phone number, address, vendor ya company ka naam KHUD SE MAT BANAO.
+- Tum doctor nahi ho. Koi diagnosis mat do.
+- Dawai ka naam suggest mat karo, dose ya timing mat batao, aur dawai band ya badalne ko kabhi mat kaho. Dawai ke sawal par "apne doctor se poochho" likho.
+- "risks" mein sirf wahi emergency risks rakho jo upar diye gaye hain (agar koi nahi diya, to conditions se jude risks rakho). Har ek ke liye ek entry.
+- "redFlags" mein 4 se 6 aise lakshan likho jinpar turant 108 / 112 par call karna chahiye (patient ki conditions ke hisaab se).
+- Phone number, address, hospital, doctor ya company ka naam KHUD SE MAT BANAO.
 - Sirf ye emergency numbers likh sakte ho: 112, 100, 101, 108.
+- Patient ki umar aur "madad chahiye" ka dhyan rakho (jaise bujurg ya chalne me dikkat ho to girne se bachaav pe zor do).
 - Checklist ke 3 se 5 sections rakho, har section mein 3 se 6 items.
-- Dawai ya medical dose ki salah mat do.
 `.trim();
 
   const call = ai.models.generateContent({
