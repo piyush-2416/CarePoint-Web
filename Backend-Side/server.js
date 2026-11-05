@@ -6,16 +6,18 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import multer from "multer";
 import path from "path";
-import fs from "fs";import appointmentsRouter from "./Routes/Appointments.js";
+import fs from "fs";
 import crypto from "crypto";
 import { fileURLToPath } from "url";
-import doctorProfileRouter from "./Routes/DoctorProfile.js";
 // NOTE: folder ka naam exactly "Routes" / "Middleware" hona chahiye (Linux/Render par case-sensitive hota hai)
+import appointmentsRouter from "./Routes/Appointments.js";
+import doctorProfileRouter from "./Routes/DoctorProfile.js";
 import authRouter from "./Routes/Auth.js";
 import plansRouter from "./Routes/Plans.js";
 import safetyRouter from "./Routes/Safety.js";
 import { requireAuth, requireRole } from "./Middleware/auth.js";
 import patientsRouter from "./Routes/Patients.js";
+
 // ---------- Config ----------
 const MONGODB_URI = process.env.MONGODB_URI;
 const DATABASE_NAME = process.env.DB_NAME || "hospital-data";
@@ -111,16 +113,18 @@ app.get(["/api/products", "/api/doctors"], async (req, res) => {
     console.error("❌ Doctors load error:", err.message);
     res.status(500).json({ error: "Doctors load nahi ho paaye" });
   }
-}); 
+});
+
 app.use("/api/appointments", requireAuth, requireRole("patient", "doctor"), appointmentsRouter);
+
 // Ek doctor ki detail (id ya _id se)
 app.get(["/api/products/:id", "/api/doctors/:id", "/api/Doctorid/:id"], async (req, res) => {
   try {
-  const doctor = await findDoctorById(getDb(req), req.params.id);
-if (!doctor || doctor.isProfileComplete === false) {
-  return res.status(404).json({ error: "Doctor nahi mila" });
-}
-res.json(doctor);
+    const doctor = await findDoctorById(getDb(req), req.params.id);
+    if (!doctor || doctor.isProfileComplete === false) {
+      return res.status(404).json({ error: "Doctor nahi mila" });
+    }
+    res.json(doctor);
   } catch (err) {
     console.error("❌ Doctor error:", err.message);
     res.status(500).json({ error: "Server error" });
@@ -140,6 +144,16 @@ app.get("/api/medicines", async (req, res) => {
 
 // ---------- Documents (login zaroori) ----------
 const ALLOWED_TYPES = ["application/pdf", "image/jpeg", "image/png", "image/webp"];
+
+// Frontend (Documents.jsx) ki categories se bilkul same
+const DOC_CATEGORIES = [
+  "Prescription",
+  "Lab Report",
+  "Scan / X-Ray",
+  "Insurance",
+  "Bill / Receipt",
+  "Other",
+];
 
 const upload = multer({
   storage: multer.diskStorage({
@@ -173,18 +187,24 @@ documentsRouter.get("/", async (req, res) => {
   }
 });
 
-// Upload (form-data me field ka naam: "file", optional: "title")
+// Upload (form-data me field ka naam: "file", baaki: "title", "category", "notes")
 documentsRouter.post("/", upload.single("file"), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: "File select karo" });
 
+    const title = String(req.body.title || req.file.originalname).trim().slice(0, 150);
+    const category = DOC_CATEGORIES.includes(req.body.category) ? req.body.category : "Other";
+    const notes = String(req.body.notes ?? "").trim().slice(0, 500);
+
     const doc = {
       userId: getUserId(req),
-      title: (req.body.title || req.file.originalname).toString().slice(0, 150),
+      title,
+      category,
+      notes,
       originalName: req.file.originalname,
       storedName: req.file.filename,
       mimeType: req.file.mimetype,
-      size: req.file.size,
+      fileSize: req.file.size, // frontend d.fileSize padhta hai
       createdAt: new Date(),
     };
 
@@ -196,7 +216,7 @@ documentsRouter.post("/", upload.single("file"), async (req, res) => {
   }
 });
 
-// File dekhna / download (sirf owner ko)
+// File dekhna / download (sirf owner ko). ?download=true lagao to download hoga
 documentsRouter.get("/:id/file", async (req, res) => {
   try {
     if (!ObjectId.isValid(req.params.id)) {
@@ -210,6 +230,10 @@ documentsRouter.get("/:id/file", async (req, res) => {
     const filePath = path.join(UPLOAD_DIR, path.basename(doc.storedName));
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ error: "File server par nahi mili" });
+    }
+
+    if (req.query.download === "true") {
+      return res.download(filePath, doc.originalName);
     }
     res.type(doc.mimeType);
     res.sendFile(filePath);
@@ -313,15 +337,16 @@ relativesRouter.delete("/:id", async (req, res) => {
   }
 });
 
-// ---------- Login ke peeche wale routes ----------
-// requireAuth HAMESHA router se PEHLE lagta hai, warna wo kabhi chalta hi nahi
 // ---------- Login + role ke peeche wale routes ----------
+// requireAuth HAMESHA router se PEHLE lagta hai, warna wo kabhi chalta hi nahi
 app.use("/api/documents", requireAuth, requireRole("patient", "doctor"), documentsRouter);
 app.use("/api/doctor/profile", requireAuth, requireRole("doctor"), doctorProfileRouter);
 app.use("/api/relatives", requireAuth, requireRole("patient"), relativesRouter);
-app.use("/api/plans", requireAuth, requireRole("patient"), plansRouter);
+// Safety Planner patient aur doctor dono ke liye
+app.use("/api/plans", requireAuth, requireRole("patient", "doctor"), plansRouter);
 app.use("/api/safety", requireAuth, requireRole("patient"), safetyRouter);
 app.use("/api/patients", requireAuth, requireRole("doctor"), patientsRouter);
+
 // ---------- 404 ----------
 app.use((req, res) => {
   res.status(404).json({ error: `Route nahi mila: ${req.method} ${req.originalUrl}` });
