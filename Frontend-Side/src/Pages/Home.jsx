@@ -45,16 +45,16 @@ function Home() {
       icon: "🚨",
       items: [
         { icon: "🚑", label: "24/7 Ambulance", sub: "Rapid response fleet" },
-        { icon: "💉", label: "Emergency Services", sub: "Turant ilaaj, har samay" },
+        { icon: "💉", label: "Emergency Services", sub: "Immediate treatment, anytime" },
         { icon: "🏥", label: "ICU & Critical Care", sub: "Advanced life support" },
-        { icon: "🩸", label: "Blood Bank", sub: "Sabhi blood groups" },
+        { icon: "🩸", label: "Blood Bank", sub: "All blood groups" },
       ],
     },
     {
       group: "Diagnostics",
       icon: "🔬",
       items: [
-        { icon: "🔬", label: "Advanced Laboratory", sub: "Fast aur sahi reports" },
+        { icon: "🔬", label: "Advanced Laboratory", sub: "Fast and accurate reports" },
         { icon: "🩻", label: "MRI & CT Scan", sub: "Modern imaging" },
       ],
     },
@@ -62,30 +62,30 @@ function Home() {
       group: "Care",
       icon: "🩺",
       items: [
-        { icon: "🩺", label: "Multi-Specialty Care", sub: "Har bimari ke specialist" },
-        { icon: "❤️", label: "Cardiac Care Unit", sub: "Heart ki poori dekhbhal" },
-        { icon: "💊", label: "24/7 Pharmacy", sub: "Dawai hamesha available" },
+        { icon: "🩺", label: "Multi-Specialty Care", sub: "Specialists for every condition" },
+        { icon: "❤️", label: "Cardiac Care Unit", sub: "Complete heart care" },
+        { icon: "💊", label: "24/7 Pharmacy", sub: "Medicines always available" },
       ],
     },
     {
       group: "Digital",
       icon: "📱",
       items: [
-        { icon: "📱", label: "Online Appointments", sub: "Ghar baithe booking" },
-        { icon: "🎥", label: "Video Consultation", sub: "Doctor se video par baat" },
-        { icon: "📄", label: "Digital Health Records", sub: "Reports hamesha saath" },
+        { icon: "📱", label: "Online Appointments", sub: "Book from home" },
+        { icon: "🎥", label: "Video Consultation", sub: "Talk to a doctor on video" },
+        { icon: "📄", label: "Digital Health Records", sub: "Reports always with you" },
       ],
     },
   ];
   const SERVICES = [
-    { title: "Doctors", desc: "Best doctors dhundo aur Appointments lo", icon: "🩺", to: "/doctors" },
-    { title: "Medicines", desc: "Dawaiyan online order karo", icon: "💊", to: "/medicines" },
-    { title: "AI Safety Planner", desc: "Emergency ke liye pehle se taiyari", icon: "🛡️", to: "/safety-planner", ai: true },
-    { title: "AI Safety Checker", desc: "Abhi ki situation ka khatra check karo", icon: "🔍", to: "/safety-checker", ai: true },
-    { title: "Document Wallet", desc: "Reports aur prescriptions ek jagah", icon: "📁", to: "/documents" },
-    { title: "Smart Contact List", desc: "Apno ke emergency contacts", icon: "👨‍👩‍👧", to: "/relatives" },
-    { title: "Government Schemes", desc: "Kin yojanaon ke liye eligible ho", icon: "🏛️", to: "/schemes" },
-    { title: "Need Help", desc: "Koi sawal ya dikkat? Hum madad karenge", icon: "💬", to: "/help" },
+    { title: "Doctors", desc: "Find the best doctors and book Appointments", icon: "🩺", to: "/doctors" },
+    { title: "Medicines", desc: "Order medicines online", icon: "💊", to: "/medicines" },
+    { title: "AI Safety Planner", desc: "Prepare for emergencies in advance", icon: "🛡️", to: "/safety-planner", ai: true },
+    { title: "AI Safety Checker", desc: "Check the risk in your current situation", icon: "🔍", to: "/safety-checker", ai: true },
+    { title: "Document Wallet", desc: "Reports and prescriptions in one place", icon: "📁", to: "/documents" },
+    { title: "Smart Contact List", desc: "Emergency contacts of your loved ones", icon: "👨‍👩‍👧", to: "/relatives" },
+    { title: "Government Schemes", desc: "See which schemes you are eligible for", icon: "🏛️", to: "/schemes" },
+    { title: "Need Help", desc: "Any question or problem? We will help", icon: "💬", to: "/help" },
   ];
 
   const navigate = useNavigate();
@@ -153,13 +153,13 @@ function Home() {
               className="font-semibold text-emerald-600 text-xs uppercase tracking-widest"
               style={{ marginBottom: 4 }}
             >
-              Sab kuch ek jagah
+              Everything in one place
             </div>
             <div className="font-bold text-slate-900 text-2xl sm:text-3xl" style={{ margin: 0 }}>
               Explore Our Services
             </div>
             <div className="text-slate-500 text-sm" style={{ marginTop: 4 }}>
-              Ek healthier, safer aur secure life ke liye jo kuch chahiye, sab yahan hai.
+              Everything you need for a healthier, safer and more secure life is right here.
             </div>
           </div>
 
@@ -186,7 +186,7 @@ function Home() {
             <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
               <div className="font-bold text-red-700 text-sm sm:text-base">Emergency Services</div>
               <div className="text-red-600/80 text-xs">
-                Har second keemti hai. Ambulance aur turant madad, 24x7.
+                Every second counts. Ambulance and immediate help, 24x7.
               </div>
             </div>
             <a
@@ -255,7 +255,7 @@ function Home() {
               className="font-semibold text-emerald-600 text-xs uppercase tracking-widest"
               style={{ marginBottom: 4 }}
             >
-              Hamari suvidhayein
+              Our facilities
             </div>
             <div className="font-bold text-slate-900 text-2xl sm:text-3xl">Our Facilities</div>
           </div>
@@ -292,7 +292,7 @@ function Home() {
               <div style={{ position: "absolute", left: 14, right: 14, bottom: 14, color: "#fff" }}>
                 <div className="font-bold text-base">Always Ready, Always Near</div>
                 <div className="text-white/80 text-xs" style={{ marginTop: 2 }}>
-                  Ambulance fleet standby par, din-raat.
+                  Ambulance fleet on standby, day and night.
                 </div>
               </div>
             </div>
@@ -303,7 +303,7 @@ function Home() {
                 Multi-Specialty Care, Under One Roof
               </div>
               <div className="text-slate-500 text-xs" style={{ marginTop: 3, marginBottom: 12 }}>
-                Emergency se routine checkup tak, sab kuch paas mein.
+                From emergencies to routine checkups, everything is close by.
               </div>
 
               {/* Tabs */}
