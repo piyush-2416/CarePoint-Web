@@ -3,7 +3,7 @@ import Navbar from "../Components/Navbar";
 import { useAuth } from "../context/AuthContext";
 
 /* ---------- settings ---------- */
-const HERO_IMAGE = "https://cdn2.vectorstock.com/i/1000x1000/01/96/graphic-cartoon-character-feedback-vector-36760196.jpg"; // yahan apni image ka URL daalna (khali = gradient)
+const HERO_IMAGE = "https://cdn2.vectorstock.com/i/1000x1000/01/96/graphic-cartoon-character-feedback-vector-36760196.jpg"; // put your image URL here (empty = gradient)
 const STORAGE_KEY = "carepoint_feedbacks";
 const PAGE_SIZE = 6;
 const MAX_MESSAGE = 400;
@@ -14,9 +14,9 @@ const SORTS = [
   ["high", "Highest rating"],
   ["low", "Lowest rating"],
 ];
-const RATING_TEXT = ["", "Bahut kharab", "Kharab", "Theek-thaak", "Accha", "Bahut badhiya"];
+const RATING_TEXT = ["", "Very bad", "Bad", "Okay", "Good", "Excellent"];
 
-/* ---------- storage (backend lagana ho to sirf ye 2 functions badalna) ---------- */
+/* ---------- storage (to add a backend, only change these 2 functions) ---------- */
 const loadFeedbacks = () => {
   try {
     const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
@@ -85,7 +85,7 @@ const Stars = ({ value, size = 16 }) => (
   </span>
 );
 
-/* ---------- styles (Tailwind ki zarurat nahi) ---------- */
+/* ---------- styles (no Tailwind needed) ---------- */
 const styles = `
 .fb-root{--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--teal:#0d9488;--teal-d:#0f766e;--teal-l:#ccfbf1;--teal-xl:#f0fdfa;--bg:#f4faf9;--red:#dc2626;
   font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;text-align:left}
@@ -208,12 +208,12 @@ export default function Feedback() {
   const [visible, setVisible] = useState(PAGE_SIZE);
   const [deleteId, setDeleteId] = useState(null);
 
-  // user baad me load ho to naam bhar do (agar khali hai)
+  // if the user loads later, fill in the name (if it is empty)
   useEffect(() => {
     if (user?.name) setForm((f) => ({ ...f, name: f.name || user.name }));
   }, [user]);
 
-  // dusre tab me feedback aaye to yahan bhi update ho
+  // if feedback arrives in another tab, update here too
   useEffect(() => {
     const onStorage = (e) => {
       if (e.key === STORAGE_KEY) setList(loadFeedbacks());
@@ -225,10 +225,10 @@ export default function Feedback() {
   /* ---------- submit ---------- */
   const validate = () => {
     const errs = {};
-    if (form.name.trim().length < 2) errs.name = "Apna naam likho";
-    if (!form.rating) errs.rating = "Star rating chuno";
+    if (form.name.trim().length < 2) errs.name = "Please enter your name";
+    if (!form.rating) errs.rating = "Please select a star rating";
     if (form.message.trim().length < 10)
-      errs.message = "Kam se kam 10 akshar ka feedback likho";
+      errs.message = "Please write at least 10 characters of feedback";
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -306,10 +306,10 @@ export default function Feedback() {
             />
           )}
           <div className="fb-hero-in">
-            <h1>💬 Aapki Feedback</h1>
+            <h1>💬 Your Feedback</h1>
             <p>
-              Hamari website kaisi lagi? Apna experience batao, taaki hum aur
-              behtar ban sakein.
+              How did you like our website? Share your experience so we can
+              get even better.
             </p>
           </div>
         </section>
@@ -318,19 +318,19 @@ export default function Feedback() {
           <div className="fb-grid">
             {/* ================= FORM ================= */}
             <aside className="fb-card fb-formcard">
-              <h2>Feedback do</h2>
-              <p className="fb-sub">Sirf 1 minute lagega. Aapki rai hamare liye important hai.</p>
+              <h2>Give feedback</h2>
+              <p className="fb-sub">It takes just 1 minute. Your opinion matters to us.</p>
 
               <form className="fb-form" onSubmit={submit} noValidate>
                 <div className="fb-field">
-                  <label htmlFor="fb-name">Aapka naam</label>
+                  <label htmlFor="fb-name">Your name</label>
                   <input
                     id="fb-name"
                     className={`fb-input ${errors.name ? "bad" : ""}`}
                     value={form.name}
                     maxLength={40}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    placeholder="Jaise Rahul Sharma"
+                    placeholder="e.g. Rahul Sharma"
                     autoComplete="name"
                   />
                   {errors.name && <p className="fb-err">{errors.name}</p>}
@@ -358,7 +358,7 @@ export default function Feedback() {
                 </div>
 
                 <div>
-                  <span className="fb-label">Kis baare me?</span>
+                  <span className="fb-label">What is it about?</span>
                   <div className="fb-chips">
                     {CATEGORIES.map((c) => (
                       <button
@@ -374,14 +374,14 @@ export default function Feedback() {
                 </div>
 
                 <div className="fb-field">
-                  <label htmlFor="fb-msg">Aapka feedback</label>
+                  <label htmlFor="fb-msg">Your feedback</label>
                   <textarea
                     id="fb-msg"
                     className={`fb-input ${errors.message ? "bad" : ""}`}
                     value={form.message}
                     maxLength={MAX_MESSAGE}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    placeholder="Kya accha laga? Kya sudhar sakte hain?"
+                    placeholder="What did you like? What can we improve?"
                   />
                   <p className="fb-count">
                     {form.message.length}/{MAX_MESSAGE}
@@ -391,12 +391,12 @@ export default function Feedback() {
 
                 {sent && (
                   <div className="fb-ok" role="status">
-                    ✅ Shukriya! Aapki feedback add ho gayi.
+                    ✅ Thank you! Your feedback has been added.
                   </div>
                 )}
 
                 <button type="submit" className="fb-btn">
-                  Feedback bhejo
+                  Submit feedback
                 </button>
               </form>
             </aside>
@@ -404,11 +404,11 @@ export default function Feedback() {
             {/* ================= SUMMARY + LIST ================= */}
             <main style={{ minWidth: 0 }}>
               <section className="fb-card">
-                <h2>Sabki raay</h2>
+                <h2>Everyone's opinion</h2>
                 <p className="fb-sub">
                   {stats.total > 0
-                    ? "Website ke baare me users ne ye kaha."
-                    : "Abhi koi feedback nahi aayi. Pehli feedback aap do!"}
+                    ? "Here is what users said about the website."
+                    : "No feedback yet. Be the first to share yours!"}
                 </p>
 
                 <div className="fb-sum" style={{ marginTop: 24 }}>
@@ -440,7 +440,7 @@ export default function Feedback() {
               {/* ---------- toolbar ---------- */}
               {stats.total > 0 && (
                 <div className="fb-toolbar">
-                  <h3>Saari feedback</h3>
+                  <h3>All feedback</h3>
                   <div className="fb-filters">
                     <select
                       className="fb-select"
@@ -451,7 +451,7 @@ export default function Feedback() {
                       }}
                       aria-label="Rating filter"
                     >
-                      <option value="all">Sab ratings</option>
+                      <option value="all">All ratings</option>
                       {[5, 4, 3, 2, 1].map((n) => (
                         <option key={n} value={n}>
                           {n} star
@@ -479,9 +479,9 @@ export default function Feedback() {
                 <div className="fb-empty" style={{ marginTop: 24 }}>
                   <div>📝</div>
                   <p>
-                    Yahan sabki feedback dikhegi.
+                    Everyone's feedback will appear here.
                     <br />
-                    Left wale form se apni feedback add karo.
+                    Add yours using the form on the left.
                   </p>
                 </div>
               )}
@@ -489,7 +489,7 @@ export default function Feedback() {
               {stats.total > 0 && rows.length === 0 && (
                 <div className="fb-empty">
                   <div>🔍</div>
-                  <p>Is rating ki koi feedback nahi hai.</p>
+                  <p>There is no feedback with this rating.</p>
                 </div>
               )}
 
@@ -509,7 +509,7 @@ export default function Feedback() {
 
                     <div className="fb-meta">
                       <span className="fb-tag">{f.category}</span>
-                      {f.mine && <span className="fb-you">Aapki feedback</span>}
+                      {f.mine && <span className="fb-you">Your feedback</span>}
                     </div>
 
                     <p className="fb-msg">{f.message}</p>
@@ -523,14 +523,14 @@ export default function Feedback() {
                               className="fb-link"
                               onClick={() => remove(f.id)}
                             >
-                              Haan, delete karo
+                              Yes, delete
                             </button>
                             <button
                               type="button"
                               className="fb-link neutral"
                               onClick={() => setDeleteId(null)}
                             >
-                              Nahi
+                              No
                             </button>
                           </>
                         ) : (
@@ -554,7 +554,7 @@ export default function Feedback() {
                   className="fb-more"
                   onClick={() => setVisible((v) => v + PAGE_SIZE)}
                 >
-                  Aur dikhao ({rows.length - visible} baaki)
+                  Show more ({rows.length - visible} remaining)
                 </button>
               )}
             </main>
