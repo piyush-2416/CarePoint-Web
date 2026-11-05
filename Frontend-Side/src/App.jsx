@@ -46,7 +46,10 @@ const DoctorOnly = ({ children }) => (
 // "/" par: login nahi hai -> Auth page, patient -> Home, doctor -> patients page
 function RootRoute() {
   const { user, loading } = useAuth();
-  if (loading) return <p style={{ padding: "96px 16px", textAlign: "center" }}>Loading...</p>;
+  if (loading)
+    return (
+      <p style={{ padding: "96px 16px", textAlign: "center" }}>Loading...</p>
+    );
   if (!user) return <Auth />;
   if (user.role === "doctor") return <Navigate to="/doctor/patients" replace />;
   return <Home />;
@@ -65,37 +68,193 @@ function App() {
           <Route path="/logout" element={<Logout />} />
 
           {/* ---------- Sirf Patient ---------- */}
-          <Route path="/About" element={<PatientOnly><About /></PatientOnly>} />
-          <Route path="/Blogs" element={<PatientOnly><Blogs /></PatientOnly>} />
-          <Route path="/HealthTips" element={<PatientOnly><HealthTips /></PatientOnly>} />
-          <Route path="/Doctors" element={<PatientOnly><Doctors /></PatientOnly>} />
-          <Route path="/products/:id" element={<PatientOnly><ProductPage /></PatientOnly>} />
-          <Route path="/Doctorid/:id" element={<PatientOnly><Doctorid /></PatientOnly>} />
-          <Route path="/Schemes" element={<PatientOnly><Schemes /></PatientOnly>} />
-
+          <Route
+            path="/About"
+            element={
+              <PatientOnly>
+                <About />
+              </PatientOnly>
+            }
+          />
+          <Route
+            path="/Blogs"
+            element={
+              <PatientOnly>
+                <Blogs />
+              </PatientOnly>
+            }
+          />
+          <Route
+            path="/HealthTips"
+            element={
+              <PatientOnly>
+                <HealthTips />
+              </PatientOnly>
+            }
+          />
+          <Route
+            path="/Doctors"
+            element={
+              <PatientOnly>
+                <Doctors />
+              </PatientOnly>
+            }
+          />
+          <Route
+            path="/products/:id"
+            element={
+              <PatientOnly>
+                <ProductPage />
+              </PatientOnly>
+            }
+          />
+          <Route
+            path="/Doctorid/:id"
+            element={
+              <PatientOnly>
+                <Doctorid />
+              </PatientOnly>
+            }
+          />
+          <Route
+            path="/Schemes"
+            element={
+              <PatientOnly>
+                <Schemes />
+              </PatientOnly>
+            }
+          />
+          <Route
+            path="/SafetyChecker"
+            element={
+              <AnyRole>
+                <SafetyChecker />
+              </AnyRole>
+            }
+          />
+          <Route
+            path="/SafetyPlanner"
+            element={
+              <AnyRole>
+                <SafetyPlanner />
+              </AnyRole>
+            }
+          />
           {/* ---------- Patient + Doctor dono (login zaroori) ---------- */}
-          <Route path="/Emergency" element={<AnyRole><Emergency /></AnyRole>} />
-          <Route path="/Appointment" element={<AnyRole><Appointment /></AnyRole>} />
-          <Route path="/Medicines" element={<AnyRole><Medicines /></AnyRole>} />
-          <Route path="/Help" element={<AnyRole><Help /></AnyRole>} />
-          <Route path="/Profile" element={<AnyRole><Profile /></AnyRole>} />
-                    <Route path="/Feedback" element={<AnyRole><Feedback /></AnyRole>} />
+          <Route
+            path="/Emergency"
+            element={
+              <AnyRole>
+                <Emergency />
+              </AnyRole>
+            }
+          />
+          <Route
+            path="/Appointment"
+            element={
+              <AnyRole>
+                <Appointment />
+              </AnyRole>
+            }
+          />
+          <Route
+            path="/Medicines"
+            element={
+              <AnyRole>
+                <Medicines />
+              </AnyRole>
+            }
+          />
+          <Route
+            path="/Help"
+            element={
+              <AnyRole>
+                <Help />
+              </AnyRole>
+            }
+          />
+          <Route
+            path="/Profile"
+            element={
+              <AnyRole>
+                <Profile />
+              </AnyRole>
+            }
+          />
+          <Route
+            path="/Feedback"
+            element={
+              <AnyRole>
+                <Feedback />
+              </AnyRole>
+            }
+          />
 
-          <Route path="/Documents" element={<AnyRole><Documents /></AnyRole>} />
-          <Route path="/Relatives" element={<AnyRole><Relatives /></AnyRole>} />
-          <Route path="/SafetyChecker" element={<AnyRole><SafetyChecker /></AnyRole>} />
-          <Route path="/SafetyPlanner" element={<AnyRole><SafetyPlanner /></AnyRole>} />
-<Route path="/Appointment" element={<AnyRole><Appointments /></AnyRole>} />
+          <Route
+            path="/Documents"
+            element={
+              <AnyRole>
+                <Documents />
+              </AnyRole>
+            }
+          />
+          <Route
+            path="/Relatives"
+            element={
+              <AnyRole>
+                <Relatives />
+              </AnyRole>
+            }
+          />
+
+          <Route
+            path="/Appointment"
+            element={
+              <AnyRole>
+                <Appointments />
+              </AnyRole>
+            }
+          />
           {/* Auth page ke cards in hyphen wale links par jaate hain */}
-          <Route path="/safety-checker" element={<Navigate to="/SafetyChecker" replace />} />
-          <Route path="/safety-planner" element={<Navigate to="/SafetyPlanner" replace />} />
+          <Route
+            path="/safety-checker"
+            element={<Navigate to="/SafetyChecker" replace />}
+          />
+          <Route
+            path="/safety-planner"
+            element={<Navigate to="/SafetyPlanner" replace />}
+          />
 
           {/* ---------- Sirf Doctor ---------- */}
-          <Route path="/doctor/profile" element={<DoctorOnly><DoctorProfile /></DoctorOnly>} />
-          <Route path="/doctor/patients" element={<DoctorOnly><Patients /></DoctorOnly>} />
-          <Route path="/doctor/patients/:id" element={<DoctorOnly><PatientDetail /></DoctorOnly>} />
+          <Route
+            path="/doctor/profile"
+            element={
+              <DoctorOnly>
+                <DoctorProfile />
+              </DoctorOnly>
+            }
+          />
+          <Route
+            path="/doctor/patients"
+            element={
+              <DoctorOnly>
+                <Patients />
+              </DoctorOnly>
+            }
+          />
+          <Route
+            path="/doctor/patients/:id"
+            element={
+              <DoctorOnly>
+                <PatientDetail />
+              </DoctorOnly>
+            }
+          />
           {/* Purane /patients links bhi chalte rahein */}
-          <Route path="/patients" element={<Navigate to="/doctor/patients" replace />} />
+          <Route
+            path="/patients"
+            element={<Navigate to="/doctor/patients" replace />}
+          />
 
           {/* ---------- Koi galat URL: wapas "/" (logout ho to Auth page) ---------- */}
           <Route path="*" element={<Navigate to="/" replace />} />
