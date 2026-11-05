@@ -7,7 +7,7 @@ import Navbar from "../Components/Navbar";
 const GENDERS = ["Male", "Female", "Other"];
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
-// Khali value ke liye dash dikhao
+// Show a dash for empty values
 const show = (v) => (v === undefined || v === null || String(v).trim() === "" ? "—" : v);
 
 const fmtDate = (d) =>
@@ -15,7 +15,7 @@ const fmtDate = (d) =>
     ? new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
     : "—";
 
-/* Scoped CSS: sab kuch .pf ke andar, taaki global CSS isse na bigaade */
+/* Scoped CSS: everything lives inside .pf so global CSS does not break it */
 const css = `
 .pf{width:100%;min-height:100vh;padding:40px 20px 64px;text-align:left;color:#0f172a;font-family:inherit;line-height:1.5;
   background:linear-gradient(180deg,#ecfdf5 0%,#f7fffb 320px,#ffffff 100%)}
@@ -114,14 +114,14 @@ export default function Profile() {
   const [error, setError] = useState("");
   const noBtnRef = useRef(null);
 
-  const [doc, setDoc] = useState(null); // doctor ki professional details (Doctors-data se)
+  const [doc, setDoc] = useState(null); // doctor's professional details (from Doctors-data)
 
-  // Patient ki personal details edit
+  // Edit the patient's personal details
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({ phone: "", age: "", gender: "", bloodGroup: "" });
 
-  // Sirf doctor ke liye: Doctors-data se uski saved profile lao
+  // Doctor only: load their saved profile from Doctors-data
   useEffect(() => {
     if (user?.role !== "doctor") return;
     api
@@ -130,7 +130,7 @@ export default function Profile() {
       .catch(() => setDoc(null));
   }, [user?.role]);
 
-  // Modal khula ho to: Escape se band ho, aur focus safe option ("Nahi") par rahe
+  // When the modal is open: Escape closes it, and focus stays on the safe option ("No")
   useEffect(() => {
     if (!confirmOpen) return;
     noBtnRef.current?.focus();
@@ -141,7 +141,7 @@ export default function Profile() {
     return () => window.removeEventListener("keydown", onKey);
   }, [confirmOpen, loggingOut]);
 
-  // ----- Saare hooks upar ho chuke, ab guards -----
+  // ----- All hooks are above, now the guards -----
   if (loading) return null;
   if (!user) return <Navigate to="/login" replace />;
 
@@ -171,7 +171,7 @@ export default function Profile() {
       await updateProfile(form);
       setEditing(false);
     } catch (err) {
-      setError(err?.response?.data?.message || "Save nahi ho paya, dobara try karo");
+      setError(err?.response?.data?.message || "Could not save, please try again");
     } finally {
       setSaving(false);
     }
@@ -184,7 +184,7 @@ export default function Profile() {
       await logout();
       navigate("/login", { replace: true });
     } catch (err) {
-      setError(err?.response?.data?.message || "Logout nahi ho paya, dobara try karo");
+      setError(err?.response?.data?.message || "Could not log out, please try again");
       setLoggingOut(false);
       setConfirmOpen(false);
     }
@@ -220,10 +220,10 @@ export default function Profile() {
           <section className="pf-card pf-sec">
             <h2 className="pf-title">Account Information</h2>
             <div className="pf-grid">
-              <Field label="Naam" value={show(user.name)} />
+              <Field label="Name" value={show(user.name)} />
               <Field label="Email" value={show(user.email)} />
               <Field label="Role" value={isDoctor ? "Doctor" : "Patient"} />
-              <Field label="Account banaya" value={fmtDate(user.createdAt)} />
+              <Field label="Account created" value={fmtDate(user.createdAt)} />
             </div>
           </section>
 
@@ -233,7 +233,7 @@ export default function Profile() {
 
             {isDoctor && doc && !doc.isProfileComplete && (
               <div className="pf-alert warn">
-                ⚠️ Profile adhuri hai, patients aapko Doctors list mein nahi dekh paa rahe.
+                ⚠️ Your profile is incomplete, so patients cannot see you in the Doctors list.
               </div>
             )}
 
@@ -251,7 +251,7 @@ export default function Profile() {
                   <Field label="Available timing" value={show(doc?.availableTime)} />
                   <Field label="Hospital / Clinic" value={show(doc?.hospital)} />
                 </div>
-                <Link to="/doctor/profile" className="pf-edit">✏️ Profile edit karo</Link>
+                <Link to="/doctor/profile" className="pf-edit">✏️ Edit profile</Link>
               </>
             ) : editing ? (
               <form onSubmit={handleSave}>
@@ -264,7 +264,7 @@ export default function Profile() {
                     />
                   </label>
                   <label className="pf-field">
-                    <span className="pf-label">Umar</span>
+                    <span className="pf-label">Age</span>
                     <input
                       className="pf-input" name="age" type="number" min="0" max="120"
                       value={form.age} onChange={handleChange}
@@ -273,21 +273,21 @@ export default function Profile() {
                   <label className="pf-field">
                     <span className="pf-label">Gender</span>
                     <select className="pf-input" name="gender" value={form.gender} onChange={handleChange}>
-                      <option value="">Chuno</option>
+                      <option value="">Select</option>
                       {GENDERS.map((g) => <option key={g} value={g}>{g}</option>)}
                     </select>
                   </label>
                   <label className="pf-field">
                     <span className="pf-label">Blood Group</span>
                     <select className="pf-input" name="bloodGroup" value={form.bloodGroup} onChange={handleChange}>
-                      <option value="">Chuno</option>
+                      <option value="">Select</option>
                       {BLOOD_GROUPS.map((b) => <option key={b} value={b}>{b}</option>)}
                     </select>
                   </label>
                 </div>
                 <div className="pf-form-actions">
                   <button type="submit" className="pf-edit" disabled={saving}>
-                    {saving ? "Save ho raha hai..." : "Save karo"}
+                    {saving ? "Saving..." : "Save"}
                   </button>
                   <button type="button" className="pf-cancel" onClick={() => setEditing(false)} disabled={saving}>
                     Cancel
@@ -298,11 +298,11 @@ export default function Profile() {
               <>
                 <div className="pf-grid">
                   <Field label="Phone" value={show(user.phone)} />
-                  <Field label="Umar" value={show(user.age)} />
+                  <Field label="Age" value={show(user.age)} />
                   <Field label="Gender" value={show(user.gender)} />
                   <Field label="Blood Group" value={show(user.bloodGroup)} />
                 </div>
-                <button type="button" className="pf-edit" onClick={startEdit}>✏️ Details edit karo</button>
+                <button type="button" className="pf-edit" onClick={startEdit}>✏️ Edit details</button>
               </>
             )}
           </section>
@@ -311,10 +311,10 @@ export default function Profile() {
           <section className="pf-card pf-logout">
             <div>
               <h2>Logout</h2>
-              <p>Is device se apne account se bahar niklo.</p>
+              <p>Sign out of your account on this device.</p>
             </div>
             <button type="button" className="pf-out" onClick={() => setConfirmOpen(true)}>
-              Logout karo
+              Log out
             </button>
           </section>
         </div>
@@ -331,18 +331,18 @@ export default function Profile() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="pf-warn" aria-hidden="true">⚠️</div>
-              <h3 id="logout-title">Kya aap logout karna chahte hain?</h3>
-              <p id="logout-desc">Logout karne ke baad dobara login karna padega.</p>
+              <h3 id="logout-title">Do you want to log out?</h3>
+              <p id="logout-desc">You will need to log in again after logging out.</p>
 
               <div className="pf-actions">
                 <button
                   ref={noBtnRef} type="button" className="pf-no"
                   onClick={() => setConfirmOpen(false)} disabled={loggingOut}
                 >
-                  Nahi
+                  No
                 </button>
                 <button type="button" className="pf-yes" onClick={handleLogout} disabled={loggingOut}>
-                  {loggingOut ? "Ho raha hai..." : "Haan, logout"}
+                  {loggingOut ? "Working..." : "Yes, log out"}
                 </button>
               </div>
             </div>
