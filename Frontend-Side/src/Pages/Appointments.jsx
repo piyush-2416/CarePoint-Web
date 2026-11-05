@@ -15,13 +15,13 @@ const STATUS = {
   cancelled: { label: "Cancelled", icon: "🚫" },
 };
 const FILTERS = [
-  ["all", "Sab"],
+  ["all", "All"],
   ["pending", "Pending"],
   ["accepted", "Accepted"],
   ["denied", "Denied"],
   ["cancelled", "Cancelled"],
 ];
-const PRIORITY = { pending: 0, accepted: 1 }; // baaki sab uske baad
+const PRIORITY = { pending: 0, accepted: 1 }; // everything else comes after
 
 /* ---------- date helpers ---------- */
 const pad = (n) => String(n).padStart(2, "0");
@@ -46,7 +46,7 @@ const startOf = (a) => {
   return d;
 };
 
-/* ---------- calendar file (sirf accepted ke liye) ---------- */
+/* ---------- calendar file (only for accepted) ---------- */
 const icsText = (s) => String(s ?? "").replace(/[\r\n,;\\]/g, " ");
 function downloadIcs(a) {
   const start = startOf(a);
@@ -77,7 +77,7 @@ function downloadIcs(a) {
   URL.revokeObjectURL(url);
 }
 
-/* ---------- styles (Tailwind ki zarurat nahi) ---------- */
+/* ---------- styles (no Tailwind needed) ---------- */
 const styles = `
 .ap-root{--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--teal:#0d9488;--teal-d:#0f766e;--teal-l:#ccfbf1;--teal-xl:#f0fdfa;--bg:#f4faf9;
   font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;text-align:left}
@@ -85,12 +85,12 @@ const styles = `
 .ap-root a{text-decoration:none}
 .ap-root button{font-family:inherit}
 
-/* ---- hero image (navbar ke seedha niche) ---- */
+/* ---- hero image (right below the navbar) ---- */
 .ap-hero{position:relative;width:100%;height:340px;background:linear-gradient(135deg,#134e4a,#0d9488 60%,#14b8a6);overflow:hidden}
 .ap-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
 .ap-hero-ph{position:absolute;top:18px;right:24px;color:rgba(255,255,255,.6);font-size:12px;font-weight:600;letter-spacing:.04em}
 
-/* ---- heading card (image ke upar thoda overlap) ---- */
+/* ---- heading card (slightly overlaps the image) ---- */
 .ap-headwrap{position:relative;z-index:2;max-width:1000px;margin:-70px auto 0;padding:0 24px}
 .ap-headcard{background:#fff;border:1px solid var(--line);border-radius:22px;padding:28px 32px;box-shadow:0 14px 40px rgba(15,23,42,.1);
   display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:20px}
@@ -190,7 +190,7 @@ const styles = `
 @media (prefers-reduced-motion:reduce){.ap-skel{animation:none}.ap-btn,.ap-tab{transition:none}}
 `;
 
-/* ---------- chhote components ---------- */
+/* ---------- small components ---------- */
 function Detail({ label, children, full = false }) {
   return (
     <div className={`ap-detail ${full ? "full" : ""}`}>
@@ -240,9 +240,9 @@ export default function Appointments() {
   const [error, setError] = useState("");
   const [filter, setFilter] = useState("all");
   const [busyId, setBusyId] = useState(null);
-  const [denyId, setDenyId] = useState(null); // doctor: deny confirm khula hai
+  const [denyId, setDenyId] = useState(null); // doctor: deny confirmation is open
   const [note, setNote] = useState("");
-  const [cancelId, setCancelId] = useState(null); // patient: cancel confirm khula hai
+  const [cancelId, setCancelId] = useState(null); // patient: cancel confirmation is open
 
   const load = useCallback(() => {
     setLoading(true);
@@ -251,7 +251,7 @@ export default function Appointments() {
       .get("/appointments/mine")
       .then((res) => setList(res.data))
       .catch((e) =>
-        setError(e.response?.data?.message || "Appointments load nahi ho paayi"),
+        setError(e.response?.data?.message || "Could not load appointments"),
       )
       .finally(() => setLoading(false));
   }, []);
@@ -273,7 +273,7 @@ export default function Appointments() {
       setDenyId(null);
       setNote("");
     } catch (err) {
-      setError(err.response?.data?.message || "Update nahi ho paya");
+      setError(err.response?.data?.message || "Could not update");
       load();
     } finally {
       setBusyId(null);
@@ -287,7 +287,7 @@ export default function Appointments() {
       const res = await api.patch(`/appointments/${id}/cancel`);
       setList((prev) => prev.map((a) => (a._id === id ? res.data : a)));
     } catch (err) {
-      setError(err.response?.data?.message || "Cancel nahi ho paya");
+      setError(err.response?.data?.message || "Could not cancel");
       load();
     } finally {
       setBusyId(null);
@@ -328,7 +328,7 @@ export default function Appointments() {
               onError={(e) => (e.target.style.display = "none")}
             />
           ) : (
-            <span className="ap-hero-ph">HERO IMAGE YAHAN AAYEGI</span>
+            <span className="ap-hero-ph">HERO IMAGE GOES HERE</span>
           )}
         </section>
 
@@ -337,12 +337,12 @@ export default function Appointments() {
           <div className="ap-headcard">
             <div>
               <h1>
-                📅 {isDoctor ? "Appointment Requests" : "Meri Appointments"}
+                📅 {isDoctor ? "Appointment Requests" : "My Appointments"}
               </h1>
               <p>
                 {isDoctor
-                  ? "Patients ki requests yahan aati hain. Accept ya deny karo."
-                  : "Doctor ke accept karne tak appointment Pending rehti hai."}
+                  ? "Patient requests appear here. Accept or deny them."
+                  : "An appointment stays Pending until the doctor accepts it."}
               </p>
             </div>
 
@@ -353,11 +353,11 @@ export default function Appointments() {
                 onClick={load}
                 disabled={loading}
               >
-                {loading ? "Load ho raha hai..." : "🔄 Refresh"}
+                {loading ? "Loading..." : "🔄 Refresh"}
               </button>
               {!isDoctor && (
                 <Link to="/Doctors" className="ap-btn">
-                  ➕ Nayi appointment
+                  ➕ New appointment
                 </Link>
               )}
             </div>
@@ -370,8 +370,8 @@ export default function Appointments() {
             <div className="ap-alert warn">
               <span style={{ fontSize: 20 }}>⏳</span>
               <p>
-                <b>{pendingCount}</b> request{pendingCount > 1 ? "s" : ""} aapke
-                jawab ka intezar kar rahi {pendingCount > 1 ? "hain" : "hai"}.
+                <b>{pendingCount}</b> request{pendingCount > 1 ? "s are" : " is"}{" "}
+                waiting for your response.
               </p>
             </div>
           )}
@@ -410,13 +410,13 @@ export default function Appointments() {
               <p>
                 {list.length === 0
                   ? isDoctor
-                    ? "Abhi koi appointment request nahi aayi."
-                    : "Aapne abhi koi appointment book nahi ki."
-                  : "Is filter mein koi appointment nahi hai."}
+                    ? "No appointment requests yet."
+                    : "You have not booked any appointment yet."
+                  : "No appointments match this filter."}
               </p>
               {!isDoctor && list.length === 0 && (
                 <Link to="/Doctors" className="ap-btn">
-                  Doctor chuno
+                  Choose a doctor
                 </Link>
               )}
             </div>
@@ -477,7 +477,7 @@ export default function Appointments() {
                         </Detail>
                       )}
                       {a.doctorNote && (
-                        <Detail label="Doctor ka note" full>
+                        <Detail label="Doctor's note" full>
                           {a.doctorNote}
                         </Detail>
                       )}
@@ -495,7 +495,7 @@ export default function Appointments() {
                             value={note}
                             onChange={(e) => setNote(e.target.value)}
                             maxLength={200}
-                            placeholder="Wajah likho (optional), jaise: us din chhutti hai"
+                            placeholder="Add a reason (optional), e.g. I am on leave that day"
                           />
                           <div className="ap-actions">
                             <button
@@ -504,7 +504,7 @@ export default function Appointments() {
                               disabled={busy}
                               onClick={() => decide(a._id, "denied", note)}
                             >
-                              {busy ? "Ho raha hai..." : "Haan, deny karo"}
+                              {busy ? "Working..." : "Yes, deny"}
                             </button>
                             <button
                               type="button"
@@ -515,7 +515,7 @@ export default function Appointments() {
                                 setNote("");
                               }}
                             >
-                              Nahi
+                              No
                             </button>
                           </div>
                         </div>
@@ -526,7 +526,7 @@ export default function Appointments() {
                         <>
                           {past ? (
                             <p className="ap-note">
-                              ⌛ Ye time nikal chuka hai.
+                              ⌛ This time has already passed.
                             </p>
                           ) : (
                             <div className="ap-actions">
@@ -536,7 +536,7 @@ export default function Appointments() {
                                 disabled={busy}
                                 onClick={() => decide(a._id, "accepted")}
                               >
-                                {busy ? "Ho raha hai..." : "✅ Accept"}
+                                {busy ? "Working..." : "✅ Accept"}
                               </button>
                               <button
                                 type="button"
@@ -563,7 +563,7 @@ export default function Appointments() {
                               className="ap-btn ghost"
                               onClick={() => downloadIcs(a)}
                             >
-                              📆 Calendar mein jodo
+                              📆 Add to calendar
                             </button>
                           )}
                           {cancelId === a._id ? (
@@ -574,7 +574,7 @@ export default function Appointments() {
                                 disabled={busy}
                                 onClick={() => cancel(a._id)}
                               >
-                                {busy ? "Ho raha hai..." : "Haan, cancel karo"}
+                                {busy ? "Working..." : "Yes, cancel"}
                               </button>
                               <button
                                 type="button"
@@ -582,7 +582,7 @@ export default function Appointments() {
                                 disabled={busy}
                                 onClick={() => setCancelId(null)}
                               >
-                                Nahi
+                                No
                               </button>
                             </>
                           ) : (
@@ -591,7 +591,7 @@ export default function Appointments() {
                               className="ap-btn soft-red"
                               onClick={() => setCancelId(a._id)}
                             >
-                              Cancel karo
+                              Cancel
                             </button>
                           )}
                         </div>
@@ -603,7 +603,7 @@ export default function Appointments() {
                           to={`/doctor/patients/${a.patientId}`}
                           className={`ap-link ${showDoctorActions ? "gap" : ""}`}
                         >
-                          Patient ki detail dekho →
+                          View patient details →
                         </Link>
                       )}
                     </div>
