@@ -1,8 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Navbar from "../Components/Navbar";
-const API = "http://localhost:3000/api/documents";
 
-// Image frontend ke public folder me rakho: public/documents-banner.jpg
+const API = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/documents`
+  : "http://localhost:3000/api/documents";
+
+// Image frontend ke public folder me rakho: public/Medical_Documents.png
 const HERO_IMG = "/Medical_Documents.png";
 
 const CATEGORIES = [
@@ -38,6 +41,14 @@ function formatDate(d) {
 
 function scrollToId(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+// Server ke error ko saaf message me badlo
+async function readError(res, fallback) {
+  if (res.status === 401) return "Please log in again to see your documents.";
+  if (res.status === 403) return "Your account does not have access to documents.";
+  const data = await res.json().catch(() => ({}));
+  return data.error || data.message || fallback;
 }
 
 // Is page ka poora CSS yahin hai (Tailwind / global CSS par depend nahi).
@@ -234,11 +245,18 @@ function Documents() {
   // Saare documents lao
   const loadDocs = async () => {
     try {
-      const res = await fetch(API);
-      if (!res.ok) throw new Error();
+      // credentials: "include" ke bina login cookie server tak nahi jaati (401 aata hai)
+      const res = await fetch(API, { credentials: "include" });
+      if (!res.ok) throw new Error(await readError(res, "Could not load documents."));
       setDocs(await res.json());
-    } catch {
-      setError("Could not load documents. Is the backend running?");
+      setError("");
+    } catch (err) {
+      // fetch khud fail ho (network) to "Failed to fetch" aata hai
+      setError(
+        err instanceof TypeError
+          ? "Cannot reach the server. Is the backend running on port 3000?"
+          : err.message
+      );
     } finally {
       setLoading(false);
     }
@@ -255,20 +273,25 @@ function Documents() {
 
     if (!title.trim()) return setError("Please enter a title.");
     if (!file) return setError("Please choose a file to upload.");
+    if (file.size > 10 * 1024 * 1024) return setError("File must be 10 MB or smaller.");
 
     const formData = new FormData();
-    formData.append("title", title);
+    formData.append("title", title.trim());
     formData.append("category", category);
     formData.append("notes", notes);
     formData.append("file", file);
 
     try {
       setSaving(true);
-      const res = await fetch(API, { method: "POST", body: formData });
+      const res = await fetch(API, {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error(await readError(res, "Upload failed."));
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Upload failed.");
 
-      setDocs([data, ...docs]);
+      setDocs((prev) => [data, ...prev]);
       setTitle("");
       setNotes("");
       setFile(null);
@@ -276,7 +299,11 @@ function Documents() {
       setFileKey((k) => k + 1);
       setFilter("All");
     } catch (err) {
-      setError(err.message);
+      setError(
+        err instanceof TypeError
+          ? "Cannot reach the server. Is the backend running on port 3000?"
+          : err.message
+      );
     } finally {
       setSaving(false);
     }
@@ -286,25 +313,25 @@ function Documents() {
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this document? This cannot be undone.")) return;
     try {
-      const res = await fetch(`${API}/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error();
-      setDocs(docs.filter((d) => d._id !== id));
-    } catch {
-      setError("Could not delete the document. Please try again.");
+      const res = await fetch(`${API}/${id}`, { method: "DELETE", credentials: "include" });
+      if (!res.ok) throw new Error(await readError(res, "Could not delete the document."));
+      setDocs((prev) => prev.filter((d) => d._id !== id));
+    } catch (err) {
+      setError(err.message || "Could not delete the document. Please try again.");
     }
   };
 
   const shown = filter === "All" ? docs : docs.filter((d) => d.category === filter);
   const totalSize = useMemo(
-    () => shown.reduce((sum, d) => sum + (d.fileSize || 0), 0),
+    () => shown.reduce((sum, d) => sum + (d.fileSize ?? d.size ?? 0), 0),
     [shown]
   );
 
   return (
-
     <div className="docs-page">
       <style>{CSS}</style>
-<Navbar/>
+      <Navbar />
+
       {/* ================= HERO ================= */}
       <section
         className="docs-hero"
@@ -357,6 +384,7 @@ function Documents() {
                 type="text"
                 className="docs-field"
                 placeholder="e.g. Blood test, March"
+                maxLength={150}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
@@ -383,6 +411,7 @@ function Documents() {
               <textarea
                 id="doc-notes"
                 rows={3}
+                maxLength={500}
                 className="docs-field"
                 placeholder="Anything worth remembering, e.g. doctor name or test result"
                 value={notes}
@@ -397,6 +426,7 @@ function Documents() {
                   key={fileKey}
                   id="doc-file"
                   type="file"
+                  accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp"
                   onChange={(e) => setFile(e.target.files[0] || null)}
                 />
                 <span className="docs-drop-icon" aria-hidden="true">
@@ -406,7 +436,7 @@ function Documents() {
                   {file ? file.name : "Choose a file to upload"}
                 </span>
                 <span className="docs-drop-hint">
-                  {file ? formatSize(file.size) : "Files up to 10 MB"}
+                  {file ? formatSize(file.size) : "PDF, JPG, PNG or WEBP, up to 10 MB"}
                 </span>
               </label>
             </div>
@@ -468,13 +498,13 @@ function Documents() {
                     <div className="docs-item-info">
                       <p className="docs-item-title" title={d.title}>{d.title}</p>
                       <p className="docs-meta">
-                        {formatDate(d.createdAt)} · {formatSize(d.fileSize)}
+                        {formatDate(d.createdAt)} · {formatSize(d.fileSize ?? d.size)}
                       </p>
                       <p className="docs-fname" title={d.originalName}>{d.originalName}</p>
                     </div>
                   </div>
 
-                  <span className="docs-badge">{d.category}</span>
+                  <span className="docs-badge">{d.category || "Other"}</span>
                   {d.notes && <p className="docs-notes">{d.notes}</p>}
 
                   <div className="docs-item-actions">
