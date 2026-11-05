@@ -5,8 +5,9 @@ const API = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL}/documents`
   : "http://localhost:3000/api/documents";
 
-// Image frontend ke public folder me rakho: public/Medical_Documents.png
-const HERO_IMG = "/Medical_Documents.png";
+// Yahan image ka DIRECT link paste karo (end me .jpg / .png / .webp hona chahiye).
+// Khali rakhoge ya link galat hoga to gradient dikhega.
+const HERO_IMG = "https://media.istockphoto.com/id/1290482722/vector/people-taking-documents-from-shelves.jpg?s=612x612&w=0&k=20&c=QNoBmjAZhzFR1g35msxaipMDfXa0FkB_NQC7qsyrTRU=";
 
 const CATEGORIES = [
   "Prescription",
@@ -235,12 +236,22 @@ function Documents() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [filter, setFilter] = useState("All");
+  const [heroOk, setHeroOk] = useState(false); // online image sach me load hui ya nahi
 
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [notes, setNotes] = useState("");
   const [file, setFile] = useState(null);
   const [fileKey, setFileKey] = useState(0); // file input ko reset karne ke liye
+
+  // Hero image pehle check karo: sahi ho tabhi dikhao, warna gradient rahega
+  useEffect(() => {
+    if (!HERO_IMG) return;
+    const img = new Image();
+    img.onload = () => setHeroOk(true);
+    img.onerror = () => setHeroOk(false);
+    img.src = HERO_IMG;
+  }, []);
 
   // Saare documents lao
   const loadDocs = async () => {
@@ -336,7 +347,9 @@ function Documents() {
       <section
         className="docs-hero"
         style={{
-          backgroundImage: `linear-gradient(rgba(5,61,61,0.55), rgba(5,61,61,0.85)), url(${HERO_IMG})`,
+          backgroundImage: heroOk
+            ? `linear-gradient(rgba(5,61,61,0.55), rgba(5,61,61,0.85)), url("${HERO_IMG}")`
+            : "linear-gradient(135deg, #095555, #0b6b6b 55%, #17c8c8)",
         }}
       >
         <div className="docs-wrap">
