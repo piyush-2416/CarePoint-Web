@@ -5,11 +5,14 @@ import { useAuth } from "../context/AuthContext";
 // Features ki common list (My Profile par laal dot)
 const featureLinksAll = [
   { to: "/Documents", icon: "📂", label: "My Documents" },
+
+  // { to: "/Relatives", icon: "👥", label: "Emergency Contacts" },
   { to: "/Help", icon: "💬", label: "Help & Support" },
   { to: "/HealthTips", icon: "🙂", label: "Yours Health-Tips" },
   { to: "/About", icon: "ℹ️", label: "About Us" },
   { to: "/Feedback", icon: "📄", label: "Feedback" },
-{ to: "/Profile", icon: "👤", label: "My Profile", dot: true },
+
+  { to: "/Profile", icon: "👤", label: "My Profile", dot: true },
 ];
 
 // ---------- Patient (aur logged-out visitor) ----------
