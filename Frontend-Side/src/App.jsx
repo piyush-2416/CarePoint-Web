@@ -25,7 +25,7 @@ import Profile from "./Pages/Profile.jsx";
 import Relatives from "./Pages/Relatives.jsx";
 import Documents from "./Pages/Documents.jsx";
 import SafetyChecker from "./Pages/SafetyCheck.jsx";
-import SafetyPlanner from "./Pages/Safetyplanner.jsx";
+import SafetyPlanner from "./Pages/SafetyPlanner.jsx";
 import DoctorProfile from "./Pages/DoctorProfile.jsx";
 import Patients from "./Pages/Patients.jsx";
 import PatientDetail from "./Pages/PatientDetail.jsx";
