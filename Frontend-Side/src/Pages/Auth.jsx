@@ -1,7 +1,10 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
-  ArrowRight, Stethoscope, CalendarDays, Pill, ShieldPlus, Clock, HeartPulse,
-  Building2, Play, ShieldCheck, Search, FolderOpen, Users, Landmark, LifeBuoy,
-  Siren, LogIn, UserPlus,
+  Mail, Lock, Eye, EyeOff, User, ArrowRight, Stethoscope, CalendarDays, Pill,
+  ShieldPlus, Clock, Heart, HeartPulse, Building2, Play,
+  ShieldCheck, Search, FolderOpen, Users, Landmark, LifeBuoy, Siren,
+  LogIn, UserPlus,
 } from "lucide-react";
 
 /* Brand icons - inline SVG, footer ke liye */
@@ -141,12 +144,12 @@ export default function Auth() {
         aria-label="CarePoint - Better Health, Brighter Tomorrow"
       >
         <div className="hero-actions">
-          <a href="/login" className="hero-btn login">
+          <Link to="/login" className="hero-btn login">
             <LogIn size={18} /> Login
-          </a>
-          <a href="/signup" className="hero-btn signup">
+          </Link>
+          <Link to="/signup" className="hero-btn signup">
             <UserPlus size={18} /> Sign Up
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -208,9 +211,9 @@ export default function Auth() {
           <h3>Take the First Step Towards<br />a Healthier You</h3>
           <p>Join CarePoint today and experience a smarter,<br />simpler way to manage your health.</p>
           <div className="cp-cta-btns">
-            <a href="/signup" style={{ textDecoration: "none" }}>
+            <Link to="/signup" style={{ textDecoration: "none" }}>
               <button type="button">Sign Up Now <ArrowRight size={14} /></button>
-            </a>
+            </Link>
             <button type="button" className="ghost">Learn More</button>
           </div>
         </div>
