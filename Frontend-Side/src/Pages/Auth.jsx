@@ -1,13 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import {
   Mail, Lock, Eye, EyeOff, User, ArrowRight, Stethoscope, CalendarDays, Pill,
   ShieldPlus, Clock, Heart, HeartPulse, Building2, Play,
   ShieldCheck, Search, FolderOpen, Users, Landmark, LifeBuoy, Siren,
-  LogIn, UserPlus,
 } from "lucide-react";
 
-/* Brand icons - inline SVG, footer ke liye */
+/* Brand icons (naye lucide-react mein nahi aate) - inline SVG, footer ke liye */
 const brand = (d) => ({ size = 16, fill = "currentColor" }) => (
   <svg viewBox="0 0 24 24" width={size} height={size} fill={fill} aria-hidden="true"><path d={d} /></svg>
 );
@@ -20,7 +18,7 @@ const Twitter = brand("M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6
 
 /* ---------- IMAGES ---------- */
 const IMG = {
-  hero: "/carepoint-auth.png", // public/carepoint-auth.png
+  hero: "/carepoint-auth.png",            // public/carepoint-auth.png
   svcDoctors: "https://wallpapers.com/images/hd/mbbs-three-doctors-l6mpzm2z8xq90u8e.jpg",
   svcHospitals: "https://tse2.mm.bing.net/th/id/OIP.rGAa__1Ul0KuaYRWAQj4xQHaHa?r=0&w=626&h=626&rs=1&pid=ImgDetMain&o=7&rm=3",
   svcMedicines: "https://cdn.pixabay.com/photo/2023/10/01/14/40/medicine-8287535_1280.jpg",
@@ -43,13 +41,13 @@ const services = [
   { icon: Building2, t: "Hospitals", d: "Find the best hospitals near you.", img: IMG.svcHospitals, href: "/hospitals" },
   { icon: Pill, t: "Medicines", d: "Order medicines online with ease.", img: IMG.svcMedicines, href: "/medicines" },
   { icon: CalendarDays, t: "Appointments", d: "Book your slot in a few clicks.", img: IMG.svcAppointments, href: "/appointments" },
-  { icon: ShieldCheck, t: "AI Safety Planner", d: "Prepare for emergencies in advance.", img: "https://verityai.co/_next/image?url=https:%2F%2Fcdn.sanity.io%2Fimages%2F5v26bvj8%2Fproduction%2F6f435aa4e6278b4345a91cec90c3a10ef6e02e40-1536x1024.png&w=1200&q=75", ai: true, tone: "linear-gradient(135deg,#0b8f89,#34c3a4)", href: "/safety-planner" },
-  { icon: Search, t: "AI Safety Checker", d: "Check your current situation's risk.", img: "https://cdn.vectorstock.com/i/500p/43/45/businessman-is-talking-or-chatting-with-chat-bot-vector-46624345.jpg", ai: true, tone: "linear-gradient(135deg,#0e7490,#22b8cf)", href: "/safety-checker" },
-  { icon: FolderOpen, t: "Document Wallet", d: "Keep reports and prescriptions together.", img: "https://www.shutterstock.com/image-vector/digital-wallet-icon-wireframe-hand-600nw-2586641487.jpg", tone: "linear-gradient(135deg,#0f766e,#2dd4bf)", href: "/documents" },
-  { icon: Users, t: "Smart Contact List", d: "Your family's emergency contacts.", img: "https://tse2.mm.bing.net/th/id/OIP.PmXcJ-YOXjhgFmD3nN1SfwHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", tone: "linear-gradient(135deg,#047857,#4ade80)", href: "/relatives" },
-  { icon: Landmark, t: "Government Schemes", d: "See which schemes you are eligible for.", img: "https://media.assettype.com/outlookmoney/2026-06-09/jk9r2482/ayushman-bharat-west-bengal.png?auto=format%2Ccompress&fit=max&format=webp&w=768&dpr=1.0", tone: "linear-gradient(135deg,#0b6e75,#38bdf8)", href: "/schemes" },
-  { icon: LifeBuoy, t: "Need Help", d: "Questions or problems? We are here.", tone: "linear-gradient(135deg,#115e59,#5eead4)", img: "https://img.freepik.com/premium-vector/medical-social-worker-helps-patients-families-cope-with-medical-challenges_701961-4370.jpg", href: "/help" },
-  { icon: Siren, t: "Emergency", d: "Every second counts. Get help right away.", urgent: true, wide: true, tone: "linear-gradient(135deg,#dc2626,#f87171)", img: "https://static.vecteezy.com/system/resources/previews/026/994/779/large_2x/911-emergency-call-on-web-site-assistant-manager-online-ambulance-service-hotline-call-center-modern-flat-cartoon-style-illustration-on-white-background-vector.jpg", href: "/emergency" },
+  { icon: ShieldCheck, t: "AI Safety Planner", d: "Prepare for emergencies in advance.",img :"https://verityai.co/_next/image?url=https:%2F%2Fcdn.sanity.io%2Fimages%2F5v26bvj8%2Fproduction%2F6f435aa4e6278b4345a91cec90c3a10ef6e02e40-1536x1024.png&w=1200&q=75", ai: true, tone: "linear-gradient(135deg,#0b8f89,#34c3a4)", href: "/safety-planner" },
+  { icon: Search, t: "AI Safety Checker", d: "Check your current situation's risk.", img:"https://cdn.vectorstock.com/i/500p/43/45/businessman-is-talking-or-chatting-with-chat-bot-vector-46624345.jpg",ai: true, tone: "linear-gradient(135deg,#0e7490,#22b8cf)", href: "/safety-checker" },
+  { icon: FolderOpen, t: "Document Wallet", d: "Keep reports and prescriptions together.", img:"https://www.shutterstock.com/image-vector/digital-wallet-icon-wireframe-hand-600nw-2586641487.jpg",tone: "linear-gradient(135deg,#0f766e,#2dd4bf)", href: "/documents" },
+  { icon: Users, t: "Smart Contact List", d: "Your family's emergency contacts.",img:'https://tse2.mm.bing.net/th/id/OIP.PmXcJ-YOXjhgFmD3nN1SfwHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3', tone: "linear-gradient(135deg,#047857,#4ade80)", href: "/relatives" },
+  { icon: Landmark, t: "Government Schemes", d: "See which schemes you are eligible for.",img:"https://media.assettype.com/outlookmoney/2026-06-09/jk9r2482/ayushman-bharat-west-bengal.png?auto=format%2Ccompress&fit=max&format=webp&w=768&dpr=1.0", tone: "linear-gradient(135deg,#0b6e75,#38bdf8)", href: "/schemes" },
+  { icon: LifeBuoy, t: "Need Help", d: "Questions or problems? We are here.", tone: "linear-gradient(135deg,#115e59,#5eead4)",img:"https://img.freepik.com/premium-vector/medical-social-worker-helps-patients-families-cope-with-medical-challenges_701961-4370.jpg", href: "/help" },
+  { icon: Siren, t: "Emergency", d: "Every second counts. Get help right away.", urgent: true, wide: true, tone: "linear-gradient(135deg,#dc2626,#f87171)", img:"https://static.vecteezy.com/system/resources/previews/026/994/779/large_2x/911-emergency-call-on-web-site-assistant-manager-online-ambulance-service-hotline-call-center-modern-flat-cartoon-style-illustration-on-white-background-vector.jpg",href: "/emergency" },
 ];
 
 const reviews = [
@@ -70,87 +68,145 @@ function Logo({ small }) {
   );
 }
 
-/* ---------- HERO CSS (naya) ----------
-   Apne purane `css` const ke saath ye bhi render hota hai.
-   Purane .cpa, .cpa-card, .cpa-left, .cpa-right, .cpa-form, .cpa-* wale
-   saare rules ab unused hain - unhe aap `css` se delete kar sakte ho. */
-const heroCss = `
-.hero{
-  position:relative; isolation:isolate;
-  min-height:100vh; min-height:100svh;
-  display:flex; flex-direction:column; justify-content:flex-end;
-  background-color:#0a4f52;
-  background-image:var(--hero);
-  background-size:cover;
-  background-position:center top;
-  background-repeat:no-repeat;
-}
-.hero::before{
-  content:""; position:absolute; inset:0; z-index:-1;
-  background:linear-gradient(to top, rgba(6,40,44,.88) 0%, rgba(6,40,44,.45) 28%, rgba(6,40,44,0) 55%);
-}
-.hero-actions{
-  width:100%; max-width:560px; margin:0 auto;
-  padding:24px 20px calc(32px + env(safe-area-inset-bottom, 0px));
-  display:grid; grid-template-columns:1fr 1fr; gap:14px;
-}
-.hero-btn{
-  display:flex; align-items:center; justify-content:center; gap:10px;
-  min-height:54px; padding:0 18px; border-radius:16px;
-  font:700 16px/1 inherit; font-family:inherit; text-decoration:none;
-  transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
-  -webkit-tap-highlight-color:transparent;
-}
-.hero-btn:active{ transform:scale(.97); }
-.hero-btn:focus-visible{ outline:3px solid #fff; outline-offset:3px; }
-.hero-btn.login{
-  color:#fff; background:rgba(255,255,255,.16);
-  border:1.5px solid rgba(255,255,255,.7);
-  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
-}
-.hero-btn.login:hover{ background:rgba(255,255,255,.28); }
-.hero-btn.signup{
-  color:#fff; border:1.5px solid transparent;
-  background:linear-gradient(135deg,#0b8f89,#34c3a4);
-  box-shadow:0 10px 24px rgba(11,143,137,.45);
-}
-.hero-btn.signup:hover{ box-shadow:0 14px 30px rgba(11,143,137,.6); transform:translateY(-1px); }
-
-@media (min-width:768px){
-  .hero{ min-height:88vh; background-position:center center; }
-  .hero-actions{ max-width:520px; padding-bottom:56px; }
-}
-@media (max-width:360px){
-  .hero-actions{ gap:10px; padding-left:14px; padding-right:14px; }
-  .hero-btn{ font-size:15px; padding:0 10px; }
-}
-@media (prefers-reduced-motion:reduce){
-  .hero-btn{ transition:none; }
-}
-`;
+/* ---------- Brand icons (inline SVG, no extra package) ---------- */
+const GoogleIcon = () => (
+  <svg viewBox="0 0 48 48" width="18" height="18" aria-hidden="true">
+    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+  </svg>
+);
+const AppleIcon = () => (
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="#111" aria-hidden="true">
+    <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701" />
+  </svg>
+);
+const FacebookIcon = () => (
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="#1877f2" aria-hidden="true">
+    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+  </svg>
+);
 
 export default function Auth() {
+  const [mode, setMode] = useState("signin");
+  const [showPw, setShowPw] = useState(false);
+  const [form, setForm] = useState({ name: "", id: "", password: "", remember: false });
+
+  const isIn = mode === "signin";
+
+  const onChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm((f) => ({ ...f, [name]: type === "checkbox" ? checked : value }));
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    // TODO: yahan apni login / signup API call lagao
+    console.log(mode, form);
+  };
+
+  const social = (provider) => {
+    // TODO: social login yahan lagao
+    console.log("social login:", provider);
+  };
+
   return (
     <div className="cp">
-      {/* NOTE: `css` aapke file mein pehle se defined hai - use waise hi rakho */}
       <style>{css}</style>
-      <style>{heroCss}</style>
+      <section className="cpa">
 
-      {/* ================= HERO ================= */}
-      <section
-        className="hero"
-        style={{ "--hero": `url(${IMG.hero})` }}
-        role="img"
-        aria-label="CarePoint - Better Health, Brighter Tomorrow"
-      >
-        <div className="hero-actions">
-          <Link to="/login" className="hero-btn login">
-            <LogIn size={18} /> Login
-          </Link>
-          <Link to="/signup" className="hero-btn signup">
-            <UserPlus size={18} /> Sign Up
-          </Link>
+      <div className="cpa-card">
+        {/* ---------- LEFT: image ---------- */}
+        <div className="cpa-left">
+          <img src={IMG.hero} alt="CarePoint - Better Health, Brighter Tomorrow" />
         </div>
+
+        {/* ---------- RIGHT: form ---------- */}
+        <div className="cpa-right">
+          <div className="cpa-top">
+            <span>{isIn ? "New here?" : "Already a member?"}</span>
+            <button type="button" className="cpa-link" onClick={() => setMode(isIn ? "signup" : "signin")}>
+              {isIn ? "Create an account" : "Sign in"}
+            </button>
+          </div>
+
+          <form className="cpa-form" onSubmit={onSubmit} noValidate>
+            <h2>{isIn ? "Welcome Back" : "Create Account"} <span aria-hidden="true">{isIn ? "👋" : "🎉"}</span></h2>
+            <p className="cpa-sub">
+              {isIn
+                ? "Sign in to your CarePoint account and continue your healthcare journey."
+                : "Join CarePoint and start your healthcare journey today."}
+            </p>
+
+            <div className="cpa-tabs" role="tablist">
+              <button type="button" role="tab" aria-selected={isIn} className={isIn ? "on" : ""} onClick={() => setMode("signin")}>Sign In</button>
+              <button type="button" role="tab" aria-selected={!isIn} className={!isIn ? "on" : ""} onClick={() => setMode("signup")}>Sign Up</button>
+            </div>
+
+            {!isIn && (
+              <div className="cpa-field">
+                <label htmlFor="name">Full Name</label>
+                <div className="cpa-input">
+                  <User size={18} />
+                  <input id="name" name="name" value={form.name} onChange={onChange} placeholder="Enter your full name" autoComplete="name" />
+                </div>
+              </div>
+            )}
+
+            <div className="cpa-field">
+              <label htmlFor="id">Email or Phone Number</label>
+              <div className="cpa-input">
+                <Mail size={18} />
+                <input id="id" name="id" value={form.id} onChange={onChange} placeholder="Enter your email or phone number" autoComplete="username" />
+              </div>
+            </div>
+
+            <div className="cpa-field">
+              <label htmlFor="password">Password</label>
+              <div className="cpa-input">
+                <Lock size={18} />
+                <input
+                  id="password" name="password" type={showPw ? "text" : "password"}
+                  value={form.password} onChange={onChange} placeholder="Enter your password"
+                  autoComplete={isIn ? "current-password" : "new-password"}
+                />
+                <button type="button" className="cpa-eye" onClick={() => setShowPw((s) => !s)} aria-label={showPw ? "Hide password" : "Show password"}>
+                  {showPw ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            {isIn && (
+              <div className="cpa-row">
+                <label className="cpa-check">
+                  <input type="checkbox" name="remember" checked={form.remember} onChange={onChange} />
+                  <span className="box" />
+                  Remember me
+                </label>
+                <button type="button" className="cpa-link">Forgot password?</button>
+              </div>
+            )}
+
+            <button type="submit" className="cpa-submit">
+              {isIn ? "Sign In" : "Create Account"} <ArrowRight size={18} />
+            </button>
+
+            <div className="cpa-or"><span>or continue with</span></div>
+
+            <div className="cpa-social">
+              <button type="button" onClick={() => social("google")}><GoogleIcon /> Google</button>
+              <button type="button" onClick={() => social("apple")}><AppleIcon /> Apple</button>
+              <button type="button" onClick={() => social("facebook")}><FacebookIcon /> Facebook</button>
+            </div>
+
+            <p className="cpa-terms">
+              By continuing, you agree to our{" "}
+              <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.
+            </p>
+          </form>
+        </div>
+      </div>
       </section>
 
       {/* ================= WHY CHOOSE ================= */}
@@ -211,9 +267,9 @@ export default function Auth() {
           <h3>Take the First Step Towards<br />a Healthier You</h3>
           <p>Join CarePoint today and experience a smarter,<br />simpler way to manage your health.</p>
           <div className="cp-cta-btns">
-            <Link to="/signup" style={{ textDecoration: "none" }}>
-              <button type="button">Sign Up Now <ArrowRight size={14} /></button>
-            </Link>
+            <button type="button" onClick={() => { setMode("signup"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
+              Sign Up Now <ArrowRight size={14} />
+            </button>
             <button type="button" className="ghost">Learn More</button>
           </div>
         </div>
@@ -265,11 +321,4 @@ export default function Auth() {
             <p className="cp-foot-txt">Get the CarePoint app for a better healthcare experience.</p>
             <div className="cp-stores">
               <a href="#gp"><Play size={16} fill="#fff" /><span><small>GET IT ON</small>Google Play</span></a>
-              <a href="#as"><Apple size={16} fill="#fff" /><span><small>Download on the</small>App Store</span></a>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-}
+              <a href="#as"><Apple size={16} fill="#fff" /><span><small>Download on the</small>App Sto
