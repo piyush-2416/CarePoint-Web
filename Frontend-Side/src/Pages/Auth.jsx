@@ -1,11 +1,10 @@
-import { useState } from "react";
 import {
-  Mail, Lock, Eye, EyeOff, User, ArrowRight, Stethoscope, CalendarDays, Pill,
-  ShieldPlus, Clock, Heart, HeartPulse, Building2, Play,
-  ShieldCheck, Search, FolderOpen, Users, Landmark, LifeBuoy, Siren,
+  ArrowRight, Stethoscope, CalendarDays, Pill, ShieldPlus, Clock, HeartPulse,
+  Building2, Play, ShieldCheck, Search, FolderOpen, Users, Landmark, LifeBuoy,
+  Siren, LogIn, UserPlus,
 } from "lucide-react";
 
-/* Brand icons (naye lucide-react mein nahi aate) - inline SVG, footer ke liye */
+/* Brand icons - inline SVG, footer ke liye */
 const brand = (d) => ({ size = 16, fill = "currentColor" }) => (
   <svg viewBox="0 0 24 24" width={size} height={size} fill={fill} aria-hidden="true"><path d={d} /></svg>
 );
@@ -18,7 +17,7 @@ const Twitter = brand("M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6
 
 /* ---------- IMAGES ---------- */
 const IMG = {
-  hero: "/carepoint-auth.png",            // public/carepoint-auth.png
+  hero: "/carepoint-auth.png", // public/carepoint-auth.png
   svcDoctors: "https://wallpapers.com/images/hd/mbbs-three-doctors-l6mpzm2z8xq90u8e.jpg",
   svcHospitals: "https://tse2.mm.bing.net/th/id/OIP.rGAa__1Ul0KuaYRWAQj4xQHaHa?r=0&w=626&h=626&rs=1&pid=ImgDetMain&o=7&rm=3",
   svcMedicines: "https://cdn.pixabay.com/photo/2023/10/01/14/40/medicine-8287535_1280.jpg",
@@ -41,13 +40,13 @@ const services = [
   { icon: Building2, t: "Hospitals", d: "Find the best hospitals near you.", img: IMG.svcHospitals, href: "/hospitals" },
   { icon: Pill, t: "Medicines", d: "Order medicines online with ease.", img: IMG.svcMedicines, href: "/medicines" },
   { icon: CalendarDays, t: "Appointments", d: "Book your slot in a few clicks.", img: IMG.svcAppointments, href: "/appointments" },
-  { icon: ShieldCheck, t: "AI Safety Planner", d: "Prepare for emergencies in advance.",img :"https://verityai.co/_next/image?url=https:%2F%2Fcdn.sanity.io%2Fimages%2F5v26bvj8%2Fproduction%2F6f435aa4e6278b4345a91cec90c3a10ef6e02e40-1536x1024.png&w=1200&q=75", ai: true, tone: "linear-gradient(135deg,#0b8f89,#34c3a4)", href: "/safety-planner" },
-  { icon: Search, t: "AI Safety Checker", d: "Check your current situation's risk.", img:"https://cdn.vectorstock.com/i/500p/43/45/businessman-is-talking-or-chatting-with-chat-bot-vector-46624345.jpg",ai: true, tone: "linear-gradient(135deg,#0e7490,#22b8cf)", href: "/safety-checker" },
-  { icon: FolderOpen, t: "Document Wallet", d: "Keep reports and prescriptions together.", img:"https://www.shutterstock.com/image-vector/digital-wallet-icon-wireframe-hand-600nw-2586641487.jpg",tone: "linear-gradient(135deg,#0f766e,#2dd4bf)", href: "/documents" },
-  { icon: Users, t: "Smart Contact List", d: "Your family's emergency contacts.",img:'https://tse2.mm.bing.net/th/id/OIP.PmXcJ-YOXjhgFmD3nN1SfwHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3', tone: "linear-gradient(135deg,#047857,#4ade80)", href: "/relatives" },
-  { icon: Landmark, t: "Government Schemes", d: "See which schemes you are eligible for.",img:"https://media.assettype.com/outlookmoney/2026-06-09/jk9r2482/ayushman-bharat-west-bengal.png?auto=format%2Ccompress&fit=max&format=webp&w=768&dpr=1.0", tone: "linear-gradient(135deg,#0b6e75,#38bdf8)", href: "/schemes" },
-  { icon: LifeBuoy, t: "Need Help", d: "Questions or problems? We are here.", tone: "linear-gradient(135deg,#115e59,#5eead4)",img:"https://img.freepik.com/premium-vector/medical-social-worker-helps-patients-families-cope-with-medical-challenges_701961-4370.jpg", href: "/help" },
-  { icon: Siren, t: "Emergency", d: "Every second counts. Get help right away.", urgent: true, wide: true, tone: "linear-gradient(135deg,#dc2626,#f87171)", img:"https://static.vecteezy.com/system/resources/previews/026/994/779/large_2x/911-emergency-call-on-web-site-assistant-manager-online-ambulance-service-hotline-call-center-modern-flat-cartoon-style-illustration-on-white-background-vector.jpg",href: "/emergency" },
+  { icon: ShieldCheck, t: "AI Safety Planner", d: "Prepare for emergencies in advance.", img: "https://verityai.co/_next/image?url=https:%2F%2Fcdn.sanity.io%2Fimages%2F5v26bvj8%2Fproduction%2F6f435aa4e6278b4345a91cec90c3a10ef6e02e40-1536x1024.png&w=1200&q=75", ai: true, tone: "linear-gradient(135deg,#0b8f89,#34c3a4)", href: "/safety-planner" },
+  { icon: Search, t: "AI Safety Checker", d: "Check your current situation's risk.", img: "https://cdn.vectorstock.com/i/500p/43/45/businessman-is-talking-or-chatting-with-chat-bot-vector-46624345.jpg", ai: true, tone: "linear-gradient(135deg,#0e7490,#22b8cf)", href: "/safety-checker" },
+  { icon: FolderOpen, t: "Document Wallet", d: "Keep reports and prescriptions together.", img: "https://www.shutterstock.com/image-vector/digital-wallet-icon-wireframe-hand-600nw-2586641487.jpg", tone: "linear-gradient(135deg,#0f766e,#2dd4bf)", href: "/documents" },
+  { icon: Users, t: "Smart Contact List", d: "Your family's emergency contacts.", img: "https://tse2.mm.bing.net/th/id/OIP.PmXcJ-YOXjhgFmD3nN1SfwHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", tone: "linear-gradient(135deg,#047857,#4ade80)", href: "/relatives" },
+  { icon: Landmark, t: "Government Schemes", d: "See which schemes you are eligible for.", img: "https://media.assettype.com/outlookmoney/2026-06-09/jk9r2482/ayushman-bharat-west-bengal.png?auto=format%2Ccompress&fit=max&format=webp&w=768&dpr=1.0", tone: "linear-gradient(135deg,#0b6e75,#38bdf8)", href: "/schemes" },
+  { icon: LifeBuoy, t: "Need Help", d: "Questions or problems? We are here.", tone: "linear-gradient(135deg,#115e59,#5eead4)", img: "https://img.freepik.com/premium-vector/medical-social-worker-helps-patients-families-cope-with-medical-challenges_701961-4370.jpg", href: "/help" },
+  { icon: Siren, t: "Emergency", d: "Every second counts. Get help right away.", urgent: true, wide: true, tone: "linear-gradient(135deg,#dc2626,#f87171)", img: "https://static.vecteezy.com/system/resources/previews/026/994/779/large_2x/911-emergency-call-on-web-site-assistant-manager-online-ambulance-service-hotline-call-center-modern-flat-cartoon-style-illustration-on-white-background-vector.jpg", href: "/emergency" },
 ];
 
 const reviews = [
@@ -68,145 +67,87 @@ function Logo({ small }) {
   );
 }
 
-/* ---------- Brand icons (inline SVG, no extra package) ---------- */
-const GoogleIcon = () => (
-  <svg viewBox="0 0 48 48" width="18" height="18" aria-hidden="true">
-    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
-    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
-    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
-    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
-  </svg>
-);
-const AppleIcon = () => (
-  <svg viewBox="0 0 24 24" width="18" height="18" fill="#111" aria-hidden="true">
-    <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701" />
-  </svg>
-);
-const FacebookIcon = () => (
-  <svg viewBox="0 0 24 24" width="18" height="18" fill="#1877f2" aria-hidden="true">
-    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-  </svg>
-);
+/* ---------- HERO CSS (naya) ----------
+   Apne purane `css` const ke saath ye bhi render hota hai.
+   Purane .cpa, .cpa-card, .cpa-left, .cpa-right, .cpa-form, .cpa-* wale
+   saare rules ab unused hain - unhe aap `css` se delete kar sakte ho. */
+const heroCss = `
+.hero{
+  position:relative; isolation:isolate;
+  min-height:100vh; min-height:100svh;
+  display:flex; flex-direction:column; justify-content:flex-end;
+  background-color:#0a4f52;
+  background-image:var(--hero);
+  background-size:cover;
+  background-position:center top;
+  background-repeat:no-repeat;
+}
+.hero::before{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background:linear-gradient(to top, rgba(6,40,44,.88) 0%, rgba(6,40,44,.45) 28%, rgba(6,40,44,0) 55%);
+}
+.hero-actions{
+  width:100%; max-width:560px; margin:0 auto;
+  padding:24px 20px calc(32px + env(safe-area-inset-bottom, 0px));
+  display:grid; grid-template-columns:1fr 1fr; gap:14px;
+}
+.hero-btn{
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  min-height:54px; padding:0 18px; border-radius:16px;
+  font:700 16px/1 inherit; font-family:inherit; text-decoration:none;
+  transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.hero-btn:active{ transform:scale(.97); }
+.hero-btn:focus-visible{ outline:3px solid #fff; outline-offset:3px; }
+.hero-btn.login{
+  color:#fff; background:rgba(255,255,255,.16);
+  border:1.5px solid rgba(255,255,255,.7);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+}
+.hero-btn.login:hover{ background:rgba(255,255,255,.28); }
+.hero-btn.signup{
+  color:#fff; border:1.5px solid transparent;
+  background:linear-gradient(135deg,#0b8f89,#34c3a4);
+  box-shadow:0 10px 24px rgba(11,143,137,.45);
+}
+.hero-btn.signup:hover{ box-shadow:0 14px 30px rgba(11,143,137,.6); transform:translateY(-1px); }
+
+@media (min-width:768px){
+  .hero{ min-height:88vh; background-position:center center; }
+  .hero-actions{ max-width:520px; padding-bottom:56px; }
+}
+@media (max-width:360px){
+  .hero-actions{ gap:10px; padding-left:14px; padding-right:14px; }
+  .hero-btn{ font-size:15px; padding:0 10px; }
+}
+@media (prefers-reduced-motion:reduce){
+  .hero-btn{ transition:none; }
+}
+`;
 
 export default function Auth() {
-  const [mode, setMode] = useState("signin");
-  const [showPw, setShowPw] = useState(false);
-  const [form, setForm] = useState({ name: "", id: "", password: "", remember: false });
-
-  const isIn = mode === "signin";
-
-  const onChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setForm((f) => ({ ...f, [name]: type === "checkbox" ? checked : value }));
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    // TODO: yahan apni login / signup API call lagao
-    console.log(mode, form);
-  };
-
-  const social = (provider) => {
-    // TODO: social login yahan lagao
-    console.log("social login:", provider);
-  };
-
   return (
     <div className="cp">
+      {/* NOTE: `css` aapke file mein pehle se defined hai - use waise hi rakho */}
       <style>{css}</style>
-      <section className="cpa">
+      <style>{heroCss}</style>
 
-      <div className="cpa-card">
-        {/* ---------- LEFT: image ---------- */}
-        <div className="cpa-left">
-          <img src={IMG.hero} alt="CarePoint - Better Health, Brighter Tomorrow" />
+      {/* ================= HERO ================= */}
+      <section
+        className="hero"
+        style={{ "--hero": `url(${IMG.hero})` }}
+        role="img"
+        aria-label="CarePoint - Better Health, Brighter Tomorrow"
+      >
+        <div className="hero-actions">
+          <a href="/login" className="hero-btn login">
+            <LogIn size={18} /> Login
+          </a>
+          <a href="/signup" className="hero-btn signup">
+            <UserPlus size={18} /> Sign Up
+          </a>
         </div>
-
-        {/* ---------- RIGHT: form ---------- */}
-        <div className="cpa-right">
-          <div className="cpa-top">
-            <span>{isIn ? "New here?" : "Already a member?"}</span>
-            <button type="button" className="cpa-link" onClick={() => setMode(isIn ? "signup" : "signin")}>
-              {isIn ? "Create an account" : "Sign in"}
-            </button>
-          </div>
-
-          <form className="cpa-form" onSubmit={onSubmit} noValidate>
-            <h2>{isIn ? "Welcome Back" : "Create Account"} <span aria-hidden="true">{isIn ? "👋" : "🎉"}</span></h2>
-            <p className="cpa-sub">
-              {isIn
-                ? "Sign in to your CarePoint account and continue your healthcare journey."
-                : "Join CarePoint and start your healthcare journey today."}
-            </p>
-
-            <div className="cpa-tabs" role="tablist">
-              <button type="button" role="tab" aria-selected={isIn} className={isIn ? "on" : ""} onClick={() => setMode("signin")}>Sign In</button>
-              <button type="button" role="tab" aria-selected={!isIn} className={!isIn ? "on" : ""} onClick={() => setMode("signup")}>Sign Up</button>
-            </div>
-
-            {!isIn && (
-              <div className="cpa-field">
-                <label htmlFor="name">Full Name</label>
-                <div className="cpa-input">
-                  <User size={18} />
-                  <input id="name" name="name" value={form.name} onChange={onChange} placeholder="Enter your full name" autoComplete="name" />
-                </div>
-              </div>
-            )}
-
-            <div className="cpa-field">
-              <label htmlFor="id">Email or Phone Number</label>
-              <div className="cpa-input">
-                <Mail size={18} />
-                <input id="id" name="id" value={form.id} onChange={onChange} placeholder="Enter your email or phone number" autoComplete="username" />
-              </div>
-            </div>
-
-            <div className="cpa-field">
-              <label htmlFor="password">Password</label>
-              <div className="cpa-input">
-                <Lock size={18} />
-                <input
-                  id="password" name="password" type={showPw ? "text" : "password"}
-                  value={form.password} onChange={onChange} placeholder="Enter your password"
-                  autoComplete={isIn ? "current-password" : "new-password"}
-                />
-                <button type="button" className="cpa-eye" onClick={() => setShowPw((s) => !s)} aria-label={showPw ? "Hide password" : "Show password"}>
-                  {showPw ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
-            </div>
-
-            {isIn && (
-              <div className="cpa-row">
-                <label className="cpa-check">
-                  <input type="checkbox" name="remember" checked={form.remember} onChange={onChange} />
-                  <span className="box" />
-                  Remember me
-                </label>
-                <button type="button" className="cpa-link">Forgot password?</button>
-              </div>
-            )}
-
-            <button type="submit" className="cpa-submit">
-              {isIn ? "Sign In" : "Create Account"} <ArrowRight size={18} />
-            </button>
-
-            <div className="cpa-or"><span>or continue with</span></div>
-
-            <div className="cpa-social">
-              <button type="button" onClick={() => social("google")}><GoogleIcon /> Google</button>
-              <button type="button" onClick={() => social("apple")}><AppleIcon /> Apple</button>
-              <button type="button" onClick={() => social("facebook")}><FacebookIcon /> Facebook</button>
-            </div>
-
-            <p className="cpa-terms">
-              By continuing, you agree to our{" "}
-              <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.
-            </p>
-          </form>
-        </div>
-      </div>
       </section>
 
       {/* ================= WHY CHOOSE ================= */}
@@ -267,9 +208,9 @@ export default function Auth() {
           <h3>Take the First Step Towards<br />a Healthier You</h3>
           <p>Join CarePoint today and experience a smarter,<br />simpler way to manage your health.</p>
           <div className="cp-cta-btns">
-            <button type="button" onClick={() => { setMode("signup"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
-              Sign Up Now <ArrowRight size={14} />
-            </button>
+            <a href="/signup" style={{ textDecoration: "none" }}>
+              <button type="button">Sign Up Now <ArrowRight size={14} /></button>
+            </a>
             <button type="button" className="ghost">Learn More</button>
           </div>
         </div>
@@ -325,192 +266,7 @@ export default function Auth() {
             </div>
           </div>
         </div>
-        <div className="cp-copy">
-          <div className="cp-wrap">
-            <span>© 2025 CarePoint. All rights reserved.</span>
-            <span className="cp-script small">Your Health Our Priority <Heart size={12} /></span>
-          </div>
-        </div>
       </footer>
     </div>
   );
 }
-
-/* ============================== STYLES ============================== */
-const css = `
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@500;600&display=swap');
-
-/* ===== page root (sections ke liye) ===== */
-.cp{--teal:#0e9a8e;--teal2:#14b8a6;--deep:#0b4f5c;--ink:#0f3d4a;--muted:#5b7580;--tint:#e8f7f6;--line:#d5ece9;
- font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--ink);background:#fff;overflow-x:hidden;text-align:left;width:100%}
-.cp *{box-sizing:border-box;margin:0}
-.cp a{text-decoration:none;color:inherit}
-.cp button{font-family:inherit;cursor:pointer}
-.cp-wrap{max-width:1180px;margin-inline:auto}
-
-/* --- reset: Vite ke default global CSS se bachne ke liye --- */
-.cpa, .cpa *{box-sizing:border-box;margin:0;padding:0;text-align:left;letter-spacing:normal}
-.cpa{--teal:#0b8f89;--teal-d:#087a75;--deep:#0b3f4d;--muted:#5f7a84;--line:#dbe7e9;
- --h:clamp(600px,min(76vh,65vw),680px);
- position:relative;width:100%;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--deep);background:#fff}
-.cpa :where(button){font:inherit;color:inherit;background:none;border:0;border-radius:0;cursor:pointer;line-height:1;box-shadow:none}
-.cpa :where(input){font:inherit;color:inherit;background:none;border:0;outline:0;box-shadow:none;width:100%}
-.cpa :where(a){color:inherit;text-decoration:none}
-.cpa button:focus-visible,.cpa a:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
-
-/* hero: full width, image left + form right */
-.cpa-card{position:relative;display:flex;width:100%;min-height:var(--h);background:#fff}
-.cpa-left{position:relative;flex-shrink:0;width:calc(var(--h)*0.841);background:#e4f6f4;display:block}
-.cpa-left img{display:block;width:100%;height:100%;object-fit:cover;object-position:left top}
-
-.cpa-right{flex:1;min-width:0;display:flex;flex-direction:column;padding:14px clamp(24px,4vw,80px) 16px}
-.cpa-top{display:flex;justify-content:flex-end;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
-.cpa-link{color:var(--teal);font-size:13px;font-weight:500;text-decoration:underline;text-underline-offset:3px}
-.cpa-link:hover{color:var(--teal-d)}
-.cpa-form{flex:1;width:100%;max-width:540px;margin:0 auto;display:flex;flex-direction:column;justify-content:center;padding:4px 0}
-.cpa-form h2{font-size:clamp(24px,2.2vw,30px);font-weight:700;line-height:1.15;color:var(--deep)}
-.cpa-sub{margin-top:6px;font-size:13.5px;line-height:1.5;color:var(--muted)}
-
-.cpa-tabs{display:flex;margin:16px 0 0;height:44px;border:1px solid var(--line);border-radius:999px;background:#fff;padding:0}
-.cpa-tabs button{flex:1;height:100%;border-radius:999px;font-size:14px;font-weight:600;color:var(--deep);text-align:center;transition:background .2s,color .2s}
-.cpa-tabs button.on{background:linear-gradient(90deg,#0a8f88,#16a79c);color:#fff;box-shadow:0 6px 16px rgba(11,143,137,.25)}
-.cpa-tabs button:not(.on):hover{background:#f1faf9}
-
-.cpa-field{margin-top:11px}
-.cpa-field label{display:block;font-size:13px;font-weight:600;margin-bottom:5px;color:var(--deep)}
-.cpa-input{display:flex;align-items:center;gap:12px;height:44px;padding:0 14px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#7d949c;transition:border-color .15s,box-shadow .15s}
-.cpa-input:focus-within{border-color:var(--teal);box-shadow:0 0 0 3px rgba(11,143,137,.15);color:var(--teal)}
-.cpa-input svg{flex-shrink:0}
-.cpa-input input{font-size:13.5px;color:var(--deep);height:100%}
-.cpa-input input::placeholder{color:#a3b5bb}
-.cpa-input input:-webkit-autofill{-webkit-box-shadow:0 0 0 100px #fff inset;-webkit-text-fill-color:var(--deep)}
-.cpa-eye{display:grid;place-items:center;color:#7d949c;flex-shrink:0}
-.cpa-eye:hover{color:var(--teal)}
-
-.cpa-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
-.cpa-check{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--deep);cursor:pointer;position:relative}
-.cpa-check input{position:absolute;opacity:0;width:0;height:0}
-.cpa-check .box{width:18px;height:18px;border:1.5px solid #8aa0a7;border-radius:4px;background:#fff;display:grid;place-items:center;transition:.15s}
-.cpa-check input:checked + .box{background:var(--teal);border-color:var(--teal)}
-.cpa-check input:checked + .box::after{content:"";width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
-.cpa-check input:focus-visible + .box{outline:2px solid var(--teal);outline-offset:2px}
-
-.cpa-submit{width:100%;height:46px;margin-top:14px;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:10px;
- background:linear-gradient(90deg,#0a8f88,#14a89d);color:#fff;font-size:15.5px;font-weight:600;
- box-shadow:0 10px 22px rgba(11,143,137,.28);transition:transform .15s,box-shadow .15s}
-.cpa-submit:hover{transform:translateY(-1px);box-shadow:0 14px 26px rgba(11,143,137,.34)}
-.cpa-submit:active{transform:translateY(0)}
-
-.cpa-or{position:relative;margin:16px 0 12px;text-align:center;font-size:13px;color:var(--muted)}
-.cpa-or::before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:var(--line)}
-.cpa-or span{position:relative;background:#fff;padding:0 16px;text-align:center}
-
-.cpa-social{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.cpa-social button{height:42px;border:1px solid var(--line);border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;gap:10px;
- font-size:13.5px;font-weight:500;color:var(--deep);transition:background .15s,border-color .15s,box-shadow .15s}
-.cpa-social button:hover{background:#f6fbfb;border-color:#bfdedb;box-shadow:0 4px 12px rgba(11,143,137,.08)}
-
-.cpa-terms{margin-top:12px;text-align:center;font-size:12px;color:var(--muted);line-height:1.5}
-.cpa-terms a{color:var(--teal)}.cpa-terms a:hover{text-decoration:underline}
-
-/* tablet & mobile */
-@media(max-width:1100px){
- .cpa-card{flex-direction:column;min-height:0}
- .cpa-left{width:100%;height:clamp(220px,42vw,340px)}
- .cpa-right{padding:22px 28px 40px}
- .cpa-form{max-width:520px}
- .cpa-sub{max-width:none}
-}
-@media(max-width:560px){
- .cpa-left{height:clamp(200px,56vw,260px)}
- .cpa-right{padding:18px 18px 32px}
- .cpa-form h2{font-size:24px}
- .cpa-sub{font-size:13.5px}
- .cpa-social{gap:8px}
- .cpa-social button{font-size:12.5px;gap:6px;padding:0 4px}
-}
-@media(max-width:360px){
- .cpa-social{grid-template-columns:1fr}
-}
-
-/* ===== sections ===== */
-.cp-logo{display:flex;align-items:center;gap:10px}
-.cp-logo-ic{width:46px;height:46px;color:#1e88c8}
-.cp-logo-name{font-size:30px;font-weight:700;color:var(--deep);line-height:1}
-.cp-logo-name span{color:var(--teal2)}
-.cp-logo-tag{font-size:13px;color:var(--muted);margin-top:4px}
-.cp-logo.small .cp-logo-ic{width:30px;height:30px}
-.cp-logo.small .cp-logo-name{font-size:20px;color:#fff}
-.cp-logo.small .cp-logo-tag{font-size:9px;color:#9fd3cf}
-.cp-script.small{font-family:'Caveat',cursive;font-size:16px;color:#4fd1c5;display:flex;align-items:center;gap:6px}
-
-.cp-circle{width:44px;height:44px;border-radius:50%;background:#c9efea;color:var(--teal);display:grid;place-items:center;flex-shrink:0}
-.cp-circle.sm{width:32px;height:32px}
-.cp-sec{padding:60px 24px;text-align:center}
-.cp-sec.white{background:#fff}.cp-sec.tint{background:linear-gradient(180deg,#e9f8f7,#f4fcfb)}
-.cp-eyebrow{font-size:11px;letter-spacing:.2em;font-weight:700;color:var(--teal)}
-.cp-sec h3{font-size:28px;font-weight:700;color:var(--deep);margin-top:10px}
-.cp-secsub{font-size:14px;color:var(--muted);margin:8px 0 34px;text-align:center}
-.cp-grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;text-align:left}
-.cp-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;text-align:left}
-.cp-why{background:#eefaf9;border:1px solid var(--line);border-radius:10px;padding:22px;min-height:140px;text-align:left}
-.cp-why b{display:block;margin:12px 0 6px;font-size:14px}
-.cp-why p{font-size:12.5px;color:var(--muted);line-height:1.55}
-.cp-svc{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 6px 24px rgba(14,100,100,.08)}
-.cp-svc-img{height:76px;background:#cfe9ee center/cover}
-.cp-svc-body{display:flex;align-items:center;gap:10px;padding:12px 14px 14px}
-.cp-svc-body div{flex:1}
-.cp-svc-body b{display:block;font-size:13px}
-.cp-svc-body small{font-size:10.5px;color:var(--muted)}
-.cp-arrow{width:26px;height:26px;border-radius:50%;background:var(--tint);color:var(--teal);display:grid;place-items:center}
-
-/* service cards (links) */
-.cp-svc{display:block;transition:transform .15s,box-shadow .15s}
-.cp-svc:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(14,100,100,.14)}
-.cp-svc-img.ph{display:grid;place-items:center;color:rgba(255,255,255,.92)}
-.cp-ai{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:20px;background:var(--tint);border:1px solid var(--line);color:var(--teal);font-size:9px;font-weight:700;vertical-align:middle}
-.cp-svc.wide{grid-column:span 2}
-.cp-svc.urgent{border:1px solid #fecaca}
-.cp-svc.urgent .cp-circle{background:#fee2e2;color:#dc2626}
-.cp-svc.urgent .cp-arrow{background:#dc2626;color:#fff}
-
-.cp-cta{background:linear-gradient(90deg,#0b8f87 0%,#16a99d 45%,rgba(22,169,157,.2) 100%),var(--cta) right/cover no-repeat,#13a095;
- padding:50px 24px;color:#fff}
-.cp-cta-in{max-width:1180px;margin:auto}
-.cp-pill{display:inline-block;background:#6fe0d4;color:#05524c;font-size:10px;font-weight:700;padding:4px 12px;border-radius:20px}
-.cp-cta h3{font-size:28px;font-weight:700;margin:14px 0 12px;line-height:1.25}
-.cp-cta p{font-size:12.5px;opacity:.95;line-height:1.5}
-.cp-cta-btns{display:flex;gap:12px;margin-top:20px}
-.cp-cta-btns button{border:1px solid #fff;background:#fff;color:var(--deep);border-radius:30px;padding:9px 20px;font-size:12px;font-weight:600;display:flex;gap:6px;align-items:center}
-.cp-cta-btns .ghost{background:transparent;color:#fff}
-
-.cp-rev{border:1px solid var(--line);border-radius:10px;padding:16px 18px}
-.cp-rev p{font-size:12px;color:var(--muted);line-height:1.55;min-height:56px}
-.cp-rev-foot{display:flex;align-items:center;gap:10px;margin-top:12px}
-.cp-rev-foot img{width:34px;height:34px;border-radius:50%;object-fit:cover;background:#cfe9ee}
-.cp-rev-foot div{flex:1}
-.cp-rev-foot b{display:block;font-size:12px}.cp-rev-foot small{font-size:10.5px;color:var(--muted)}
-.stars{color:#f5b301;font-size:12px;letter-spacing:1px}
-
-.cp-footer{background:#0b4552;color:#d6eceb;padding-top:36px}
-.cp-foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.4fr;gap:30px;padding:0 24px 30px}
-.cp-foot-grid h5{font-size:12px;color:#fff;margin-bottom:12px}
-.cp-foot-grid a{display:block;font-size:11px;margin-bottom:8px;color:#b7dcd9}
-.cp-foot-txt{font-size:11px;line-height:1.6;margin:12px 0;color:#b7dcd9;max-width:260px}
-.cp-socials{display:flex;gap:10px}
-.cp-socials a{width:26px;height:26px;border-radius:50%;background:#fff;color:#0b4552;display:grid;place-items:center;margin:0}
-.cp-stores{display:flex;gap:10px;flex-wrap:wrap}
-.cp-stores a{display:flex;align-items:center;gap:8px;background:#000;border:1px solid #777;border-radius:6px;padding:5px 10px;color:#fff;margin:0;font-size:12px;font-weight:600}
-.cp-stores small{display:block;font-size:7px;font-weight:400;margin:0}
-.cp-copy{background:#093a45;border-top:1px solid #1d6270;padding:16px 24px;font-size:10.5px}
-.cp-copy .cp-wrap{display:flex;justify-content:space-between;align-items:center}
-
-@media(max-width:1100px){
- .cp-grid4{grid-template-columns:1fr 1fr}.cp-grid3{grid-template-columns:1fr}
- .cp-foot-grid{grid-template-columns:1fr 1fr}
-}
-@media(max-width:560px){
- .cp-grid4,.cp-foot-grid{grid-template-columns:1fr}
- .cp-svc.wide{grid-column:span 1}
-}
-`;
