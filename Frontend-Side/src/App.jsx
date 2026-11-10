@@ -66,6 +66,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/logout" element={<Logout />} />
+          <Route path="/Home" element={<Home />} />
 
           {/* ---------- Sirf Patient ---------- */}
           <Route
