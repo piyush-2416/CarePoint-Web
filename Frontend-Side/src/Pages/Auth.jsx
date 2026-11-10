@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
-  Mail, Lock, Eye, EyeOff, User, ArrowRight, Stethoscope, CalendarDays, Pill,
+  ArrowRight, UserPlus, Stethoscope, CalendarDays, Pill,
   ShieldPlus, Clock, HeartPulse, Building2, Play,
   ShieldCheck, Search, FolderOpen, Users, Landmark, LifeBuoy, Siren,
 } from "lucide-react";
@@ -64,6 +64,12 @@ const reviews = [
   { n: "Neha Singh", img: IMG.u3, q: "The platform is very user-friendly and keeps my family's health in check. Highly recommended!" },
 ];
 
+const points = [
+  { icon: Stethoscope, t: "Consult expert doctors" },
+  { icon: Pill, t: "Order genuine medicines" },
+  { icon: ShieldPlus, t: "Your data stays private" },
+];
+
 function Logo({ small }) {
   return (
     <div className={`cp-logo ${small ? "small" : ""}`}>
@@ -76,40 +82,12 @@ function Logo({ small }) {
   );
 }
 
-const GoogleIcon = () => (
-  <svg viewBox="0 0 48 48" width="18" height="18" aria-hidden="true">
-    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
-    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
-    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
-    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
-  </svg>
-);
-
 export default function Auth() {
-  const [mode, setMode] = useState("signin");
-  const [showPw, setShowPw] = useState(false);
-  const [form, setForm] = useState({ name: "", id: "", password: "", remember: false });
-  const isIn = mode === "signin";
-
-  const onChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setForm((f) => ({ ...f, [name]: type === "checkbox" ? checked : value }));
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    // TODO: yahan apni login / signup API call lagao
-    console.log(mode, form);
-  };
-
-  const social = (provider) => {
-    // TODO: social login yahan lagao
-    console.log("social login:", provider);
-  };
-
   return (
     <div className="cp">
       <style>{css}</style>
+
+      {/* ================= MAIN SECTION: sirf 2 buttons ================= */}
       <section className="cpa">
         <div className="cpa-card">
           <div className="cpa-left">
@@ -117,86 +95,35 @@ export default function Auth() {
           </div>
 
           <div className="cpa-right">
-            <div className="cpa-top">
-              <span>{isIn ? "New here?" : "Already a member?"}</span>
-              <button type="button" className="cpa-link" onClick={() => setMode(isIn ? "signup" : "signin")}>
-                {isIn ? "Create an account" : "Sign in"}
-              </button>
-            </div>
-
-            <form className="cpa-form" onSubmit={onSubmit} noValidate>
-              <h2>{isIn ? "Welcome Back" : "Create Account"} <span aria-hidden="true">{isIn ? "👋" : "🎉"}</span></h2>
+            <div className="cpa-welcome">
+              <span className="cpa-badge"><HeartPulse size={16} /> CarePoint</span>
+              <h2>Welcome to CarePoint <span aria-hidden="true">👋</span></h2>
               <p className="cpa-sub">
-                {isIn
-                  ? "Sign in to your CarePoint account and continue your healthcare journey."
-                  : "Join CarePoint and start your healthcare journey today."}
+                Your complete healthcare partner. Login to continue your journey or create a free account to get started.
               </p>
 
-              <div className="cpa-tabs" role="tablist">
-                <button type="button" role="tab" aria-selected={isIn} className={isIn ? "on" : ""} onClick={() => setMode("signin")}>Sign In</button>
-                <button type="button" role="tab" aria-selected={!isIn} className={!isIn ? "on" : ""} onClick={() => setMode("signup")}>Sign Up</button>
+              <div className="cpa-actions">
+                <Link to="/Login" className="cpa-btn primary">
+                  Login <ArrowRight size={18} />
+                </Link>
+                <Link to="/Signup" className="outline cpa-btn">
+                  Sign Up <UserPlus size={18} />
+                </Link>
               </div>
 
-              {!isIn && (
-                <div className="cpa-field">
-                  <label htmlFor="name">Full Name</label>
-                  <div className="cpa-input">
-                    <User size={18} />
-                    <input id="name" name="name" value={form.name} onChange={onChange} placeholder="Enter your full name" autoComplete="name" />
-                  </div>
-                </div>
-              )}
-
-              <div className="cpa-field">
-                <label htmlFor="id">Email or Phone Number</label>
-                <div className="cpa-input">
-                  <Mail size={18} />
-                  <input id="id" name="id" value={form.id} onChange={onChange} placeholder="Enter your email or phone number" autoComplete="username" />
-                </div>
-              </div>
-
-              <div className="cpa-field">
-                <label htmlFor="password">Password</label>
-                <div className="cpa-input">
-                  <Lock size={18} />
-                  <input
-                    id="password" name="password" type={showPw ? "text" : "password"}
-                    value={form.password} onChange={onChange} placeholder="Enter your password"
-                    autoComplete={isIn ? "current-password" : "new-password"}
-                  />
-                  <button type="button" className="cpa-eye" onClick={() => setShowPw((s) => !s)} aria-label={showPw ? "Hide password" : "Show password"}>
-                    {showPw ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                </div>
-              </div>
-
-              {isIn && (
-                <div className="cpa-row">
-                  <label className="cpa-check">
-                    <input type="checkbox" name="remember" checked={form.remember} onChange={onChange} />
-                    <span className="box" />
-                    Remember me
-                  </label>
-                  <button type="button" className="cpa-link">Forgot password?</button>
-                </div>
-              )}
-
-              <button type="submit" className="cpa-submit">
-                {isIn ? "Sign In" : "Create Account"} <ArrowRight size={18} />
-              </button>
-
-              <div className="cpa-or"><span>or continue with</span></div>
-
-              <div className="cpa-social">
-                <button type="button" onClick={() => social("google")}><GoogleIcon /> Google</button>
-                <button type="button" onClick={() => social("apple")}><Apple size={18} fill="#111" /> Apple</button>
-                <button type="button" onClick={() => social("facebook")}><Facebook size={18} fill="#1877f2" /> Facebook</button>
-              </div>
+              <ul className="cpa-points">
+                {points.map(({ icon: I, t }) => (
+                  <li key={t}>
+                    <span className="cp-circle sm"><I size={16} /></span>
+                    {t}
+                  </li>
+                ))}
+              </ul>
 
               <p className="cpa-terms">
                 By continuing, you agree to our <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.
               </p>
-            </form>
+            </div>
           </div>
         </div>
       </section>
@@ -250,9 +177,9 @@ export default function Auth() {
           <h3>Take the First Step Towards<br />a Healthier You</h3>
           <p>Join CarePoint today and experience a smarter,<br />simpler way to manage your health.</p>
           <div className="cp-cta-btns">
-            <button type="button" onClick={() => { setMode("signup"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
+            <Link to="/Signup" className="cp-cta-main">
               Sign Up Now <ArrowRight size={14} />
-            </button>
+            </Link>
             <button type="button" className="ghost">Learn More</button>
           </div>
         </div>
@@ -322,39 +249,25 @@ const css = `
 .cp a{text-decoration:none;color:inherit}
 .cp-wrap{max-width:1180px;margin:0 auto}
 
-/* ---------- AUTH ---------- */
+/* ---------- MAIN SECTION ---------- */
 .cpa{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px 16px;background:linear-gradient(135deg,#e6f6f4,#f4fbfa)}
 .cpa-card{width:100%;max-width:1080px;display:grid;grid-template-columns:1.05fr 1fr;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(15,118,110,.18)}
 .cpa-left{background:var(--teal-l);min-height:420px}
 .cpa-left img{width:100%;height:100%;object-fit:cover;display:block}
-.cpa-right{padding:28px 40px 36px;display:flex;flex-direction:column}
-.cpa-top{display:flex;justify-content:flex-end;gap:8px;font-size:14px;color:var(--mute);align-items:center}
-.cpa-link{background:none;border:0;color:var(--teal);font-weight:600;cursor:pointer;font-size:14px;padding:0}
-.cpa-link:hover{text-decoration:underline}
-.cpa-form h2{font-size:30px;margin:18px 0 6px}
-.cpa-sub{color:var(--mute);font-size:14px;margin:0 0 20px;line-height:1.5}
-.cpa-tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--teal-l);border-radius:12px;padding:4px;margin-bottom:18px}
-.cpa-tabs button{border:0;background:transparent;padding:10px;border-radius:9px;font-weight:600;color:var(--mute);cursor:pointer;font-size:14px}
-.cpa-tabs button.on{background:#fff;color:var(--teal);box-shadow:0 2px 8px rgba(0,0,0,.08)}
-.cpa-field{margin-bottom:14px}
-.cpa-field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
-.cpa-input{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:12px;padding:0 14px;height:48px;color:var(--mute);background:#fff}
-.cpa-input:focus-within{border-color:var(--teal);box-shadow:0 0 0 3px rgba(15,118,110,.15)}
-.cpa-input input{flex:1;border:0;outline:0;font-size:14px;background:transparent;color:var(--ink);min-width:0}
-.cpa-eye{border:0;background:none;color:var(--mute);cursor:pointer;display:flex;padding:0}
-.cpa-row{display:flex;justify-content:space-between;align-items:center;margin:4px 0 18px}
-.cpa-check{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;color:var(--mute)}
-.cpa-check input{position:absolute;opacity:0}
-.cpa-check .box{width:18px;height:18px;border:1.5px solid var(--line);border-radius:5px;display:inline-block;background:#fff}
-.cpa-check input:checked+.box{background:var(--teal);border-color:var(--teal);box-shadow:inset 0 0 0 3px #fff}
-.cpa-submit{width:100%;height:50px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--teal),#14a89c);color:#fff;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;margin-top:6px}
-.cpa-submit:hover{filter:brightness(1.07)}
-.cpa-or{display:flex;align-items:center;gap:12px;margin:20px 0 14px;color:var(--mute);font-size:12px}
-.cpa-or::before,.cpa-or::after{content:"";flex:1;height:1px;background:var(--line)}
-.cpa-social{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.cpa-social button{height:44px;border:1.5px solid var(--line);background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:600;cursor:pointer;color:var(--ink)}
-.cpa-social button:hover{border-color:var(--teal);background:var(--teal-l)}
-.cpa-terms{font-size:12px;color:var(--mute);text-align:center;margin:18px 0 0}
+.cpa-right{padding:40px;display:flex;flex-direction:column;justify-content:center}
+.cpa-welcome{width:100%;max-width:380px;margin:0 auto}
+.cpa-badge{display:inline-flex;align-items:center;gap:6px;background:var(--teal-l);color:var(--teal);font-weight:700;font-size:13px;padding:6px 12px;border-radius:999px}
+.cpa-welcome h2{font-size:32px;line-height:1.2;margin:18px 0 10px}
+.cpa-sub{color:var(--mute);font-size:15px;line-height:1.6;margin:0}
+.cpa-actions{display:grid;gap:12px;margin:28px 0 26px}
+.cpa-btn{height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px;font-weight:600;transition:transform .2s,filter .2s,background .2s}
+.cpa-btn.primary{background:linear-gradient(135deg,var(--teal),#14a89c);color:#fff;box-shadow:0 8px 20px rgba(15,118,110,.25)}
+.cpa-btn.primary:hover{filter:brightness(1.07);transform:translateY(-1px)}
+.cpa-btn.outline{border:1.5px solid var(--teal);color:var(--teal);background:#fff}
+.cpa-btn.outline:hover{background:var(--teal-l);transform:translateY(-1px)}
+.cpa-points{list-style:none;margin:0;padding:20px 0 0;border-top:1px solid var(--line);display:grid;gap:12px}
+.cpa-points li{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--mute)}
+.cpa-terms{font-size:12px;color:var(--mute);text-align:center;margin:22px 0 0}
 .cpa-terms a{color:var(--teal);font-weight:600}
 
 /* ---------- SECTIONS ---------- */
@@ -395,7 +308,7 @@ const css = `
 .cp-cta h3{font-size:34px;margin:0 0 14px;line-height:1.25}
 .cp-cta p{opacity:.9;line-height:1.6;margin:0 0 26px}
 .cp-cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.cp-cta-btns button{display:inline-flex;align-items:center;gap:8px;height:46px;padding:0 24px;border-radius:12px;border:0;background:#fff;color:var(--teal-d);font-weight:600;cursor:pointer;font-size:14px}
+.cp-cta-btns button,.cp-cta-btns .cp-cta-main{display:inline-flex;align-items:center;gap:8px;height:46px;padding:0 24px;border-radius:12px;border:0;background:#fff;color:var(--teal-d);font-weight:600;cursor:pointer;font-size:14px}
 .cp-cta-btns button.ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.6)}
 
 /* ---------- REVIEWS ---------- */
@@ -438,14 +351,13 @@ const css = `
 @media(max-width:820px){
   .cpa-card{grid-template-columns:1fr}
   .cpa-left{min-height:200px;max-height:260px}
-  .cpa-right{padding:24px 22px 30px}
+  .cpa-right{padding:28px 22px 32px}
   .cp-grid3{grid-template-columns:1fr}
 }
 @media(max-width:520px){
   .cp-grid4{grid-template-columns:1fr}
   .cp-svc.wide{grid-column:auto}
   .cp-foot-grid{grid-template-columns:1fr}
-  .cpa-social{grid-template-columns:1fr}
   .cp-sec h3,.cp-cta h3{font-size:26px}
 }
 `;
