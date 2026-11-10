@@ -103,7 +103,7 @@ if (user) return <Navigate to={homeFor(user.role)} replace />;
             className="space-y-6 bg-white lg:bg-transparent shadow-sm lg:shadow-none p-7 sm:p-10 lg:p-0 border border-slate-100 lg:border-0 rounded-3xl"
           >
             <div>
-              <h1 className="font-bold text-slate-900 text-3xl tracking-tight">Account banao</h1>
+              <h1 className="font-bold text-slate-900 text-3xl tracking-tight">jaldi se Account  banao</h1>
               <p className="mt-2 text-slate-500 text-sm">Kuch hi seconds mein shuru karo</p>
             </div>
 
