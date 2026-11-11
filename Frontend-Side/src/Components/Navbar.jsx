@@ -331,9 +331,9 @@ function Navbar() {
           {/* Desktop par sidebar khula ho to logo sidebar me dikhta hai, isliye yahan chhupa hai */}
           {(!isDesktop || !open) && (
             <Link
-              {/* to={homePath} */}
+              to={homePath}
               className="cpn-logo"
-              aria-label="CarrrrePoint Home"
+              aria-label="CarePoint Home"
               aria-expanded={open}
               onClick={() => setOpen(true)}
             >
@@ -382,7 +382,7 @@ function Navbar() {
         <div className="cpn-side-head">
           <Link
             className="cpn-logo"
-            {/* aria-label="CarePoint Home" */}
+            aria-label="CarePoint Home"
             onClick={close}
           >
             <Brand />
