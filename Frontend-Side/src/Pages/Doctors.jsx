@@ -524,7 +524,7 @@ function Doctors() {
               <div className="dp-grid">
                 {filtered.map((product, i) => (
                   <Link
-                    to={`/products/${product._id}`}
+                   to={`/doctor/patients/${a.patientId}`}
                     key={product._id}
                     className="dp-link"
                     style={{ animationDelay: `${Math.min(i, 8) * 50}ms` }}
