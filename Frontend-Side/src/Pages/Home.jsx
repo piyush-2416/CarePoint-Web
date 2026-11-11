@@ -93,9 +93,13 @@ function Home() {
   return (
     <>
       <Navbar />
-      <div className="main-sec">
-        <img src="" alt="" />
-      </div>      <div className="main-sec"></div>
+   <section style={{ width: "100%", lineHeight: 0 }}>
+  <img
+    src="/CarePoint Compassionate Healthcare Banner.png"
+    alt="CarePoint - Compassionate Healthcare"
+    style={{ width: "100%", height: "auto", maxHeight: 520, objectFit: "cover", display: "block" }}
+  />
+</section>
 
       {/* ================= Stats strip ================= */}
       <div style={{ width: "100%", padding: "16px 12px", boxSizing: "border-box" }}>
