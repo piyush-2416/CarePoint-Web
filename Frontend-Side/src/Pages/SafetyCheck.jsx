@@ -1,34 +1,47 @@
 import { useEffect, useRef, useState } from "react";
 
-// Aapke Server.js ka port 3000 hai
+// Your Server.js runs on port 3000
 const API = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
 const HERO_BG =
   "https://verityai.co/_next/image?url=https:%2F%2Fcdn.sanity.io%2Fimages%2F5v26bvj8%2Fproduction%2F6f435aa4e6278b4345a91cec90c3a10ef6e02e40-1536x1024.png&w=1080&q=75";
 
-// Backend (routes/Safety.js) ki lists se bilkul same
-const PLACES = ["Ghar par", "Raaste / sadak par", "Cab / auto / bus mein", "Office / college mein", "Anjaan jagah par", "Anya"];
-const TIMES = ["Din", "Raat"];
+/* Backend (routes/Safety.js) validates these exact `value` strings, so keep them as-is.
+   Only the `label` (what the user sees) is in English. If you change the backend lists
+   to English later, update the `value` fields too. */
+const PLACES = [
+  { value: "Ghar par", label: "At home" },
+  { value: "Raaste / sadak par", label: "On the road / street" },
+  { value: "Cab / auto / bus mein", label: "In a cab / auto / bus" },
+  { value: "Office / college mein", label: "At office / college" },
+  { value: "Anjaan jagah par", label: "In an unfamiliar place" },
+  { value: "Anya", label: "Other" },
+];
+const TIMES = [
+  { value: "Din", label: "Day" },
+  { value: "Raat", label: "Night" },
+];
+const COMPANY = ["Alone", "With someone"];
 
-const HOLD_MS = 1500; // SOS button kitni der dabana hai
-const GRACE_SECONDS = 60; // timer khatam hone ke baad kitni der mein jawab dena hai
+const HOLD_MS = 1500; // how long the SOS button must be held
+const GRACE_SECONDS = 60; // time to respond after the timer ends
 const MAX_CONTACTS = 5;
 const PROFILE_KEY = "mc_safety_profile";
 const TIMER_KEY = "mc_safety_timer";
 const DEFAULT_PROFILE = { name: "", phone: "", contacts: [], alertCommunity: true };
 
 const EMERGENCY = [
-  { n: "112", l: "Sabhi emergency" },
+  { n: "112", l: "All emergencies" },
   { n: "100", l: "Police" },
   { n: "101", l: "Fire" },
   { n: "108", l: "Ambulance" },
-  { n: "1091", l: "Mahila helpline" },
+  { n: "1091", l: "Women helpline" },
 ];
 
 const LEVEL = {
-  safe: { label: "Surakshit", cls: "safe" },
-  caution: { label: "Savdhaan", cls: "caution" },
-  danger: { label: "Khatra ho sakta hai", cls: "danger" },
+  safe: { label: "Safe", cls: "safe" },
+  caution: { label: "Caution", cls: "caution" },
+  danger: { label: "Possible danger", cls: "danger" },
   emergency: { label: "Emergency", cls: "emergency" },
 };
 
@@ -38,14 +51,14 @@ async function api(path, opts = {}) {
   try {
     res = await fetch(`${API}${path}`, { headers: { "Content-Type": "application/json" }, ...opts });
   } catch {
-    throw new Error("Backend se connect nahi ho paya. Server (port 3000) chal raha hai?");
+    throw new Error("Could not connect to the backend. Is the server (port 3000) running?");
   }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || "Server error");
   return data;
 }
 
-// "+91 98765-43210" -> "9876543210" (galat ho to null)
+// "+91 98765-43210" -> "9876543210" (null if invalid)
 const cleanPhone = (raw) => {
   const last10 = String(raw ?? "").replace(/\D/g, "").slice(-10);
   return /^[6-9]\d{9}$/.test(last10) ? last10 : null;
@@ -53,7 +66,7 @@ const cleanPhone = (raw) => {
 
 const mapsLink = (c) => `https://maps.google.com/?q=${c.lat},${c.lng}`;
 
-// Location lo; permission na mile ya der lage to null (SOS phir bhi jaayega)
+// Get location; resolves null if permission is denied or it takes too long (SOS still goes out)
 function getLocation() {
   return new Promise((resolve) => {
     if (typeof navigator === "undefined" || !navigator.geolocation) return resolve(null);
@@ -65,7 +78,7 @@ function getLocation() {
   });
 }
 
-// Data sirf is device ke browser mein rehta hai (contacts server par nahi jaate)
+// Data stays only in this device's browser (contacts are never sent to the server)
 function usePersisted(key, initial) {
   const [v, setV] = useState(() => {
     try {
@@ -80,7 +93,7 @@ function usePersisted(key, initial) {
       if (v === null || v === undefined) localStorage.removeItem(key);
       else localStorage.setItem(key, JSON.stringify(v));
     } catch {
-      /* storage na chale to bhi page chale */
+      /* page keeps working even if storage fails */
     }
   }, [key, v]);
   return [v, setV];
@@ -89,10 +102,10 @@ function usePersisted(key, initial) {
 const mmss = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
 /* ------------------------------ styles ------------------------------
-   Sab kuch is page ke andar scoped CSS (sc-) mein hai, taaki global CSS
-   (index.css / App.css) ke `button:active { background: white }` jaise
-   rules colors ko na bigaad sakein. Har button ke hover / focus / active
-   state mein background yahin explicitly set hai. */
+   Everything is scoped to this page (sc- prefix) so global CSS
+   (index.css / App.css) rules like `button:active { background: white }`
+   cannot break the colors. Every button's hover / focus / active state
+   sets its background explicitly here. */
 const CSS = `
 .sc-page {
   --green: #1f9d55; --green-d: #17843f; --green-l: #3cb371; --mint: #e8f6ee;
@@ -106,7 +119,7 @@ const CSS = `
 .sc-page button, .sc-page input, .sc-page textarea { font: inherit; }
 .sc-page h1, .sc-page h2, .sc-page h3, .sc-page h4, .sc-page p { margin: 0; }
 
-/* ---------- Buttons (har state ka bg fixed) ---------- */
+/* ---------- Buttons (every state has a fixed bg) ---------- */
 .sc-page .sc-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   min-height: 44px; padding: 0 20px; border-radius: 999px; cursor: pointer;
@@ -336,22 +349,24 @@ const CSS = `
 }
 `;
 
-/* ------------------------- chhote components ------------------------ */
+/* ------------------------- small components ------------------------ */
+const asOpt = (o) => (typeof o === "string" ? { value: o, label: o } : o);
+
 function Chips({ label, options, value, onChange }) {
   return (
     <div>
       <p className="sc-q">{label}</p>
       <div className="sc-chips" role="radiogroup" aria-label={label}>
-        {options.map((o) => (
+        {options.map(asOpt).map((o) => (
           <button
-            key={o}
+            key={o.value}
             type="button"
             role="radio"
-            aria-checked={value === o}
-            onClick={() => onChange(o)}
-            className={`sc-chip ${value === o ? "on" : ""}`}
+            aria-checked={value === o.value}
+            onClick={() => onChange(o.value)}
+            className={`sc-chip ${value === o.value ? "on" : ""}`}
           >
-            {o}
+            {o.label}
           </button>
         ))}
       </div>
@@ -374,7 +389,7 @@ function Section({ icon, title, hint, children }) {
   );
 }
 
-// Har trusted contact ke liye WhatsApp / SMS / Call buttons (browser khud se message nahi bhej sakta)
+// WhatsApp / SMS / Call buttons for each trusted contact (a browser cannot send messages by itself)
 function ContactActions({ message, contacts }) {
   const [copied, setCopied] = useState(false);
   const canShare = typeof navigator !== "undefined" && typeof navigator.share === "function";
@@ -385,7 +400,7 @@ function ContactActions({ message, contacts }) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      window.prompt("Message copy karo:", message);
+      window.prompt("Copy the message:", message);
     }
   };
 
@@ -393,7 +408,7 @@ function ContactActions({ message, contacts }) {
     <div className="sc-ca">
       {contacts.length === 0 ? (
         <p className="sc-warn">
-          Abhi koi trusted contact nahi hai. Neeche "Mere contacts" mein jodo, ya message copy karke kisi ko bhej do.
+          You have no trusted contacts yet. Add some under "My contacts" below, or copy the message and send it to someone.
         </p>
       ) : (
         <ul className="sc-ca-list">
@@ -414,11 +429,11 @@ function ContactActions({ message, contacts }) {
       )}
       <div className="sc-ca-extra">
         <button type="button" onClick={copy} className="sc-btn sc-sm sc-ghost">
-          {copied ? "Copy ho gaya ✓" : "Message copy karo"}
+          {copied ? "Copied ✓" : "Copy message"}
         </button>
         {canShare && (
           <button type="button" onClick={() => navigator.share({ text: message }).catch(() => {})} className="sc-btn sc-sm sc-ghost">
-            Share karo
+            Share
           </button>
         )}
       </div>
@@ -472,10 +487,10 @@ export default function SafetyCheck() {
     const coords = await getLocation();
     const base =
       (result && ["danger", "emergency"].includes(result.level) && result.sosMessage) ||
-      "Mujhe abhi madad chahiye. Please mujhe call karo ya meri location par aao.";
+      "I need help right now. Please call me or come to my location.";
     const message =
       `🚨 SOS${prof.name ? ` (${prof.name})` : ""}: ${base}\n` +
-      (coords ? `Location: ${mapsLink(coords)}` : "Location share nahi ho paayi.");
+      (coords ? `Location: ${mapsLink(coords)}` : "Location could not be shared.");
 
     let communityAlerted = false;
     let note = "";
@@ -498,7 +513,7 @@ export default function SafetyCheck() {
       communityAlerted = out.communityAlerted;
       note = out.note || "";
     } catch {
-      logged = false; // server tak na pahunche to bhi contacts ko seedha bhej sakte ho
+      logged = false; // even if the server is unreachable you can still message your contacts directly
     }
 
     setSos({ status: "sent", message, coords, communityAlerted, note, logged });
@@ -506,7 +521,7 @@ export default function SafetyCheck() {
     try { navigator.vibrate?.([200, 100, 200]); } catch { /* ignore */ }
   };
 
-  // Button ko HOLD_MS tak dabake rakho (galti se na dabe)
+  // Hold the button for HOLD_MS (prevents accidental presses)
   const cancelHold = () => {
     cancelAnimationFrame(holdRef.current.raf);
     setHold(0);
@@ -531,7 +546,7 @@ export default function SafetyCheck() {
   /* ------------------------ safety check (AI) ------------------------ */
   const runCheck = async () => {
     setError("");
-    if (situation.trim().length < 10) return setError("Situation thodi detail mein likho (kam se kam 10 characters).");
+    if (situation.trim().length < 10) return setError("Describe the situation in a bit more detail (at least 10 characters).");
     setChecking(true);
     setResult(null);
     setShareMsg(null);
@@ -569,7 +584,7 @@ export default function SafetyCheck() {
     return () => clearInterval(t);
   }, [endAt]);
 
-  // Timer khatam: alert kholo
+  // Timer finished: open the alert
   useEffect(() => {
     if (endAt && remaining === 0 && !alertOpen) {
       setAlertOpen(true);
@@ -578,7 +593,7 @@ export default function SafetyCheck() {
     }
   }, [endAt, remaining, alertOpen]);
 
-  // Alert ke baad bhi jawab na mile to khud SOS bhej do
+  // If there is still no response after the alert, send SOS automatically
   useEffect(() => {
     if (!alertOpen) return;
     const t = setInterval(() => setGrace((g) => g - 1), 1000);
@@ -604,10 +619,10 @@ export default function SafetyCheck() {
   const addContact = () => {
     setFormErr("");
     const phone = cleanPhone(cPhone);
-    if (!cName.trim()) return setFormErr("Contact ka naam likho.");
-    if (!phone) return setFormErr("10 digit ka sahi mobile number likho.");
-    if (prof.contacts.length >= MAX_CONTACTS) return setFormErr(`Maximum ${MAX_CONTACTS} contacts hi rakh sakte ho.`);
-    if (prof.contacts.some((c) => c.phone === phone)) return setFormErr("Ye number pehle se hai.");
+    if (!cName.trim()) return setFormErr("Enter the contact's name.");
+    if (!phone) return setFormErr("Enter a valid 10-digit mobile number.");
+    if (prof.contacts.length >= MAX_CONTACTS) return setFormErr(`You can keep at most ${MAX_CONTACTS} contacts.`);
+    if (prof.contacts.some((c) => c.phone === phone)) return setFormErr("This number is already added.");
     saveProfile({ contacts: [...prof.contacts, { name: cName.trim().slice(0, 40), phone }] });
     setCName("");
     setCPhone("");
@@ -630,16 +645,16 @@ export default function SafetyCheck() {
         <div className="sc-hero-in">
           <span className="sc-badge">
             <span className="sc-dot" />
-            AI Powered · Hinglish mein salah
+            AI Powered · Instant safety advice
           </span>
           <h1>
             Personal Safety <span>Check &amp; SOS</span>
           </h1>
           <p className="sc-hero-sub">
-            Apni situation batao, AI turant batayega kya karna hai. Khatra ho to ek button se apne logon aur community ko alert bhejo.
+            Describe your situation and the AI will tell you right away what to do. If you are in danger, alert your trusted people and your community with one button.
           </p>
           <div className="sc-calls">
-            <span className="sc-calls-label">Turant call:</span>
+            <span className="sc-calls-label">Call now:</span>
             {EMERGENCY.map((e) => (
               <a key={e.n} href={`tel:${e.n}`} className="sc-call">
                 <b>{e.n}</b> · {e.l}
@@ -657,21 +672,21 @@ export default function SafetyCheck() {
               <div>
                 <h2>SOS</h2>
                 <p className="sc-sos-p">
-                  Khatre mein ho to button ko {HOLD_MS / 1000} second tak dabake rakho. Location, aapke contacts aur community tak alert jaayega.
+                  In danger? Press and hold the button for {HOLD_MS / 1000} seconds. Your location will be sent to your contacts and your community.
                 </p>
                 <div className="sc-sos-actions">
                   <button
                     type="button"
                     className="sc-btn sc-ghost"
-                    onClick={() => window.confirm("SOS abhi bhej dein?") && sendSOS("button")}
+                    onClick={() => window.confirm("Send SOS now?") && sendSOS("button")}
                   >
-                    Dabake rakh nahi sakte? Yahan se bhejo
+                    Can't hold? Send from here
                   </button>
-                  <a href="tel:112" className="sc-btn sc-danger">📞 112 par call karo</a>
+                  <a href="tel:112" className="sc-btn sc-danger">📞 Call 112</a>
                 </div>
                 {prof.contacts.length === 0 && (
                   <p className="sc-warn">
-                    Pehle neeche "Mere contacts" mein 1-2 bharose ke log jodo, taaki SOS unhe bhej sako.
+                    First add 1-2 trusted people under "My contacts" below so your SOS can reach them.
                   </p>
                 )}
               </div>
@@ -683,7 +698,7 @@ export default function SafetyCheck() {
                 <button
                   type="button"
                   className="sc-sosbtn"
-                  aria-label="SOS bhejne ke liye dabake rakho"
+                  aria-label="Press and hold to send SOS"
                   disabled={locating}
                   onPointerDown={startHold}
                   onPointerUp={cancelHold}
@@ -694,60 +709,60 @@ export default function SafetyCheck() {
                   onKeyUp={(e) => { if (e.key === " " || e.key === "Enter") cancelHold(); }}
                 >
                   <b>SOS</b>
-                  <small>{locating ? "Location le raha hai..." : "Dabake rakho"}</small>
+                  <small>{locating ? "Getting location..." : "Press & hold"}</small>
                 </button>
               </div>
             </>
           ) : (
             <div className="sc-sent" role="status" aria-live="assertive">
               <div className="sc-sent-top">
-                <h2>🚨 SOS tayyar hai</h2>
-                <button type="button" onClick={imSafe} className="sc-btn sc-primary">✓ Main safe hoon</button>
+                <h2>🚨 SOS is ready</h2>
+                <button type="button" onClick={imSafe} className="sc-btn sc-primary">✓ I'm safe</button>
               </div>
               <ul className="sc-status">
-                <li>{sos.coords ? `📍 Location mil gayi (±${Math.round(sos.coords.accuracy || 0)} m)` : "📍 Location nahi mili: browser mein location permission allow karo."}</li>
+                <li>{sos.coords ? `📍 Location found (±${Math.round(sos.coords.accuracy || 0)} m)` : "📍 Location unavailable: allow location permission in your browser."}</li>
                 <li>
                   {sos.logged
                     ? sos.communityAlerted
-                      ? "📣 Community ko alert bhej diya gaya."
-                      : `📣 Community ko alert nahi gaya. ${sos.note || "Setting band hai."}`
-                    : "⚠️ Server tak nahi pahunch paya. Neeche se apne contacts ko seedha bhejo."}
+                      ? "📣 Alert sent to the community."
+                      : `📣 The community was not alerted. ${sos.note || "The setting is turned off."}`
+                    : "⚠️ Could not reach the server. Send the message to your contacts directly below."}
                 </li>
               </ul>
-              <p className="sc-sent-label">Ab apne logon ko ye message bhejo (har contact par ek tap):</p>
+              <p className="sc-sent-label">Now send this message to your people (one tap per contact):</p>
               <pre className="sc-pre">{sos.message}</pre>
               <ContactActions message={sos.message} contacts={prof.contacts} />
               <a href="tel:112" className="sc-block sc-btn sc-danger" style={{ marginTop: 16 }}>
-                📞 112 par abhi call karo
+                📞 Call 112 now
               </a>
             </div>
           )}
         </section>
 
         {/* ================= SAFETY CHECK ================= */}
-        <Section icon="🛡️" title="Safety check" hint="Apni situation likho. AI batayega kitna khatra hai aur abhi kya karna chahiye.">
+        <Section icon="🛡️" title="Safety check" hint="Describe your situation. The AI will tell you how serious it is and what to do right now.">
           <div className="sc-form">
             <label className="sc-label">
-              Kya ho raha hai?
+              What is happening?
               <textarea
                 className="sc-textarea"
                 rows={4}
                 maxLength={500}
                 value={situation}
                 onChange={(e) => setSituation(e.target.value)}
-                placeholder="Jaise: raat ko akela ghar ja raha hoon aur raasta sunsaan hai, ek bike peeche aa rahi hai..."
+                placeholder="For example: I'm walking home alone at night, the road is empty and a bike is following me..."
               />
               <small className={`sc-counter ${situation.length >= 10 ? "ok" : ""}`}>{situation.length}/500</small>
             </label>
 
-            <Chips label="Aap kahan ho?" options={PLACES} value={place} onChange={setPlace} />
+            <Chips label="Where are you?" options={PLACES} value={place} onChange={setPlace} />
             <div className="sc-two">
-              <Chips label="Samay" options={TIMES} value={time} onChange={setTime} />
+              <Chips label="Time of day" options={TIMES} value={time} onChange={setTime} />
               <Chips
-                label="Aap kis ke saath ho?"
-                options={["Akela / akeli", "Kisi ke saath"]}
-                value={alone ? "Akela / akeli" : "Kisi ke saath"}
-                onChange={(v) => setAlone(v === "Akela / akeli")}
+                label="Who are you with?"
+                options={COMPANY}
+                value={alone ? COMPANY[0] : COMPANY[1]}
+                onChange={(v) => setAlone(v === COMPANY[0])}
               />
             </div>
 
@@ -758,10 +773,10 @@ export default function SafetyCheck() {
                     <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25" />
                     <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
                   </svg>
-                  Check ho raha hai...
+                  Checking...
                 </>
               ) : (
-                <>Safety check karo <span aria-hidden="true">→</span></>
+                <>Check my safety <span aria-hidden="true">→</span></>
               )}
             </button>
           </div>
@@ -771,7 +786,7 @@ export default function SafetyCheck() {
           {result && lvl && (
             <div ref={resultRef} className={`sc-result ${lvl.cls}`} aria-live="polite">
               {result.source === "fallback" && (
-                <p className="sc-note">AI abhi available nahi hai, isliye ye general salah hai.</p>
+                <p className="sc-note">The AI is unavailable right now, so this is general advice.</p>
               )}
               <div className="sc-result-top">
                 <h3>{result.headline}</h3>
@@ -789,14 +804,14 @@ export default function SafetyCheck() {
                 </div>
               )}
 
-              <h4>Abhi ye karo</h4>
+              <h4>Do this now</h4>
               <ol className="sc-list">
                 {result.steps.map((s, i) => <li key={i}>{s}</li>)}
               </ol>
 
               {(result.avoid ?? []).length > 0 && (
                 <>
-                  <h4>Ye mat karo</h4>
+                  <h4>Do not do this</h4>
                   <ul className="sc-list">
                     {result.avoid.map((s, i) => <li key={i}>{s}</li>)}
                   </ul>
@@ -805,12 +820,12 @@ export default function SafetyCheck() {
 
               <div className="sc-result-actions">
                 {serious && (
-                  <button type="button" onClick={() => sendSOS("check")} className="sc-btn sc-danger">SOS bhejo</button>
+                  <button type="button" onClick={() => sendSOS("check")} className="sc-btn sc-danger">Send SOS</button>
                 )}
-                <button type="button" onClick={prepareShare} className="sc-btn sc-ghost">Contacts ko update bhejo</button>
+                <button type="button" onClick={prepareShare} className="sc-btn sc-ghost">Send an update to contacts</button>
                 {result.checkAgainInMinutes && (
                   <button type="button" onClick={() => startTimer(result.checkAgainInMinutes)} className="sc-btn sc-ghost">
-                    ⏱ {result.checkAgainInMinutes} min ka safe-timer lagao
+                    ⏱ Set a {result.checkAgainInMinutes} min safe timer
                   </button>
                 )}
               </div>
@@ -826,43 +841,43 @@ export default function SafetyCheck() {
         </Section>
 
         {/* ================= SAFE-ARRIVAL TIMER ================= */}
-        <Section icon="⏱️" title="Safe-arrival timer" hint="Akele jaa rahe ho? Timer lagao. Time khatam hone par aap 'Main safe hoon' nahi dabaoge to SOS khud chala jaayega.">
+        <Section icon="⏱️" title="Safe-arrival timer" hint="Travelling alone? Set a timer. If you don't tap 'I'm safe' when time is up, SOS will be sent automatically.">
           {endAt ? (
             <div className="sc-timer-on">
               <div>
-                <p>Safe pahunchne mein baaki</p>
+                <p>Time left to arrive safely</p>
                 <p className="sc-time" aria-live="off">{mmss(remaining)}</p>
               </div>
-              <button type="button" onClick={imSafe} className="sc-btn sc-primary">✓ Main safe pahunch gaya</button>
+              <button type="button" onClick={imSafe} className="sc-btn sc-primary">✓ I've arrived safely</button>
             </div>
           ) : (
             <div className="sc-timer-opts">
               {[15, 30, 60, 120].map((m) => (
                 <button key={m} type="button" onClick={() => startTimer(m)} className="sc-btn sc-ghost">
-                  {m < 60 ? `${m} minute` : `${m / 60} ghanta`}
+                  {m < 60 ? `${m} minutes` : `${m / 60} hour${m / 60 > 1 ? "s" : ""}`}
                 </button>
               ))}
             </div>
           )}
-          <p className="sc-tip">Ye page khula rehna chahiye (phone ki screen lock ya tab band hone par timer ruk sakta hai).</p>
+          <p className="sc-tip">Keep this page open (the timer may pause if the phone screen locks or the tab is closed).</p>
         </Section>
 
         {/* ================= CONTACTS + PROFILE ================= */}
-        <Section icon="👥" title="Mere contacts" hint="Ye data sirf aapke is phone/browser mein rehta hai, kisi server par save nahi hota.">
+        <Section icon="👥" title="My contacts" hint="This data stays only in this phone/browser and is not saved on any server.">
           <div className="sc-two">
             <label className="sc-label">
-              Aapka naam
-              <input className="sc-input" value={prof.name} maxLength={60} onChange={(e) => saveProfile({ name: e.target.value })} placeholder="Jaise: Rahul" />
+              Your name
+              <input className="sc-input" value={prof.name} maxLength={60} onChange={(e) => saveProfile({ name: e.target.value })} placeholder="e.g. Rahul" />
             </label>
             <label className="sc-label">
-              Aapka mobile number
+              Your mobile number
               <input className="sc-input" inputMode="numeric" value={prof.phone} onChange={(e) => saveProfile({ phone: e.target.value })} placeholder="9876543210" />
             </label>
           </div>
 
           <label className="sc-check">
             <input type="checkbox" checked={prof.alertCommunity} onChange={(e) => saveProfile({ alertCommunity: e.target.checked })} />
-            <span>SOS par community ke Emergency page par bhi alert bhejo (isme aapka naam, number aur location padosiyon ko dikhega)</span>
+            <span>On SOS, also send an alert to the community's Emergency page (your name, number and location will be visible to neighbours)</span>
           </label>
 
           <h3 className="sc-sub">Trusted contacts ({prof.contacts.length}/{MAX_CONTACTS})</h3>
@@ -877,8 +892,8 @@ export default function SafetyCheck() {
                       <span>{c.phone}</span>
                     </div>
                   </span>
-                  <button type="button" onClick={() => removeContact(c.phone)} className="sc-btn sc-sm sc-rm" aria-label={`${c.name} ko hatao`}>
-                    Hatao
+                  <button type="button" onClick={() => removeContact(c.phone)} className="sc-btn sc-sm sc-rm" aria-label={`Remove ${c.name}`}>
+                    Remove
                   </button>
                 </li>
               ))}
@@ -886,15 +901,15 @@ export default function SafetyCheck() {
           )}
 
           <div className="sc-add">
-            <input className="sc-input" value={cName} maxLength={40} onChange={(e) => setCName(e.target.value)} placeholder="Contact ka naam" aria-label="Contact ka naam" />
-            <input className="sc-input" inputMode="numeric" value={cPhone} onChange={(e) => setCPhone(e.target.value)} placeholder="Mobile number" aria-label="Contact ka mobile number" />
-            <button type="button" onClick={addContact} className="sc-btn sc-primary">+ Jodo</button>
+            <input className="sc-input" value={cName} maxLength={40} onChange={(e) => setCName(e.target.value)} placeholder="Contact name" aria-label="Contact name" />
+            <input className="sc-input" inputMode="numeric" value={cPhone} onChange={(e) => setCPhone(e.target.value)} placeholder="Mobile number" aria-label="Contact mobile number" />
+            <button type="button" onClick={addContact} className="sc-btn sc-primary">+ Add</button>
           </div>
           {formErr && <p role="alert" className="sc-ferr">{formErr}</p>}
         </Section>
 
         <p className="sc-foot">
-          Ye AI ke sujhav hain, professional ya police ki salah nahi. Jaan ka khatra ho to pehle 112 / 108 / 101 par call karo. Mushkil ya bahut dukh ho to Tele-MANAS (14416) par baat kar sakte ho.
+          These are AI suggestions, not professional or police advice. If your life is in danger, call 112 / 108 / 101 first. If you are struggling or very distressed, you can talk to Tele-MANAS (14416).
         </p>
       </main>
 
@@ -902,18 +917,18 @@ export default function SafetyCheck() {
       {alertOpen && (
         <div role="alertdialog" aria-modal="true" aria-labelledby="timer-alert-title" className="sc-modal">
           <div className="sc-modal-card">
-            <h2 id="timer-alert-title">Aap safe ho?</h2>
-            <p>Timer khatam ho gaya. {grace} second mein jawab nahi diya to SOS khud chala jaayega.</p>
+            <h2 id="timer-alert-title">Are you safe?</h2>
+            <p>The timer has ended. If you don't respond within {grace} seconds, SOS will be sent automatically.</p>
             <p className="sc-count">{grace}</p>
             <button type="button" autoFocus onClick={imSafe} className="sc-block sc-btn sc-primary">
-              Haan, main safe hoon
+              Yes, I'm safe
             </button>
             <button
               type="button"
               onClick={() => { setAlertOpen(false); setEndAt(null); sendSOS("timer"); }}
               className="sc-block sc-btn sc-danger"
             >
-              Nahi, SOS bhejo
+              No, send SOS
             </button>
           </div>
         </div>
