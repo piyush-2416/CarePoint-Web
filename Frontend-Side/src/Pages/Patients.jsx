@@ -6,7 +6,7 @@ import Avatar from "../Components/Avatar";
 import { useAuth } from "../context/AuthContext";
 import { daysSince, greeting, joinedLabel, useCountUp } from "../utils/ui";
 // import "../styles/patients.css";
- 
+
 function StatCard({ icon, label, value, hint, tone, delay }) {
   const n = useCountUp(value);
   return (
@@ -36,14 +36,15 @@ export default function Patients() {
 
   useEffect(() => {
     api
-      .get("/doctor/profile")
+      .get("/api/doctor/profile") // FIX: /api prefix
       .then((res) => setProfileDone(!!res.data.isProfileComplete))
       .catch(() => {});
   }, []);
+
   useEffect(() => {
     api
-      .get("/patients")
-      .then((res) => setPatients(res.data))
+      .get("/api/patients") // FIX: /api prefix
+      .then((res) => setPatients(Array.isArray(res.data) ? res.data : [])) // FIX: array check
       .catch((e) =>
         setError(e.response?.data?.message || "Patients load nahi ho paaye"),
       )
@@ -68,13 +69,13 @@ export default function Patients() {
     const list = q
       ? patients.filter(
           (p) =>
-            p.name.toLowerCase().includes(q) ||
-            p.email.toLowerCase().includes(q),
+            (p.name || "").toLowerCase().includes(q) ||
+            (p.email || "").toLowerCase().includes(q),
         )
       : [...patients];
     list.sort((a, b) =>
       sort === "az"
-        ? a.name.localeCompare(b.name)
+        ? (a.name || "").localeCompare(b.name || "")
         : sort === "old"
           ? new Date(a.createdAt) - new Date(b.createdAt)
           : new Date(b.createdAt) - new Date(a.createdAt),
