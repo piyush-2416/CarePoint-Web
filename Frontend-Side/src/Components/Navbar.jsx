@@ -333,7 +333,7 @@ function Navbar() {
             <Link
               {/* to={homePath} */}
               className="cpn-logo"
-              aria-label="CarePoint Home"
+              aria-label="CarrrrePoint Home"
               aria-expanded={open}
               onClick={() => setOpen(true)}
             >
