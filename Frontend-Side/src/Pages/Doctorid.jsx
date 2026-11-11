@@ -336,7 +336,7 @@ export default function Doctorid() {
         let data = res.data;
         if (data && data.data) data = data.data;
         if (Array.isArray(data)) data = data[0];
-        if (!data) throw new Error("not found");
+if (!data || typeof data !== "object") throw new Error("not found");
         setDoctor(data);
       })
       .catch((err) => {
@@ -354,15 +354,12 @@ export default function Doctorid() {
   const loadAppointments = useCallback(() => {
     api
       .get("/appointments/mine")
-      .then((res) =>
-        setAppointments(
-          res.data.map((a) => ({
-            ...a,
-            id: a._id,
-            dateLabel: prettyDate(fromKey(a.dateKey)),
-          })),
-        ),
-      )
+    .then((res) => {
+  const rows = Array.isArray(res.data) ? res.data : [];
+  setAppointments(
+    rows.map((a) => ({ ...a, id: a._id, dateLabel: prettyDate(fromKey(a.dateKey)) })),
+  );
+})
       .catch(() => {});
   }, []);
 
@@ -549,8 +546,7 @@ export default function Doctorid() {
             <div className="dr-center">
               <h2 className="dr-display">{error || "Doctor nahi mila"}</h2>
               <p>Dobara try karo ya wapas jao.</p>
-              <Link to="/" className="dr-back">
-                <Icon d={I.back} size={16} /> Back
+<Link to="/doctors" className="dr-back">                <Icon d={I.back} size={16} /> Back
               </Link>
             </div>
           </div>
