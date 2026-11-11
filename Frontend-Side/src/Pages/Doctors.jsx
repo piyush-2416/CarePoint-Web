@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import axios from "axios";
+import api from "../api"; // FIX: axios ki jagah api instance
 import Navbar from "../Components/Navbar";
 
 const HERO_IMG =
@@ -60,10 +60,10 @@ function Doctors() {
   const [sideOpen, setSideOpen] = useState(false); // mobile drawer
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/products")
+    api
+      .get("/api/products") // FIX: localhost hata diya
       .then((res) => {
-        setProducts(res.data);
+        setProducts(Array.isArray(res.data) ? res.data : []); // FIX: array check
         setLoading(false);
       })
       .catch((err) => {
@@ -510,7 +510,7 @@ function Doctors() {
                 ))}
               </div>
             ) : error ? (
-              <p className="dp-msg">Doctors load nahi ho paaye. Backend (localhost:3000) check karo.</p>
+              <p className="dp-msg">Doctors load nahi ho paaye. Backend check karo.</p>
             ) : filtered.length === 0 ? (
               <div className="dp-msg">
                 <p>Is filter me koi doctor nahi mila. Filters change karke dekho.</p>
@@ -524,7 +524,6 @@ function Doctors() {
               <div className="dp-grid">
                 {filtered.map((product, i) => (
                   <Link
-                  // to={`/Doctorid/${Doctorid._id}`}
                     to={`/products/${product._id}`}
                     key={product._id}
                     className="dp-link"
