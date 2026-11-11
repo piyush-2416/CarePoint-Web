@@ -249,7 +249,7 @@ export default function Appointments() {
     setError("");
     api
       .get("/appointments/mine")
-      .then((res) => setList(res.data))
+    .then((res) => setList(Array.isArray(res.data) ? res.data : []))
       .catch((e) =>
         setError(e.response?.data?.message || "Could not load appointments"),
       )
