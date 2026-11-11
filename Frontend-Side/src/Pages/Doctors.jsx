@@ -523,12 +523,12 @@ function Doctors() {
             ) : (
               <div className="dp-grid">
                 {filtered.map((product, i) => (
-                  <Link
-                   to={`/doctor/patients/${a.patientId}`}
-                    key={product._id}
-                    className="dp-link"
-                    style={{ animationDelay: `${Math.min(i, 8) * 50}ms` }}
-                  >
+               <Link
+  to={`/products/${product._id}`}
+  key={product._id}
+  className="dp-link"
+  style={{ animationDelay: `${Math.min(i, 8) * 50}ms` }}
+>
                     <div className="dp-card">
                       <div className="dp-img-wrap">
                         {product.image ? (
