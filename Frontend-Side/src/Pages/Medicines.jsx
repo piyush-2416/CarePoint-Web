@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import axios from "axios";
+import api from "../api"; // FIX: axios ki jagah api instance
 import Navbar from "../Components/Navbar";
 import {
   FaStethoscope,
@@ -122,10 +122,10 @@ function Medicines() {
   const [sideOpen, setSideOpen] = useState(false); // mobile drawer
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/Medicines")
+    api
+      .get("/api/medicines") // FIX: localhost hata diya, backend route lowercase hai
       .then((res) => {
-        setProducts(res.data);
+        setProducts(Array.isArray(res.data) ? res.data : []); // FIX: array check
         setLoading(false);
       })
       .catch((err) => {
@@ -615,9 +615,7 @@ function Medicines() {
                 ))}
               </div>
             ) : error ? (
-              <p className="mp-msg">
-                Medicines load nahi ho paayi. Backend (localhost:3000) check karo.
-              </p>
+              <p className="mp-msg">Medicines load nahi ho paayi. Backend check karo.</p>
             ) : filtered.length === 0 ? (
               <div className="mp-msg">
                 <p>Is filter me koi medicine nahi mili. Filters change karke dekho.</p>
