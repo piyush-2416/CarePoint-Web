@@ -5,121 +5,121 @@ const TIPS = [
   {
     id: 1, category: "Nutrition", icon: "🥗", readTime: "4 min",
     title: "Build a Balanced Plate",
-    description: "Sabzi, fruits, whole grains aur protein ko rozana ke khaane mein shamil karo.",
+    description: "Include vegetables, fruits, whole grains and protein in your daily meals.",
     details: [
-      "Aadhi plate sabzi aur fruits se bharo, baaki mein anaaj aur protein (dal, anda, paneer, chana).",
-      "Maida aur zyada tale hue khaane ki jagah roti, daliya ya brown rice chuno.",
-      "Din mein 3 bade meal ki jagah chhote-chhote meal bhi le sakte ho.",
+      "Fill half your plate with vegetables and fruits, and the rest with grains and protein (dal, eggs, paneer, chickpeas).",
+      "Choose roti, oats or brown rice instead of refined flour and heavily fried foods.",
+      "Instead of 3 large meals, you can also have several smaller meals through the day.",
     ],
   },
   {
     id: 2, category: "Nutrition", icon: "🧂", readTime: "3 min",
-    title: "Namak aur Cheeni Kam Karo",
-    description: "Zyada namak BP badha sakta hai aur zyada cheeni sugar ke liye theek nahi.",
+    title: "Cut Down on Salt and Sugar",
+    description: "Too much salt can raise BP, and too much sugar is bad for blood sugar.",
     details: [
-      "Khaane mein upar se namak daalne ki aadat chhodo.",
-      "Packaged snacks, achaar aur papad mein chhupa namak dhyan mein rakho.",
-      "Cold drink aur mithai ki jagah fruit ya nariyal paani lo.",
+      "Stop adding extra salt on top of your food.",
+      "Watch out for hidden salt in packaged snacks, pickles and papad.",
+      "Choose fruit or coconut water instead of cold drinks and sweets.",
     ],
   },
   {
     id: 3, category: "Fitness", icon: "🏃", readTime: "3 min",
-    title: "Roz Thoda Chalo",
-    description: "Rozana halki physical activity energy, mood aur dil ki sehat ke liye achhi hai.",
+    title: "Walk a Little Every Day",
+    description: "Light daily activity is good for your energy, mood and heart health.",
     details: [
-      "Din mein 30 minute tez chalna zyadatar logon ke liye achha shuruaat hai.",
-      "Ek saath 30 minute na ho to 10-10 minute ke teen hisse karo.",
-      "Surgery ya bimari ke baad exercise shuru karne se pehle doctor se poochho.",
+      "For most people, a brisk 30-minute walk each day is a good start.",
+      "If 30 minutes at a stretch is hard, split it into three 10-minute walks.",
+      "Ask your doctor before starting exercise after surgery or an illness.",
     ],
   },
   {
     id: 4, category: "Fitness", icon: "🧘", readTime: "4 min",
-    title: "Stretching aur Balance",
-    description: "Bujurgon aur recovery wale mareezon ke liye halka stretching girne ka khatra kam karta hai.",
+    title: "Stretching and Balance",
+    description: "Gentle stretching lowers the risk of falls in older adults and people in recovery.",
     details: [
-      "Subah 5-10 minute gardan, kandhe aur pairon ka halka stretch karo.",
-      "Balance ke liye kisi sahare ke paas ek pair par kuch second khade ho.",
-      "Dard ya chakkar aaye to turant ruk jao.",
+      "Spend 5-10 minutes each morning gently stretching your neck, shoulders and legs.",
+      "To practise balance, stand on one foot for a few seconds near something you can hold.",
+      "Stop immediately if you feel pain or dizziness.",
     ],
   },
   {
     id: 5, category: "Sleep", icon: "😴", readTime: "5 min",
-    title: "Behtar Neend ka Routine",
-    description: "Roz ek hi samay par sona aur uthna body ki clock theek rakhta hai.",
+    title: "A Better Sleep Routine",
+    description: "Sleeping and waking at the same time every day keeps your body clock healthy.",
     details: [
-      "Sone se 1 ghanta pehle mobile aur TV band karne ki koshish karo.",
-      "Kamra andhera, shaant aur thoda thanda rakho.",
-      "Raat ko chai-coffee aur bhaari khaana avoid karo.",
+      "Try to switch off your phone and TV 1 hour before bed.",
+      "Keep your room dark, quiet and slightly cool.",
+      "Avoid tea, coffee and heavy meals at night.",
     ],
   },
   {
     id: 6, category: "Mental Health", icon: "🧠", readTime: "4 min",
-    title: "Tanav se Nipatna",
-    description: "Lambi bimari mein chinta hona normal hai. Apno se baat karna madad karta hai.",
+    title: "Coping with Stress",
+    description: "Worry during a long illness is normal. Talking to loved ones helps.",
     details: [
-      "Apni pareshani kisi bharose ke insaan ko batao, akele mat jhelo.",
-      "Roz 5 minute gehri saans ka abhyas (neeche Breathing tool dekho) kaam aata hai.",
-      "Bahut udaasi ya darr lage to counsellor ya doctor se milo. Tele-MANAS helpline: 14416.",
+      "Share your worries with someone you trust instead of carrying them alone.",
+      "Practise deep breathing for 5 minutes a day (see the Breathing tool below).",
+      "If you feel very low or anxious, meet a counsellor or doctor. Tele-MANAS helpline: 14416.",
     ],
   },
   {
     id: 7, category: "Chronic Care", icon: "🩸", readTime: "5 min",
-    title: "Diabetes ke Mareez",
-    description: "Sugar ki regular jaanch aur samay par khaana control mein madad karte hain.",
+    title: "For People with Diabetes",
+    description: "Regular sugar checks and meals on time help keep it under control.",
     details: [
-      "Doctor ke bataye samay par sugar check karo aur diary mein likho.",
-      "Khaana skip mat karo, khaaskar jab dawai chal rahi ho.",
-      "Pairon ko roz dekho. Ghaav ya chhala ho to doctor ko dikhao.",
+      "Check your sugar at the times your doctor advised and note it in a diary.",
+      "Do not skip meals, especially while you are on medicine.",
+      "Look at your feet every day. Show a doctor if you see a wound or blister.",
     ],
   },
   {
     id: 8, category: "Chronic Care", icon: "❤️", readTime: "5 min",
-    title: "BP aur Dil ki Dekhbhal",
-    description: "BP ki dawai kabhi apne aap band mat karo, chahe tabiyat theek lage.",
+    title: "BP and Heart Care",
+    description: "Never stop your BP medicine on your own, even if you feel fine.",
     details: [
-      "Ek hi samay par, aaram se baithkar BP naapo aur reading likho.",
-      "Seene mein dard, saans phoolna ya pasina aaye to turant 108 par call karo.",
-      "Dawai mein badlav hamesha doctor ki salah se hi karo.",
+      "Measure your BP at the same time each day while sitting calmly, and note the reading.",
+      "If you have chest pain, shortness of breath or sweating, call 108 immediately.",
+      "Always change medicines only on your doctor's advice.",
     ],
   },
   {
     id: 9, category: "Medicine Safety", icon: "💊", readTime: "4 min",
-    title: "Dawai Sahi Tarah Lo",
-    description: "Sahi dawai, sahi samay par, sahi matra mein, yahi ilaaj ki kunji hai.",
+    title: "Take Your Medicines Correctly",
+    description: "The right medicine, at the right time, in the right amount is the key to treatment.",
     details: [
-      "Saari dawaiyon ki list (naam aur samay) ek jagah likh kar rakho.",
-      "Dawai ki expiry date samay samay par check karo.",
-      "Kisi aur ki prescription ki dawai mat lo, aur bina poochhe dawai mat badlo.",
+      "Keep a list of all your medicines (name and timing) in one place.",
+      "Check the expiry dates of your medicines from time to time.",
+      "Never take medicines prescribed for someone else, and never change medicines without asking.",
     ],
   },
   {
     id: 10, category: "Medicine Safety", icon: "📋", readTime: "3 min",
-    title: "Doctor ke paas Taiyari se Jao",
-    description: "Sawal aur reports saath le jaoge to visit zyada kaam ki hogi.",
+    title: "Be Prepared for Your Doctor Visit",
+    description: "Bringing your questions and reports makes the visit far more useful.",
     details: [
-      "Apne lakshan, kab se hain aur kitne, likh kar le jao.",
-      "Purani reports aur prescriptions CarePoint ke Document Wallet mein ek jagah rakho.",
-      "Doctor ki baat samajh na aaye to dobara poochhne mein jhijhko mat.",
+      "Write down your symptoms, when they started and how severe they are, and carry the note.",
+      "Keep old reports and prescriptions in one place using CarePoint's Document Wallet.",
+      "If you do not understand something the doctor says, do not hesitate to ask again.",
     ],
   },
   {
     id: 11, category: "Chronic Care", icon: "🫁", readTime: "4 min",
-    title: "Asthma / Saans ki Takleef",
-    description: "Dhool, dhuan aur thande mausam ke trigger se bachna zaroori hai.",
+    title: "Asthma / Breathing Trouble",
+    description: "It is important to avoid triggers such as dust, smoke and cold weather.",
     details: [
-      "Inhaler hamesha saath rakho aur expiry check karte raho.",
-      "Pollution wale din bahar jaate waqt mask lagao.",
-      "Saans bahut phoole ya bolne mein dikkat ho to der mat karo, 108 par call karo.",
+      "Always carry your inhaler and keep checking its expiry date.",
+      "Wear a mask when you go out on high-pollution days.",
+      "If breathlessness is severe or you cannot speak, do not wait. Call 108.",
     ],
   },
   {
     id: 12, category: "Nutrition", icon: "💧", readTime: "2 min",
-    title: "Paani Peete Raho",
-    description: "Paani kam peene se thakan, sar dard aur kabz ho sakti hai.",
+    title: "Keep Drinking Water",
+    description: "Drinking too little water can cause tiredness, headaches and constipation.",
     details: [
-      "Din mein lagbhag 7-8 glass paani peene ki koshish karo.",
-      "Kidney ya dil ki bimari mein paani ki matra doctor se poochh kar tay karo.",
-      "Neeche wale Water Tracker se apna count rakho.",
+      "Try to drink about 7-8 glasses of water a day.",
+      "With kidney or heart disease, ask your doctor how much water is right for you.",
+      "Use the Water Tracker below to keep count.",
     ],
   },
 ];
@@ -127,17 +127,17 @@ const TIPS = [
 const CATEGORIES = ["All", "Nutrition", "Fitness", "Sleep", "Mental Health", "Chronic Care", "Medicine Safety"];
 
 const RANGES = [
-  { name: "Blood Pressure", val: "120/80 mmHg se kam", note: "Aaram ki halat mein" },
-  { name: "Sugar (fasting)", val: "70 - 99 mg/dL", note: "8 ghante khaali pet" },
-  { name: "Pulse (aaram mein)", val: "60 - 100 / min", note: "Bade logon mein" },
-  { name: "Oxygen (SpO2)", val: "95% - 100%", note: "94% se kam ho to doctor ko batao" },
-  { name: "Body Temperature", val: "36.5 - 37.5 °C", note: "Bukhaar: 38 °C se upar" },
+  { name: "Blood Pressure", val: "Below 120/80 mmHg", note: "While at rest" },
+  { name: "Sugar (fasting)", val: "70 - 99 mg/dL", note: "After 8 hours without food" },
+  { name: "Pulse (at rest)", val: "60 - 100 / min", note: "In adults" },
+  { name: "Oxygen (SpO2)", val: "95% - 100%", note: "Tell a doctor if below 94%" },
+  { name: "Body Temperature", val: "36.5 - 37.5 °C", note: "Fever: above 38 °C" },
 ];
 
 const BREATH = [
-  { t: "Saans andar lo", s: 4, scale: 1.3 },
-  { t: "Rok kar rakho", s: 4, scale: 1.3 },
-  { t: "Saans bahar chhodo", s: 6, scale: 0.8 },
+  { t: "Breathe in", s: 4, scale: 1.3 },
+  { t: "Hold your breath", s: 4, scale: 1.3 },
+  { t: "Breathe out", s: 6, scale: 0.8 },
 ];
 
 /* ---------------------------- helpers ---------------------------- */
@@ -210,9 +210,9 @@ export default function HealthTips() {
     if (!hm || !wk || hm < 0.5 || hm > 2.5 || wk < 10 || wk > 400) return null;
     const v = wk / (hm * hm);
     let label = "Normal", tone = "ok";
-    if (v < 18.5) { label = "Kam vajan"; tone = "warn"; }
-    else if (v >= 30) { label = "Motapa"; tone = "bad"; }
-    else if (v >= 25) { label = "Zyada vajan"; tone = "warn"; }
+    if (v < 18.5) { label = "Underweight"; tone = "warn"; }
+    else if (v >= 30) { label = "Obese"; tone = "bad"; }
+    else if (v >= 25) { label = "Overweight"; tone = "warn"; }
     return { v: v.toFixed(1), label, tone };
   }, [h, w]);
 
@@ -225,14 +225,14 @@ export default function HealthTips() {
         <div className="hp-head">
           <div className="hp-eyebrow">HEALTH &amp; WELLNESS</div>
           <div className="hp-h1">Patient Health Tips &amp; Tools</div>
-          <div className="hp-sub">Roz ki chhoti aadatein, badi sehat. Tips padho aur neeche ke tools aajmao.</div>
+          <div className="hp-sub">Small daily habits, big health gains. Read the tips and try the tools below.</div>
         </div>
 
         {/* ---------- Tip of the day ---------- */}
         <div className="hp-day">
           <div className="hp-day-ic">{tipOfDay.icon}</div>
           <div className="hp-day-body">
-            <div className="hp-day-tag">AAJ KI TIP</div>
+            <div className="hp-day-tag">TIP OF THE DAY</div>
             <div className="hp-day-title">{tipOfDay.title}</div>
             <div className="hp-day-text">{tipOfDay.description}</div>
           </div>
@@ -246,7 +246,7 @@ export default function HealthTips() {
               <span className="hp-tool-ic">💧</span>
               <div>
                 <div className="hp-tool-title">Water Tracker</div>
-                <div className="hp-tool-sub">Aaj: {water}/{GOAL} glass</div>
+                <div className="hp-tool-sub">Today: {water}/{GOAL} glasses</div>
               </div>
             </div>
             <div className="hp-glasses">
@@ -264,8 +264,8 @@ export default function HealthTips() {
             </div>
             <div className="hp-bar"><div style={{ width: `${(water / GOAL) * 100}%` }} /></div>
             <div className="hp-note">
-              {water >= GOAL ? "Shabash! Aaj ka goal poora hua." : "Glass par click karke count badhao."}
-              {" "}Kidney/dil ke mareez doctor ki batayi matra follow karein.
+              {water >= GOAL ? "Well done! You reached today's goal." : "Click a glass to increase your count."}
+              {" "}People with kidney or heart disease should follow the amount their doctor advised.
             </div>
           </div>
 
@@ -275,7 +275,7 @@ export default function HealthTips() {
               <span className="hp-tool-ic">⚖️</span>
               <div>
                 <div className="hp-tool-title">BMI Calculator</div>
-                <div className="hp-tool-sub">Height aur weight daalo</div>
+                <div className="hp-tool-sub">Enter your height and weight</div>
               </div>
             </div>
             <div className="hp-inputs">
@@ -294,9 +294,9 @@ export default function HealthTips() {
                 <span className="hp-bmi-l">{bmi.label}</span>
               </div>
             ) : (
-              <div className="hp-bmi idle">Result yahan dikhega</div>
+              <div className="hp-bmi idle">Your result will appear here</div>
             )}
-            <div className="hp-note">Ye sirf ek mota andaza hai, diagnosis nahi. Bachche, garbhwati aur bujurg doctor se poochhein.</div>
+            <div className="hp-note">This is only a rough estimate, not a diagnosis. Children, pregnant women and older adults should ask a doctor.</div>
           </div>
 
           {/* Breathing */}
@@ -305,7 +305,7 @@ export default function HealthTips() {
               <span className="hp-tool-ic">🌬️</span>
               <div>
                 <div className="hp-tool-title">Breathing Exercise</div>
-                <div className="hp-tool-sub">4 - 4 - 6 gehri saans</div>
+                <div className="hp-tool-sub">4 - 4 - 6 deep breathing</div>
               </div>
             </div>
             <div className="hp-breath-box">
@@ -319,17 +319,17 @@ export default function HealthTips() {
                 {running ? count : "🙂"}
               </div>
             </div>
-            <div className="hp-breath-txt">{running ? BREATH[phase].t : "Aaram se baitho aur shuru karo"}</div>
+            <div className="hp-breath-txt">{running ? BREATH[phase].t : "Sit comfortably and begin"}</div>
             <button type="button" className="hp-btn" onClick={toggleBreath}>
-              {running ? "Roko" : "Shuru karo"}
+              {running ? "Stop" : "Start"}
             </button>
-            <div className="hp-note">Chakkar ya saans phoole to ruk jao.</div>
+            <div className="hp-note">Stop if you feel dizzy or short of breath.</div>
           </div>
         </div>
 
         {/* ---------- Normal ranges ---------- */}
         <div className="hp-card">
-          <div className="hp-card-title">📏 Normal Ranges (bade logon ke liye mota guide)</div>
+          <div className="hp-card-title">📏 Normal Ranges (a rough guide for adults)</div>
           <div className="hp-ranges">
             {RANGES.map((r) => (
               <div className="hp-range" key={r.name}>
@@ -339,7 +339,7 @@ export default function HealthTips() {
               </div>
             ))}
           </div>
-          <div className="hp-note">Aapke doctor ne alag target diya ho to wahi follow karo.</div>
+          <div className="hp-note">If your doctor gave you a different target, follow that one.</div>
         </div>
 
         {/* ---------- Explore tips ---------- */}
@@ -351,7 +351,7 @@ export default function HealthTips() {
               className="hp-in hp-search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="🔍  Tips dhundo (jaise: sugar, neend, dawai)"
+              placeholder="🔍  Search tips (e.g. sugar, sleep, medicine)"
             />
             <button
               type="button"
@@ -389,7 +389,7 @@ export default function HealthTips() {
                         type="button"
                         className={`hp-save ${isSaved ? "on" : ""}`}
                         onClick={() => toggleSave(t.id)}
-                        aria-label={isSaved ? "Saved hata do" : "Save karo"}
+                        aria-label={isSaved ? "Remove from saved" : "Save"}
                       >
                         {isSaved ? "★" : "☆"}
                       </button>
@@ -406,7 +406,7 @@ export default function HealthTips() {
                     <div className="hp-tip-foot">
                       <span>◷ {t.readTime} read</span>
                       <button type="button" className="hp-link" onClick={() => setOpen(isOpen ? null : t.id)}>
-                        {isOpen ? "Kam dikhao ↑" : "Read →"}
+                        {isOpen ? "Show less ↑" : "Read →"}
                       </button>
                     </div>
                   </article>
@@ -416,16 +416,16 @@ export default function HealthTips() {
           ) : (
             <div className="hp-empty">
               <div style={{ fontSize: 32 }}>🔍</div>
-              <div className="hp-tip-title" style={{ marginTop: 6 }}>Koi tip nahi mili</div>
-              <div className="hp-tip-desc">Doosra keyword ya category try karo.</div>
+              <div className="hp-tip-title" style={{ marginTop: 6 }}>No tips found</div>
+              <div className="hp-tip-desc">Try a different keyword or category.</div>
             </div>
           )}
         </div>
 
         {/* ---------- Disclaimer ---------- */}
         <div className="hp-disclaimer">
-          ⚠️ Ye jaankari sirf general jagrukta ke liye hai, doctor ki salah nahi. Dawai ya ilaaj mein badlav apne doctor se
-          poochh kar hi karo. Emergency mein turant <b>112</b> ya <b>108</b> par call karo.
+          ⚠️ This information is for general awareness only and is not medical advice. Always check with your doctor before
+          changing any medicine or treatment. In an emergency, call <b>112</b> or <b>108</b> immediately.
         </div>
       </div>
     </section>
