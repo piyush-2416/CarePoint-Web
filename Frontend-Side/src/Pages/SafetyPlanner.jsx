@@ -1,30 +1,30 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
-// Aapke Server.js ka port 3000 hai
+// Your Server.js runs on port 3000
 const API = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
-// Backend (Routes/Plans.js) ki lists se bilkul same
-const LIVING_SITUATIONS = ["Ghar par akela", "Parivaar ke saath", "Hospital me admit", "Surgery ke baad recovery", "Hostel / PG", "Other"];
-const CONDITIONS = ["Diabetes", "BP / Hypertension", "Heart disease", "Asthma / COPD", "Kidney disease", "Epilepsy (mirgi)", "Stroke recovery", "Cancer treatment", "Pregnancy", "Post-surgery recovery"];
-const EMERGENCY_RISKS = ["Seene me dard / heart attack", "Saans phoolna", "Sugar bahut low / high", "BP bahut high / low", "Daura (seizure)", "Girna / chot lagna", "Allergy reaction", "Zyada bleeding", "Dawai chhoot jaana / galat dawai"];
-const CARE_NEEDS = ["Chal-phir nahi sakte", "Wheelchair / walker use karte hain", "Kam dikhai deta hai", "Kam sunai deta hai", "Yaaddasht kamzor hai", "Dusron par nirbhar"];
-const RESOURCES = ["Dawai ka stock", "BP machine", "Glucometer", "Oxygen cylinder / concentrator", "Nebulizer", "Caretaker / nurse", "Emergency contact list", "Ambulance access", "Nazdiki hospital paas me", "Health insurance", "Medical reports ek jagah"];
+// Must be exactly the same as the lists in the backend (Routes/Plans.js)
+const LIVING_SITUATIONS = ["Living alone at home", "With family", "Admitted in hospital", "Recovering after surgery", "Hostel / PG", "Other"];
+const CONDITIONS = ["Diabetes", "BP / Hypertension", "Heart disease", "Asthma / COPD", "Kidney disease", "Epilepsy (seizures)", "Stroke recovery", "Cancer treatment", "Pregnancy", "Post-surgery recovery"];
+const EMERGENCY_RISKS = ["Chest pain / heart attack", "Shortness of breath", "Very low / high sugar", "Very high / low BP", "Seizure", "Fall / injury", "Allergic reaction", "Heavy bleeding", "Missed / wrong medicine"];
+const CARE_NEEDS = ["Cannot walk around", "Uses wheelchair / walker", "Poor eyesight", "Poor hearing", "Weak memory", "Dependent on others"];
+const RESOURCES = ["Medicine stock", "BP machine", "Glucometer", "Oxygen cylinder / concentrator", "Nebulizer", "Caretaker / nurse", "Emergency contact list", "Ambulance access", "Hospital nearby", "Health insurance", "Medical reports in one place"];
 
 const EMERGENCY = [
-  { n: "112", l: "Sabhi emergency", c: "#0b1f66" },
+  { n: "112", l: "All emergencies", c: "#0b1f66" },
   { n: "100", l: "Police", c: "#2563eb" },
   { n: "101", l: "Fire", c: "#ea580c" },
   { n: "108", l: "Ambulance", c: "#16a34a" },
 ];
 
 const LEVEL = {
-  low: { label: "Kam" },
-  medium: { label: "Madhyam" },
-  high: { label: "Zyada" },
+  low: { label: "Low" },
+  medium: { label: "Medium" },
+  high: { label: "High" },
 };
 
-// FIX: credentials: "include" ke bina login cookie server tak jaati hi nahi,
-// aur /api/plans requireAuth ke peeche hai. Isi wajah se "Server error" aa raha tha.
+// credentials: "include" sends the login cookie to the server
+// (/api/plans is behind requireAuth)
 async function api(path, opts = {}) {
   let res;
   try {
@@ -34,11 +34,11 @@ async function api(path, opts = {}) {
       ...opts,
     });
   } catch {
-    throw new Error("Backend se connect nahi ho paya. Server (port 3000) chal raha hai?");
+    throw new Error("Could not connect to the backend. Is the server (port 3000) running?");
   }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    if (res.status === 401) throw new Error("Pehle login karo, phir plan banao.");
+    if (res.status === 401) throw new Error("Please log in first, then create a plan.");
     throw new Error(data.error || data.message || `Server error (${res.status})`);
   }
   return data;
@@ -47,7 +47,7 @@ async function api(path, opts = {}) {
 const fmtDate = (d) =>
   new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
 
-/* ---------------- Styles (self-contained, Tailwind pe depend nahi) ---------------- */
+/* ---------------- Styles (self-contained, no Tailwind needed) ---------------- */
 const css = `
 .sp{--navy:#0b1f66;--green:#16a34a;--green-d:#15803d;--brand:#3cb371;--ink:#0f172a;--muted:#64748b;--line:#dbe7ef;
   min-height:100vh;text-align:left;color:var(--ink);font-family:inherit;line-height:1.5;
@@ -222,7 +222,7 @@ const css = `
 }
 `;
 
-/* Chhota helper: chips (single ya multi select) */
+/* Small helper: chips (single or multi select) */
 function Chips({ n, label, hint, options, value, onChange, single = false }) {
   const toggle = (o) => {
     if (single) return onChange(o);
@@ -259,7 +259,7 @@ export default function SafetyPlanner() {
   // form
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
-  const [living, setLiving] = useState("Parivaar ke saath");
+  const [living, setLiving] = useState("With family");
   const [location, setLocation] = useState("");
   const [conditions, setConditions] = useState([]);
   const [emergencyRisks, setEmergencyRisks] = useState([]);
@@ -267,7 +267,7 @@ export default function SafetyPlanner() {
   const [resources, setResources] = useState([]);
   const [notes, setNotes] = useState("");
   // data
-  const [doc, setDoc] = useState(null); // poora saved plan document
+  const [doc, setDoc] = useState(null); // the full saved plan document
   const [saved, setSaved] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -280,7 +280,7 @@ export default function SafetyPlanner() {
     try {
       setSaved(await api("/plans"));
     } catch {
-      /* list na aaye to bhi page chale */
+      /* the page should still work if the list does not load */
     }
   };
   useEffect(() => {
@@ -295,11 +295,11 @@ export default function SafetyPlanner() {
 
   const generate = async () => {
     setError("");
-    if (!name.trim()) return setError("Patient ka naam likho.");
+    if (!name.trim()) return setError("Please enter the patient's name.");
     const ageNum = Number(age);
-    if (!Number.isInteger(ageNum) || ageNum < 0 || ageNum > 120) return setError("Sahi umar likho (0 se 120).");
+    if (!Number.isInteger(ageNum) || ageNum < 0 || ageNum > 120) return setError("Please enter a valid age (0 to 120).");
     if (conditions.length === 0 && emergencyRisks.length === 0)
-      return setError("Kam se kam ek bimari ya emergency risk chuno.");
+      return setError("Select at least one condition or emergency risk.");
 
     setLoading(true);
     setDoc(null);
@@ -340,7 +340,7 @@ export default function SafetyPlanner() {
   };
 
   const removePlan = async (id) => {
-    if (!window.confirm("Ye plan delete kar dein?")) return;
+    if (!window.confirm("Delete this plan?")) return;
     try {
       await api(`/plans/${id}`, { method: "DELETE" });
       if (doc?._id === id) setDoc(null);
@@ -350,7 +350,7 @@ export default function SafetyPlanner() {
     }
   };
 
-  // Checklist tick: turant dikhao, phir server par save
+  // Checklist tick: show instantly, then save to the server
   const toggleItem = async (itemId) => {
     const old = done;
     const next = old.includes(itemId) ? old.filter((x) => x !== itemId) : [...old, itemId];
@@ -359,7 +359,7 @@ export default function SafetyPlanner() {
       await api(`/plans/${doc._id}/progress`, { method: "PATCH", body: JSON.stringify({ done: next }) });
     } catch {
       setDoc((d) => ({ ...d, done: old }));
-      setError("Progress save nahi ho paya.");
+      setError("Could not save progress.");
     }
   };
 
@@ -383,7 +383,7 @@ export default function SafetyPlanner() {
             <div>
               <span className="sp-badge">
                 <span className="sp-pulse" />
-                AI Powered · Hinglish mein plan
+                AI Powered · Personalised plan
               </span>
               <h1 className="sp-title">
                 Patient Safety <span>Planner</span>
@@ -393,11 +393,11 @@ export default function SafetyPlanner() {
                 <circle cx="230" cy="8" r="4.5" fill="#16a34a" />
               </svg>
               <p className="sp-sub">
-                Patient ki bimari aur zarooraten batao, AI poora emergency care plan banayega: checklist, red flags, hospital plan aur routine.
+                Tell us about the patient's condition and needs, and AI will build a complete emergency care plan: checklist, red flags, hospital plan and routine.
               </p>
 
               <div className="sp-sos">
-                <span className="sp-sos-label">Emergency mein turant call:</span>
+                <span className="sp-sos-label">In an emergency, call now:</span>
                 {EMERGENCY.map((e) => (
                   <a key={e.n} href={`tel:${e.n}`}>
                     <b style={{ background: e.c }}>{e.n}</b>
@@ -427,32 +427,32 @@ export default function SafetyPlanner() {
           <div>
             <div className="sp-step">
               <i>1</i>
-              <span>Patient ki jaankari</span>
+              <span>Patient details</span>
             </div>
             <div className="sp-grid2">
               <label className="sp-label">
-                Patient ka naam
-                <input className="sp-field" value={name} maxLength={80} onChange={(e) => setName(e.target.value)} placeholder="Jaise: Ramesh Kumar" />
+                Patient name
+                <input className="sp-field" value={name} maxLength={80} onChange={(e) => setName(e.target.value)} placeholder="e.g. Ramesh Kumar" />
               </label>
               <label className="sp-label">
-                Umar (saal)
-                <input className="sp-field" type="number" min="0" max="120" inputMode="numeric" value={age} onChange={(e) => setAge(e.target.value)} placeholder="Jaise: 62" />
+                Age (years)
+                <input className="sp-field" type="number" min="0" max="120" inputMode="numeric" value={age} onChange={(e) => setAge(e.target.value)} placeholder="e.g. 62" />
               </label>
               <label className="sp-label sp-span2">
-                Jagah (optional)
-                <input className="sp-field" value={location} maxLength={100} onChange={(e) => setLocation(e.target.value)} placeholder="Jaise: Ghaziabad, Uttar Pradesh" />
+                Location (optional)
+                <input className="sp-field" value={location} maxLength={100} onChange={(e) => setLocation(e.target.value)} placeholder="e.g. Ghaziabad, Uttar Pradesh" />
               </label>
             </div>
           </div>
 
-          <Chips n="2" label="Patient kahan / kaise rehta hai?" options={LIVING_SITUATIONS} value={living} onChange={setLiving} single />
-          <Chips n="3" label="Kaun si bimari / condition hai?" hint="ek ya zyada chuno" options={CONDITIONS} value={conditions} onChange={setConditions} />
-          <Chips n="4" label="Kin emergencies ka darr hai?" hint="optional" options={EMERGENCY_RISKS} value={emergencyRisks} onChange={setEmergencyRisks} />
-          <Chips n="5" label="Kis cheez mein madad chahiye?" hint="optional" options={CARE_NEEDS} value={careNeeds} onChange={setCareNeeds} />
-          <Chips n="6" label="Abhi patient ke paas kya hai?" hint="optional" options={RESOURCES} value={resources} onChange={setResources} />
+          <Chips n="2" label="Where / how does the patient live?" options={LIVING_SITUATIONS} value={living} onChange={setLiving} single />
+          <Chips n="3" label="Which condition(s) does the patient have?" hint="select one or more" options={CONDITIONS} value={conditions} onChange={setConditions} />
+          <Chips n="4" label="Which emergencies are you worried about?" hint="optional" options={EMERGENCY_RISKS} value={emergencyRisks} onChange={setEmergencyRisks} />
+          <Chips n="5" label="What kind of help is needed?" hint="optional" options={CARE_NEEDS} value={careNeeds} onChange={setCareNeeds} />
+          <Chips n="6" label="What does the patient have right now?" hint="optional" options={RESOURCES} value={resources} onChange={setResources} />
 
           <label className="sp-label">
-            Koi aur baat? (optional)
+            Anything else? (optional)
             <textarea
               className="sp-field"
               style={{ resize: "none" }}
@@ -460,7 +460,7 @@ export default function SafetyPlanner() {
               maxLength={300}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Jaise: raat ko akele rehte hain, seedhiyan chadhne me dikkat hoti hai..."
+              placeholder="e.g. stays alone at night, has trouble climbing stairs..."
             />
             <small className="sp-count-txt">{notes.length}/300</small>
           </label>
@@ -472,10 +472,10 @@ export default function SafetyPlanner() {
                   <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25" />
                   <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
                 </svg>
-                Plan ban raha hai...
+                Creating your plan...
               </>
             ) : (
-              <>Care plan banao <span aria-hidden="true">→</span></>
+              <>Create care plan <span aria-hidden="true">→</span></>
             )}
           </button>
         </div>
@@ -503,7 +503,7 @@ export default function SafetyPlanner() {
           <div ref={resultRef} className="sp-stack" aria-live="polite">
             {doc.fallback && (
               <div className="sp-warn">
-                AI abhi available nahi hai, isliye ye general plan hai. Thodi der baad naya plan banake dekho.
+                AI is not available right now, so this is a general plan. Please try creating a new plan after a while.
               </div>
             )}
 
@@ -513,7 +513,7 @@ export default function SafetyPlanner() {
                 <div>
                   <h2 className="sp-title2">{doc.patient.name}</h2>
                   <p className="sp-meta">
-                    {doc.patient.age} saal · {doc.patient.livingSituation}
+                    {doc.patient.age} years · {doc.patient.livingSituation}
                     {doc.patient.location && ` · ${doc.patient.location}`} · {fmtDate(doc.createdAt)}
                   </p>
                   {(doc.conditions ?? []).length > 0 && (
@@ -522,7 +522,7 @@ export default function SafetyPlanner() {
                 </div>
                 <div className="sp-actions no-print">
                   <button type="button" className="sp-btn" onClick={() => window.print()}>
-                    Print karo
+                    Print
                   </button>
                   <button
                     type="button"
@@ -532,7 +532,7 @@ export default function SafetyPlanner() {
                       window.scrollTo({ top: 0, behavior: "smooth" });
                     }}
                   >
-                    Naya plan
+                    New plan
                   </button>
                 </div>
               </div>
@@ -542,7 +542,7 @@ export default function SafetyPlanner() {
             {/* Red flags */}
             {(plan.redFlags ?? []).length > 0 && (
               <section className="sp-amber">
-                <h3>Ye dikhe to turant 108 / 112 par call karo</h3>
+                <h3>If you see any of these, call 108 / 112 immediately</h3>
                 <ul className="sp-list">
                   {plan.redFlags.map((s, i) => <li key={i}>{s}</li>)}
                 </ul>
@@ -565,7 +565,7 @@ export default function SafetyPlanner() {
                         {r.why && <p className="sp-mini-text">{r.why}</p>}
                         {(r.warningSigns ?? []).length > 0 && (
                           <>
-                            <p className="sp-mini-text"><b>Pehle ke sanket:</b></p>
+                            <p className="sp-mini-text"><b>Early warning signs:</b></p>
                             <ul className="sp-list">
                               {r.warningSigns.map((p, i) => <li key={i}>{p}</li>)}
                             </ul>
@@ -573,7 +573,7 @@ export default function SafetyPlanner() {
                         )}
                         {(r.prepare ?? []).length > 0 && (
                           <>
-                            <p className="sp-mini-text"><b>Taiyari:</b></p>
+                            <p className="sp-mini-text"><b>How to prepare:</b></p>
                             <ul className="sp-list">
                               {r.prepare.map((p, i) => <li key={i}>{p}</li>)}
                             </ul>
@@ -590,9 +590,9 @@ export default function SafetyPlanner() {
             {(plan.checklist ?? []).length > 0 && (
               <section className="sp-card">
                 <div className="sp-ck-head">
-                  <h3 className="sp-h3">Taiyari checklist</h3>
+                  <h3 className="sp-h3">Preparation checklist</h3>
                   <span className="sp-pill pill-green">
-                    {done.length}/{totalItems} ho gaye
+                    {done.length}/{totalItems} done
                   </span>
                 </div>
                 <div className="sp-bar">
@@ -625,7 +625,7 @@ export default function SafetyPlanner() {
             {/* Roles */}
             {(plan.roles ?? []).length > 0 && (
               <section className="sp-card">
-                <h3 className="sp-h3">Kaun kya karega</h3>
+                <h3 className="sp-h3">Who does what</h3>
                 <div style={{ marginTop: 8 }}>
                   {plan.roles.map((r) => (
                     <div key={r.role} className="sp-role">
@@ -641,7 +641,7 @@ export default function SafetyPlanner() {
             <div className="sp-grid2" style={{ alignItems: "start" }}>
               {plan.communicationPlan && (
                 <section className="sp-dark">
-                  <h3>Emergency mein kisko batayein</h3>
+                  <h3>Who to contact in an emergency</h3>
                   <p>{plan.communicationPlan}</p>
                 </section>
               )}
@@ -650,7 +650,7 @@ export default function SafetyPlanner() {
                   <h3 className="sp-h3">Hospital plan</h3>
                   {plan.hospitalPlan.whereToGo && (
                     <p className="sp-assembly">
-                      <b>Kahan jana hai:</b> {plan.hospitalPlan.whereToGo}
+                      <b>Where to go:</b> {plan.hospitalPlan.whereToGo}
                     </p>
                   )}
                   <ol className="sp-steps">
@@ -663,7 +663,7 @@ export default function SafetyPlanner() {
             {/* Routine */}
             {(plan.routine ?? []).length > 0 && (
               <section className="sp-card">
-                <h3 className="sp-h3">Rozana / hafte ka routine</h3>
+                <h3 className="sp-h3">Daily / weekly routine</h3>
                 <div className="sp-grid-r">
                   {plan.routine.map((d) => (
                     <div key={d.name} className="sp-mini">
@@ -683,7 +683,7 @@ export default function SafetyPlanner() {
               <div className="sp-grid2" style={{ alignItems: "start" }}>
                 {(plan.careSupport ?? []).length > 0 && (
                   <section className="sp-amber">
-                    <h3>Khaas madad</h3>
+                    <h3>Special support</h3>
                     <ul className="sp-list">
                       {plan.careSupport.map((s, i) => <li key={i}>{s}</li>)}
                     </ul>
@@ -691,7 +691,7 @@ export default function SafetyPlanner() {
                 )}
                 {(plan.contactsToCollect ?? []).length > 0 && (
                   <section className="sp-card">
-                    <h3 className="sp-h3">Ye contacts jama karo</h3>
+                    <h3 className="sp-h3">Contacts to collect</h3>
                     <ul className="sp-list">
                       {plan.contactsToCollect.map((s, i) => <li key={i}>{s}</li>)}
                     </ul>
@@ -701,7 +701,7 @@ export default function SafetyPlanner() {
             )}
 
             <p className="sp-note">
-              Ye AI ke sujhav hain, doctor ki salah nahi. Dawai ya ilaaj mein koi badlav apne doctor se poochh kar hi karo. Kisi bhi emergency mein turant 112 / 108 par call karo.
+              These are AI suggestions, not medical advice. Always check with your doctor before changing any medicine or treatment. In any emergency, call 112 / 108 immediately.
             </p>
           </div>
         )}
@@ -709,14 +709,14 @@ export default function SafetyPlanner() {
         {/* ================= SAVED PLANS ================= */}
         {saved.length > 0 && (
           <section className="no-print">
-            <h2 className="sp-saved-title">Aapke saved plans</h2>
+            <h2 className="sp-saved-title">Your saved plans</h2>
             <div className="sp-grid2" style={{ marginTop: 16 }}>
               {saved.filter((s) => s.patient).map((s) => (
                 <div key={s._id} className={`sp-saved ${doc?._id === s._id ? "sel" : ""}`}>
                   <div className="sp-saved-top">
                     <div style={{ minWidth: 0 }}>
                       <b className="sp-trunc">{s.patient.name}</b>
-                      <small>{s.patient.age} saal · {fmtDate(s.createdAt)}</small>
+                      <small>{s.patient.age} years · {fmtDate(s.createdAt)}</small>
                     </div>
                     {s.fallback && <span className="sp-pill lv-medium">General</span>}
                   </div>
@@ -725,7 +725,7 @@ export default function SafetyPlanner() {
                   </p>
                   <div className="sp-saved-btns">
                     <button type="button" className="sp-btn solid" onClick={() => openPlan(s._id)}>
-                      Kholo
+                      Open
                     </button>
                     <button type="button" className="sp-btn danger" onClick={() => removePlan(s._id)}>
                       Delete
