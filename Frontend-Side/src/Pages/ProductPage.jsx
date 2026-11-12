@@ -109,20 +109,20 @@
 
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
-
-import Appointments from "./Appointments";
-import Doctorid from "./Doctorid";
+import api from "../api"; // axios ki jagah
 import Navbar from "../Components/Navbar";
+
 function ProductPage() {
-  const { id } = useParams(); // URL se product ID lega
+  const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:3000/api/products/${id}`) // 👈 Backend se single product fetch
+    setLoading(true);
+    setError(null);
+    api
+      .get(`/products/${id}`) // api.js khud /api laga deta hai
       .then((res) => {
         setProduct(res.data);
         setLoading(false);
