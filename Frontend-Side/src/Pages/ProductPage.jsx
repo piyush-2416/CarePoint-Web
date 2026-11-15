@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../api";
 import Navbar from "../Components/Navbar";
-import "./ProductPage.css"; // <-- naya CSS file (same folder me rakho)
+// import "./ProductPage.css"; // <-- naya CSS file (same folder me rakho)
 
 function ProductPage() {
   const { id } = useParams();
