@@ -4273,3 +4273,26 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, .btn:focus-vi
   .dp-card { padding: 12px; }
   .dp-name { font-size: 20px; }
 }
+@media (max-width: 767px) {
+  .Doctor-card ul {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    gap: 16px;
+  }
+  .Doctor-card ul li {
+    width: 100%;
+    min-width: 0;
+  }
+  .Doctor-card ul li img {
+    height: auto !important;
+    aspect-ratio: 4 / 3;
+    object-position: top center;
+  }
+  .Doctor-card button {
+    display: block;
+    width: 100%;
+  }
+}
