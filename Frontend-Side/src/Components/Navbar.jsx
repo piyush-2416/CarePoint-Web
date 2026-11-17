@@ -222,8 +222,12 @@ function Navbar() {
         .cpn-x i:nth-child(1) { transform: rotate(45deg); }
         .cpn-x i:nth-child(2) { transform: rotate(-45deg); }
 
-        .cpn-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; border-radius: 12px; }
-        .cpn-logo-img {
+.cpn-logo {
+  display: flex; align-items: center; gap: 10px; text-decoration: none;
+  flex-shrink: 0; border-radius: 12px;
+  background: none; border: 0; padding: 0; margin: 0;
+  font: inherit; color: inherit; cursor: pointer; text-align: left;
+}        .cpn-logo-img {
           width: 46px; height: 46px; min-width: 46px; flex: 0 0 46px;
           border-radius: 50%; background: #fff; padding: 4px;
           object-fit: contain; display: block; border: 2px solid #fff;
@@ -329,7 +333,7 @@ function Navbar() {
         <div className="cpn-line" />
         <div className="cpn-bar">
           {/* Desktop par sidebar khula ho to logo sidebar me dikhta hai, isliye yahan chhupa hai */}
-          {(!isDesktop || !open) && (
+          /* {(!isDesktop || !open) && (
             <Link
               to={homePath}
               className="cpn-logo"
@@ -339,7 +343,19 @@ function Navbar() {
             >
               <Brand />
             </Link>
-          )}
+          )} */
+          {(!isDesktop || !open) && (
+  <button
+    type="button"
+    className="cpn-logo"
+    aria-label="Open sidebar"
+    aria-expanded={open}
+    aria-controls="cpn-sidebar"
+    onClick={() => setOpen(true)}
+  >
+    <Brand />
+  </button>
+)}
 
           {/* Login / Signup ya "Hi, naam" */}
           {!loading && (
