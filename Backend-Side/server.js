@@ -29,8 +29,6 @@ const RELATIVES_COLLECTION = "Relatives-data";
 const PORT = process.env.PORT || 3000;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const UPLOAD_DIR = path.join(__dirname, "uploads");
-fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
 // ---------- .env checks ----------
 if (!/^mongodb(\+srv)?:\/\//.test(MONGODB_URI ?? "")) {
